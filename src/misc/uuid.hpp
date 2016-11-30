@@ -8,6 +8,8 @@
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+
+#include <boost/uuid/uuid_serialize.hpp>
 #pragma warning(pop)
 
 // CRTP pattern
@@ -21,7 +23,7 @@ public:
 
 	virtual ~UUID() {}
 
-	boost::uuids::uuid getId() const { return this->uuid; }
+	const boost::uuids::uuid getId() const { return this->uuid; }
 	const UUID& operator=(const UUID& other) { this->uuid = other.uuid; return *this; }	
 
 protected:

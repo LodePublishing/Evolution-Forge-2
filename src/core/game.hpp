@@ -11,6 +11,8 @@
 
 #include <uuid.hpp>
 
+#include <globalstorage.hpp>
+
 #include "player.hpp"
 #include "rules.hpp"
 #include "map.hpp"
@@ -59,8 +61,14 @@ private:
 		const boost::uuids::uuid& rulesId = game->getRulesId();
 		const boost::uuids::uuid& mapId = game->getMapId();
 		const unsigned int& startingTime = game->getStartingTime();
-		const std::list<unsigned int>& playerIdList = game->getPlayerIdList();
+		const std::list<boost::uuids::uuid>& playerIdList = game->getPlayerIdList();
 
+		for(std::list<boost::uuids::uuid>::const_iterator i = playerIdList.begin(); i != playerIdList.end(); i++) {
+			GlobalStorage::instance().addPlayer(game->getPlayer(*i));
+		}
+		GlobalStorage::instance().addMap(game->getMap());
+		GlobalStorage::instance().addRules(game->getRules());
+		// TODO delete function!
 		if(version > 0) {
 		}
 
@@ -112,7 +120,7 @@ private:
 inline const boost::shared_ptr<const Player> Game::getPlayer(const boost::uuids::uuid playerId) const {
 	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Player> >::const_iterator i = playerMap.find(playerId);
 	if(i == playerMap.end()) {
-		throw "Could not find player UUID";
+		throw std::exception();
 	}
 	return i->second;
 }

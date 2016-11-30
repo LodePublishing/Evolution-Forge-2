@@ -9,18 +9,19 @@ BOOST_FIXTURE_TEST_SUITE( ProcessedGoalEntry_test, ProcessedGoalEntry_Fixture )
 
 	BOOST_AUTO_TEST_CASE (ProcessedGoalEntry_constructor)
 {
-	BOOST_CHECK_EQUAL(test_processedGoalEntry->getGoalList().front().front().front().getUnitTypeId(), Broodwar::SPACE_MARINE);
+	BOOST_CHECK_EQUAL(test_processedGoalEntry->getGoalList().front().front().front().getUnitTypeId(), broodwar.unit_id_map.find(Broodwar::SPACE_MARINE)->second);
 
-	const std::list<unsigned int> testUnitList = test_processedGoalEntry->getBuildableUnits(0);
-	std::list<unsigned int> unitList;
-	unitList.push_back(Broodwar::SCV);
-	unitList.push_back(Broodwar::COMMAND_CENTER);
-	unitList.push_back(Broodwar::SUPPLY_DEPOT);
-	unitList.push_back(Broodwar::BARRACKS);
-	unitList.push_back(Broodwar::SPACE_MARINE);
+	const std::list<boost::uuids::uuid> testUnitList = test_processedGoalEntry->getBuildableUnits(mapFixture.test_map->getLocationId(0));
+	std::list<boost::uuids::uuid> unitList;
+	unitList.push_back(broodwar.unit_id_map.find(Broodwar::SCV)->second);
+	unitList.push_back(broodwar.unit_id_map.find(Broodwar::SPACE_MARINE)->second);
+	unitList.push_back(broodwar.unit_id_map.find(Broodwar::COMMAND_CENTER)->second);
+	unitList.push_back(broodwar.unit_id_map.find(Broodwar::SUPPLY_DEPOT)->second);
+	unitList.push_back(broodwar.unit_id_map.find(Broodwar::BARRACKS)->second);
+	
 
-	std::list<unsigned int>::const_iterator j = unitList.begin();
-	for(std::list<unsigned int>::const_iterator i = testUnitList.begin(); i != testUnitList.end(); i++) {
+	std::list<boost::uuids::uuid>::const_iterator j = unitList.begin();
+	for(std::list<boost::uuids::uuid>::const_iterator i = testUnitList.begin(); i != testUnitList.end(); i++) {
 		BOOST_CHECK_EQUAL(*j, *i);
 		j++;
 	}
@@ -31,13 +32,13 @@ BOOST_FIXTURE_TEST_SUITE( ProcessedGoalEntry_test, ProcessedGoalEntry_Fixture )
 
 	std::list<std::list<Goal> > new_goals_1;
     std::list<Goal> new_goals_2;
-    new_goals_2.push_back(Goal(Broodwar::GAS_SCV, 0, 1));
+	new_goals_2.push_back(Goal(broodwar.unit_id_map.find(Broodwar::GAS_SCV)->second, mapFixture.test_map->getLocationId(0), 1));
     new_goals_1.push_back(new_goals_2);
 	test_processedGoalEntry->addGoal(new_goals_1);
 	
 	bool exception = false;
 	try {
-		test_processedGoalEntry->fillBuildableListAndAddGoals(broodwar->getRules(), mapFixture.test_map, playerFixture.test_player, test_units);
+		test_processedGoalEntry->fillBuildableListAndAddGoals(broodwar.getRules(), mapFixture.test_map, playerFixture.test_player, test_units);
 	} catch(...) {
 		exception = true;
 	}

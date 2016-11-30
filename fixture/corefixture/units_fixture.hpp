@@ -7,8 +7,18 @@
 
 #include <units.hpp>
 
+#include <broodwar.hpp>
+
+#include "player_fixture.hpp"
+#include "location_fixture.hpp"
+
+
 struct Units_Fixture
 {	
+	Player_Fixture playerFixture;
+	Location_Fixture locationFixture;
+	Broodwar broodwar;
+
 	const unsigned int test_construction_time;
 	const boost::shared_ptr<Units> test_units;
 
@@ -17,7 +27,7 @@ struct Units_Fixture
 	const boost::shared_ptr<Unit> test_unit3;
 
 	Units_Fixture();
-	~Units_Fixture();
+	virtual ~Units_Fixture();
 };
 
 

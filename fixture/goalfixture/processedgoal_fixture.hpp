@@ -2,17 +2,16 @@
 #define _GOALTEST_PROCESSEDGOALFIXTURE_HPP
 
 #include <processedgoal.hpp>
-#include <random_fixture.hpp>
 
-struct ProcessedGoal_Fixture : public Random_Fixture
+struct ProcessedGoal_Fixture
 {
-	ProcessedGoal_Fixture();
-	~ProcessedGoal_Fixture();
-
 	const bool test_isHaveable;
 	const bool test_isBuildable;
 
-	ProcessedGoal* test_processedgoal;
+	const boost::shared_ptr<const ProcessedGoal> test_processedgoal;
+
+	ProcessedGoal_Fixture();
+	virtual ~ProcessedGoal_Fixture();
 };
 
 

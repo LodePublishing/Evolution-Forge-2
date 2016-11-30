@@ -12,6 +12,7 @@
 #pragma warning(pop)
 
 #include <uuid.hpp>
+#include <globalstorage.hpp>
 
 #include "unittype.hpp"
 
@@ -125,9 +126,7 @@ public:
 	void clearConstructions();
 	void addOccupiedFacility(const boost::shared_ptr<Unit> facility);
 	void addConstructingUnit(const boost::shared_ptr<Unit> unit);
-
-	void removeUnit();
-
+	
 	// sets new goal location (and movement time etc. - different to assignGoalLocation which only sets the goal location variable to fit the goalLocationID)
 	void setGoalLocation(const boost::shared_ptr<const Location> location);
 

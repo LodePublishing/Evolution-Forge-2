@@ -7,3 +7,5 @@ UnitResourceType::UnitResourceType(const eUnitResourceType resourceType,
 	amount(amount),
 	unitTypeIdList(unitTypeIdList)	
 { }
+
+const UnitResourceType UnitResourceType::NOT_BUILDABLE_TYPE = UnitResourceType(NOT_BUILDABLE, 0, std::list<std::list<boost::uuids::uuid> >());

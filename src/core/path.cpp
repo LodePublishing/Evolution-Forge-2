@@ -1,23 +1,24 @@
 #include <sstream>
 
 #include "path.hpp"
-#include "location.hpp"
 
-Path::Path(const unsigned int sourceLocationPosition, const unsigned int targetLocationPosition,
-		const unsigned int locationDistance):
-	sourceLocationPosition(sourceLocationPosition),
-	targetLocationPosition(targetLocationPosition),
+Path::Path(const boost::uuids::uuid sourceLocationId, 
+	const boost::uuids::uuid targetLocationId,
+	const unsigned int locationDistance):
+
+	sourceLocationId(sourceLocationId),
+	targetLocationId(targetLocationId),
 	locationDistance(locationDistance)
 {
 }
 
 Path::Path(const boost::uuids::uuid id,
-	const unsigned int sourceLocationPosition, 
-	const unsigned int targetLocationPosition,
+	const boost::uuids::uuid sourceLocationId, 
+	const boost::uuids::uuid targetLocationId,
 	const unsigned int locationDistance):
 	UUID<Path>(id),
-	sourceLocationPosition(sourceLocationPosition),
-	targetLocationPosition(targetLocationPosition),
+	sourceLocationId(sourceLocationId),
+	targetLocationId(targetLocationId),
 	locationDistance(locationDistance)
 {
 }
@@ -28,6 +29,6 @@ Path::~Path()
 const std::string Path::toString() const
 {
 	std::ostringstream os;
-	os << sourceLocationPosition << " -> " << targetLocationPosition << " [" << locationDistance << "km]";
+	os << sourceLocationId << " -> " << targetLocationId << " [" << locationDistance << "km]";
 	return os.str();
 }

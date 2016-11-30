@@ -7,17 +7,24 @@
 
 #include <unit.hpp>
 
+#include <broodwar.hpp>
+
+#include "player_fixture.hpp"
+#include "map_fixture.hpp"
+
+
 struct Unit_Fixture
 {
+	Player_Fixture playerFixture;
+	Map_Fixture mapFixture;
+	Broodwar broodwar;
+
 	const unsigned int test_construction_time;
 
-	const boost::shared_ptr<const UnitType> unitType1;
-	const boost::shared_ptr<const UnitType> unitType2;
-
-	// TODO evtl unitTypes in unitTypeFixture definieren
+	const boost::shared_ptr<Units> test_units;
 
 	Unit_Fixture();
-	~Unit_Fixture();
+	virtual ~Unit_Fixture();
 };
 
 #endif // _COREFIXTURE_UNITFIXTURE_HPP

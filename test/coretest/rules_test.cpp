@@ -10,8 +10,8 @@ BOOST_FIXTURE_TEST_SUITE( Rules_test, Rules_Fixture )
 	BOOST_AUTO_TEST_CASE (Rules_constructor)
 {
 	BOOST_CHECK_EQUAL(test_rules->getName(), test_rules_name);
-	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitType1->getId())->getName().test_unitName1);
-	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitType2->getId())->getName().test_unitName2);
+	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitTypeFixture.test_unittype->getId())->getName(), unitTypeFixture.test_unittype->getName());
+	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitTypeFixture.test_unittype_noncorporeal->getId())->getName(), unitTypeFixture.test_unittype_noncorporeal->getName());
 }
 
 	BOOST_AUTO_TEST_CASE (Rules_reload)
@@ -22,16 +22,15 @@ BOOST_FIXTURE_TEST_SUITE( Rules_test, Rules_Fixture )
 	Rules::saveToXML(test_rules.get(), test_filename_xml, test_file_name);
 
 	// reload the map
-	Rules* new_rules_xml2 = NULL;
-	
+	Rules* new_rules_xml2 = NULL;	
 	Rules::loadFromXML(new_rules_xml2, test_filename_xml, test_file_name);
 	boost::shared_ptr<Rules> new_rules_xml(new_rules_xml2);
 
 	std::remove(test_filename_xml.c_str());
 		
 	BOOST_CHECK_EQUAL(new_rules_xml->getName(), test_rules_name);
-	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitType1->getId())->getName().test_unitName1);
-	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitType2->getId())->getName().test_unitName2);
+	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitTypeFixture.test_unittype->getId())->getName(), unitTypeFixture.test_unittype->getName());
+	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitTypeFixture.test_unittype_noncorporeal->getId())->getName(), unitTypeFixture.test_unittype_noncorporeal->getName());
 }
 
 BOOST_AUTO_TEST_SUITE_END( )

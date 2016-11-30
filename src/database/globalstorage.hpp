@@ -62,7 +62,7 @@ public:
 
 	// call e.g. at the end of a fixture
 	void clear();
-
+	~GlobalStorage();
 private:
 friend class boost::serialization::access;
 
@@ -70,51 +70,8 @@ friend class boost::serialization::access;
 	void serialize(Archive& ar, const unsigned int version)
 	{ }
 
-	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const GlobalStorage* globalStorage, const unsigned int version) { 
-		
-		// const std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> >& unitTypeMap = globalStorage->getUnitTypeMap(); -> rules
-		// const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Location> >& locationMap = globalStorage->getLocationMap(); -> Map
-		const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Race> >& raceMap = globalStorage->getRaceMap();
-		const std::map<const boost::uuids::uuid, const boost::shared_ptr<const GoalEntry> >& goalEntryMap = globalStorage->getGoalEntryMap();
-		const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Map> >& mapMap = globalStorage->getMapMap();
-		const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Government> >& governmentMap = globalStorage->getGovernmentMap();
-		const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Player> >& playerMap = globalStorage->getPlayerMap();
-		const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Rules> >& rulesMap = globalStorage->getRulesMap();
-
-		if(version > 0) {
-		}
-		
-		// order is important! there are interdependencies! maybe move them to the individual maps later... make tables out of maps and add the code there
-		ar & BOOST_SERIALIZATION_NVP(rulesId)
-		   & BOOST_SERIALIZATION_NVP(mapId)
-		   & BOOST_SERIALIZATION_NVP(startingTime)
-		   & BOOST_SERIALIZATION_NVP(playerIdList);
-	} 
-
-	template<class Archive> 
-	friend inline void load_construct_data(Archive& ar, GlobalStorage*& game, const unsigned int version)
-	{
-		boost::uuids::uuid rulesId;
-		boost::uuids::uuid mapId;
-		unsigned int startingTime;
-		std::list<boost::uuids::uuid> playerIdList;
-		std::list<boost::shared_ptr<const Player> > playerList;		
-
-		ar & BOOST_SERIALIZATION_NVP(rulesId)
-		   & BOOST_SERIALIZATION_NVP(mapId)
-		   & BOOST_SERIALIZATION_NVP(startingTime)
-		   & BOOST_SERIALIZATION_NVP(playerIdList);
-
-		for(std::list<boost::uuids::uuid>::const_iterator i = playerIdList.begin(); i != playerIdList.end(); i++) {
-			playerList.push_back(GlobalStorage::instance().getPlayer(*i));
-		}
-
-		if(version > 0) {
-		}
-
-		::new(game)Game(GlobalStorage::instance().getRules(rulesId), GlobalStorage::instance().getMap(mapId), startingTime, playerList);
-	}
+	template<class Archive> friend inline void save_construct_data(Archive &ar, const GlobalStorage* globalStorage, const unsigned int version);
+	template<class Archive> friend inline void load_construct_data(Archive& ar, GlobalStorage*& game, const unsigned int version);
 
 
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > unitTypeMap;
@@ -127,7 +84,7 @@ friend class boost::serialization::access;
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<const Rules> > rulesMap;
 
 	GlobalStorage();
-	~GlobalStorage();
+	
 };
 
 inline const boost::shared_ptr<const UnitType> GlobalStorage::getUnitType(const boost::uuids::uuid unitTypeId) const {

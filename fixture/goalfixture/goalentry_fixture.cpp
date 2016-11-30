@@ -3,8 +3,11 @@
 #pragma warning(pop)
 
 #include <time.h>
-#include "goalentry_fixture.hpp"
+
 #include <random_fixture.hpp>
+
+#include "goalentry_fixture.hpp"
+
 
 GoalEntry_Fixture::GoalEntry_Fixture():
 	test_goalentry_name("my_goalentry_Name"),

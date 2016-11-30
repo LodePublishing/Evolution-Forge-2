@@ -1,5 +1,5 @@
-#ifndef _CORE_PROCESSEDGOAL_HPP
-#define _CORE_PROCESSEDGOAL_HPP
+#ifndef _GOAL_PROCESSEDGOAL_HPP
+#define _GOAL_PROCESSEDGOAL_HPP
 
 class ProcessedGoal
 {
@@ -64,4 +64,4 @@ inline void ProcessedGoal::setBuildable(const bool buildable) {
 
 
 
-#endif // _CORE_PROCESSEDGOAL_HPP
+#endif // _GOAL_PROCESSEDGOAL_HPP

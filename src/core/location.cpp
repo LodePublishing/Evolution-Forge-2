@@ -4,21 +4,19 @@
 #include "path.hpp"
 #include "units.hpp"
 
-Location::Location(const std::string& name, const unsigned int position, const signed int x, const signed int y) :
+Location::Location(const std::string& name, const signed int x, const signed int y) :
 	Coordinate(x, y),
 	name(name),
-	position(position),
 	paths(),
 	distanceMap()
 {
 	// the paths are loaded later when all locations are initialized!
 }
 
-Location::Location(const boost::uuids::uuid id, const std::string& name, const unsigned int position, const signed int x, const signed int y) :
+Location::Location(const boost::uuids::uuid id, const std::string& name, const signed int x, const signed int y) :
 	UUID<Location>(id),
 	Coordinate(x, y),
 	name(name),
-	position(position),
 	paths(),
 	distanceMap()
 {
@@ -29,7 +27,6 @@ Location::Location(const Location& object):
 	UUID<Location>(object),
 	Coordinate(object),
 	name(object.name),
-	position(object.position),
 	paths(object.paths),
 	distanceMap(object.distanceMap)
 { }
@@ -48,10 +45,10 @@ unsigned int Location::getAirDistance(const boost::shared_ptr<const Location> ta
 }
 
 unsigned int Location::getGroundDistance(const boost::shared_ptr<const Location> targetLocation) const {
-	std::map<unsigned int, unsigned int>::const_iterator i = distanceMap.find(targetLocation->getPosition());
+	std::map<const boost::uuids::uuid, const unsigned int>::const_iterator i = distanceMap.find(targetLocation->getId());
 
 	if(i == distanceMap.end()) {
-		throw "Invalid location index or no path between both locations.";
+		throw std::exception();
 	}
 	
 	return i->second;
@@ -62,7 +59,6 @@ const std::string Location::toString() const
 {
 	std::ostringstream os;
 	os << "Location Name: " << name << std::endl;
-	os << "Position: " << position << std::endl;
 //	os << "Coordinate: " << coordinate.toString() << std::endl;
 	os << "Distances: ";
 	for(std::list<boost::shared_ptr<const Path> >::const_iterator i = paths.begin(); i != paths.end(); i++) {

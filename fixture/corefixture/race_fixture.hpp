@@ -13,7 +13,7 @@ struct Race_Fixture
 	const boost::shared_ptr<const Race> test_race;
 
 	Race_Fixture();
-	~Race_Fixture();
+	virtual ~Race_Fixture();
 };
 
 

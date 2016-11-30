@@ -7,16 +7,18 @@
 
 #include <path.hpp>
 
+class Location;
+
 struct Path_Fixture
 {
-	const unsigned int test_source_position;
-	const unsigned int test_target_position;
+	const boost::uuids::uuid test_source_location_id;
+	const boost::uuids::uuid test_target_location_id;
 	const unsigned int test_distance;
 
 	const boost::shared_ptr<const Path> test_path;
 
 	Path_Fixture();
-	~Path_Fixture();
+	virtual ~Path_Fixture();
 };
 
 #endif // _COREFIXTURE_PATHFIXTURE_HPP

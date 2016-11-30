@@ -4,15 +4,13 @@
 
 #include <player_fixture.hpp>
 #include <government_fixture.hpp>
-#include <goalentry_fixture.hpp>
 
 BOOST_FIXTURE_TEST_SUITE( Player_test, Player_Fixture )
 
 	BOOST_AUTO_TEST_CASE (Player_constructor)
 {
-	BOOST_CHECK_EQUAL(test_player->getName().test_player_name);
-	BOOST_CHECK_EQUAL(test_player->getGovernment()->getName().test_government_name);
-	BOOST_CHECK_EQUAL(test_player->getGoalEntry()->getName().test_goalentry_name);
+	BOOST_CHECK_EQUAL(test_player->getName(), test_player_name);
+	BOOST_CHECK_EQUAL(test_player->getGovernment()->getName(), governmentFixture.test_government_name);
 	// TODO startingUnits
 }
 

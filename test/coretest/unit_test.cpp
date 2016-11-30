@@ -5,15 +5,16 @@
 #include <unit_fixture.hpp>
 #include <map_fixture.hpp>
 #include <player_fixture.hpp>
+#include <random_fixture.hpp>
 
 // TODO aufteilen
 BOOST_FIXTURE_TEST_SUITE( Unit_test, Unit_Fixture )
 
 	BOOST_AUTO_TEST_CASE (Unit_constructor )
 {
-	const boost::shared_ptr<Units> test_units(new Units());
-	// facility
-	boost::shared_ptr<Unit> test_unit1(new Unit(Player_Fixture::instance().test_player, unitType1.test_map->getLocation(0), test_units));
+	
+	// scv
+	boost::shared_ptr<Unit> test_unit1(boost::shared_ptr<Unit>(new Unit(playerFixture.test_player, broodwar.getRules()->getUnitType(broodwar.unit_id_map.find(Broodwar::SCV)->second), mapFixture.test_map->getLocationByIndex(0), test_units)));
 	test_units->addUnit(test_unit1);
 
 	BOOST_CHECK_EQUAL(test_unit1->isConstructing(), false);
@@ -21,12 +22,12 @@ BOOST_FIXTURE_TEST_SUITE( Unit_test, Unit_Fixture )
 	std::list<boost::shared_ptr<Unit> > unit_list;
 	unit_list.push_back(test_unit1);
 
-	// unit to build
-	boost::shared_ptr<Unit> test_unit2(new Unit(Player_Fixture::instance().test_player, unitType2.test_map->getLocation(0), test_units, 1, test_construction_time, unit_list));
+	// marine
+	boost::shared_ptr<Unit> test_unit2(boost::shared_ptr<Unit>(new Unit(playerFixture.test_player, broodwar.getRules()->getUnitType(broodwar.unit_id_map.find(Broodwar::SPACE_MARINE)->second), mapFixture.test_map->getLocationByIndex(0), test_units, 1, test_construction_time, unit_list)));
 	test_units->addUnit(test_unit2);
 	
-	BOOST_CHECK_EQUAL(test_unit2->getLocation()->getName().test_map->getLocation(0)->getName());
-	BOOST_CHECK_EQUAL(test_unit2->getPlayerId().test_player->getId());
+	BOOST_CHECK_EQUAL(test_unit2->getLocation()->getName(), mapFixture.test_map->getLocationByIndex(0)->getName());
+	BOOST_CHECK_EQUAL(test_unit2->getPlayerId(), playerFixture.test_player->getId());
 	BOOST_CHECK_EQUAL(test_unit2->getRemainingConstructionTime(), test_construction_time);
 	BOOST_CHECK_EQUAL(test_unit2->getRemainingMovementTime(), 0);
 	BOOST_CHECK_EQUAL(test_unit2->isUnderConstruction(), true);
@@ -38,27 +39,27 @@ BOOST_FIXTURE_TEST_SUITE( Unit_test, Unit_Fixture )
 	BOOST_CHECK_EQUAL(test_unit2->isUnderConstruction(), false);
 	BOOST_CHECK_EQUAL(test_unit1->isConstructing(), false);
 
-	test_unit1->setGoalLocation(Map_Fixture::instance().test_map->getLocation(0));
-	test_unit2->setGoalLocation(Map_Fixture::instance().test_map->getLocation(0));
+	test_unit1->setGoalLocation(mapFixture.test_map->getLocationByIndex(0));
+	test_unit2->setGoalLocation(mapFixture.test_map->getLocationByIndex(0));
 	BOOST_CHECK_EQUAL(test_unit1->getRemainingMovementTime(), 0);
 	BOOST_CHECK_EQUAL(test_unit2->getRemainingMovementTime(), 0);
 
-	test_unit1->setGoalLocation(Map_Fixture::instance().test_map->getLocation(1));
-	test_unit2->setGoalLocation(Map_Fixture::instance().test_map->getLocation(2));
-	unsigned int distance1 = Map_Fixture::instance().test_map->getLocationAt(1)->getGroundDistance(Map_Fixture::instance().test_map->getLocationAt(2));
-	unsigned int distance2 = Map_Fixture::instance().test_map->getLocationAt(1)->getAirDistance(Map_Fixture::instance().test_map->getLocationAt(33));
+	test_unit1->setGoalLocation(mapFixture.test_map->getLocationByIndex(0));
+	test_unit2->setGoalLocation(mapFixture.test_map->getLocationByIndex(1));
+	unsigned int distance1 = mapFixture.test_map->getLocationByIndex(0)->getGroundDistance(mapFixture.test_map->getLocationByIndex(1));
+	unsigned int distance2 = mapFixture.test_map->getLocationByIndex(0)->getAirDistance(mapFixture.test_map->getLocationByIndex(2));
 	unsigned int time1 = distance1 / test_unit1->getUnitType()->getSpeed();
 	unsigned int time2 = distance2 / test_unit2->getUnitType()->getSpeed();
 
 	for(unsigned int i = 0; i < time1; i++) {
 		test_unit1->process();
 	}
-	BOOST_CHECK_EQUAL(test_unit1->getLocation()->getName().test_map->getLocation(1)->getName());
+	BOOST_CHECK_EQUAL(test_unit1->getLocation()->getName(), mapFixture.test_map->getLocationByIndex(0)->getName());
 
 	for(unsigned int i = 0; i < time2; i++) {
 		test_unit2->process();
 	}
-	BOOST_CHECK_EQUAL(test_unit2->getLocation()->getName().test_map->getLocation(2)->getName());
+	BOOST_CHECK_EQUAL(test_unit2->getLocation()->getName(), mapFixture.test_map->getLocationByIndex(1)->getName());
 
 			
 	/*

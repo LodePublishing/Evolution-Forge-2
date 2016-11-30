@@ -1,28 +1,28 @@
 #ifndef _COREFIXTURE_RULESFIXTURE_HPP
 #define _COREFIXTURE_RULESFIXTURE_HPP
 
-#pragma warning(push, 0)  
-#include <boost/smart_ptr.hpp>
-#pragma warning(pop)
-
 #include <rules.hpp>
+
+#include "race_fixture.hpp"
+#include "unittype_fixture.hpp"
 
 struct Rules_Fixture
 {
+	const Race_Fixture raceFixture;
+	const UnitType_Fixture unitTypeFixture;
+
 	const std::string test_filename_xml;
 	const std::string test_file_name;
 	const std::string test_rules_name;
-
-	const boost::shared_ptr<const UnitType> unitType1;
-	const boost::shared_ptr<const UnitType> unitType2;
+	const std::list<boost::shared_ptr<const UnitType> > test_unittype_list;
 
 	const boost::shared_ptr<const Rules> test_rules;
 
 	Rules_Fixture();
-	~Rules_Fixture();
+	virtual ~Rules_Fixture();
 
 private:
-	const std::list<boost::shared_ptr<const UnitType> > init_unittypelist_helper();		
+	const std::list<boost::shared_ptr<const UnitType> > init_unittypelist_helper();
 };
 
 

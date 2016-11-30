@@ -1,5 +1,5 @@
-#ifndef _CORE_GOAL_HPP
-#define _CORE_GOAL_HPP
+#ifndef _GOAL_GOAL_HPP
+#define _GOAL_GOAL_HPP
 
 #pragma warning(push, 0)  
 #include <boost/serialization/base_object.hpp>
@@ -95,4 +95,4 @@ inline unsigned int Goal::getCount() const {
 }
 
 
-#endif // _CORE_GOAL_HPP
+#endif // _GOAL_GOAL_HPP

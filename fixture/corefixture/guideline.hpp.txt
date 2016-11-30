@@ -1,0 +1,20 @@
+#ifndef _COREFIXTURE_<NAME>FIXTURE_HPP
+#define _COREFIXTURE_<NAME>FIXTURE_HPP
+
+#pragma warning(push, 0)  
+#include <boost/smart_ptr.hpp>
+#pragma warning(pop)
+
+#include <<.hpps from CORE project>>
+
+struct <NAME>_Fixture
+{
+	const <all required fields for initialization, no other fixtures>;
+
+	const boost::shared_ptr<const <NAME>> test_<NAME>;
+	
+	<NAME>_Fixture();	
+	~<NAME>_Fixture();
+};
+
+#endif // _COREFIXTURE_<NAME>FIXTURE_HPP

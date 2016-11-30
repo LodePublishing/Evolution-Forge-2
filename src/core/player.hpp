@@ -4,10 +4,9 @@
 #include <uuid.hpp>
 
 #include "government.hpp"
-#include "goalentry.hpp"
 #include "units.hpp"
 
-#include "globalstorage.hpp"
+#include <globalstorage.hpp>
 
 /**
 * Player holds global information unique to each player like
@@ -19,13 +18,11 @@ class Player : public UUID<Player>
 public:
 	Player(const std::string& name,
 		const boost::shared_ptr<const Government> government,
-		const boost::shared_ptr<const GoalEntry> goalEntry,
 		const boost::shared_ptr<const Units> startingUnits);
 
 	Player(const boost::uuids::uuid id,
 		const std::string& name,
 		const boost::shared_ptr<const Government> government,
-		const boost::shared_ptr<const GoalEntry> goalEntry,
 		const boost::shared_ptr<const Units> startingUnits);
 
 	~Player();	
@@ -33,8 +30,6 @@ public:
 	const std::string& getName() const;
 	const boost::shared_ptr<const Government> getGovernment() const;
 	boost::uuids::uuid getGovernmentId() const;
-	const boost::shared_ptr<const GoalEntry> getGoalEntry()  const;
-	boost::uuids::uuid getGoalEntryId() const;
 	const boost::shared_ptr<const Units> getStartingUnits() const;
 
 private:
@@ -50,7 +45,6 @@ private:
 		const boost::uuids::uuid& id = player->getId();
 		const std::string& name = player->getName();
 		const boost::uuids::uuid& governmentId = player->getGovernmentId();
-		const boost::uuids::uuid& goalEntryId = player->getGoalEntryId();
 		const boost::shared_ptr<const Units>& startingUnits = player->getStartingUnits();
 
 		if(version > 0) {
@@ -59,7 +53,6 @@ private:
 		ar & BOOST_SERIALIZATION_NVP(id)
 		   & BOOST_SERIALIZATION_NVP(name)
 		   & BOOST_SERIALIZATION_NVP(governmentId)
-		   & BOOST_SERIALIZATION_NVP(goalEntryId)
 		   & BOOST_SERIALIZATION_NVP(startingUnits);
 	}
 
@@ -69,26 +62,22 @@ private:
 		boost::uuids::uuid id;
 		std::string name;
 		boost::uuids::uuid governmentId;
-		boost::uuids::uuid goalEntryId;
 		boost::shared_ptr<const Units> startingUnits;
 		
 		ar & BOOST_SERIALIZATION_NVP(id)
 		   & BOOST_SERIALIZATION_NVP(name)
 		   & BOOST_SERIALIZATION_NVP(governmentId)
-		   & BOOST_SERIALIZATION_NVP(goalEntryId)
 		   & BOOST_SERIALIZATION_NVP(startingUnits);
 		   
 		if(version > 0) {
 		}
 
-		::new(player)Player(id, name, GlobalStorage::instance().getGovernment(governmentId), GlobalStorage::instance().getGoalEntry(goalEntryId), startingUnits);
+		::new(player)Player(id, name, GlobalStorage::instance().getGovernment(governmentId), startingUnits);
 	}
 
 	const std::string name;
 	const boost::shared_ptr<const Government> government;
 	const boost::uuids::uuid governmentId;
-	const boost::shared_ptr<const GoalEntry> goalEntry;
-	const boost::uuids::uuid goalEntryId;
 	const boost::shared_ptr<const Units> startingUnits;
 
 	Player& operator=(const Player& other);
@@ -104,14 +93,6 @@ inline const boost::shared_ptr<const Government> Player::getGovernment() const {
 
 inline boost::uuids::uuid Player::getGovernmentId() const {
 	return governmentId;
-}
-
-inline const boost::shared_ptr<const GoalEntry> Player::getGoalEntry()  const {
-	return goalEntry;
-}
-
-inline boost::uuids::uuid Player::getGoalEntryId() const {
-	return goalEntryId;
 }
 
 inline const boost::shared_ptr<const Units> Player::getStartingUnits() const {

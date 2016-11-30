@@ -122,7 +122,7 @@ inline const std::list<boost::shared_ptr<Unit> >& Units::getUnitList() const {
 
 inline const boost::shared_ptr<Unit>& Units::getUnit(const boost::uuids::uuid unitId) const {
 	if(unitMap.find(unitId) == unitMap.end()) {
-		throw "Invalid unit id!";
+		throw std::exception();
 	}
 	return unitMap.find(unitId)->second;
 }
@@ -181,6 +181,7 @@ inline unsigned int Units::getGlobalTotal(const UnitGlobalKey& key) const {
 inline void Units::addOneLocalAvailable(const UnitLocalKey& key) {
 	++localAvailable[key];
 
+	addOneLocalNeutralAvailable(UnitLocalNeutralKey(key.locationId, key.unitTypeId));
 	addOneGlobalAvailable(UnitGlobalKey(key.playerId, key.unitTypeId));
 }
 
@@ -189,7 +190,7 @@ inline void Units::removeOneLocalAvailable(const UnitLocalKey& key) {
 
 	--localAvailable[key];
 
-	removeOneLocalNeutralTotal(UnitLocalNeutralKey(key.locationId, key.unitTypeId));
+	removeOneLocalNeutralAvailable(UnitLocalNeutralKey(key.locationId, key.unitTypeId));
 	removeOneGlobalAvailable(UnitGlobalKey(key.playerId, key.unitTypeId));
 }
 

@@ -45,8 +45,10 @@ enum eUnitResourceType
 
 // facility is lost immediately after construction is started
 	FACILITY_IS_LOST_RESOURCE,
-// neutral facility (e.g. vespene geysir, gold mine etc.) is lost immediately after construction is started
+// neutral facility is lost immediately after construction is started TODO Example?
 	NEUTRAL_FACILITY_IS_LOST_RESOURCE,
+// neutral facility (e.g. vespene geysir, gold mine etc.) is needed as long as this building stands
+	NEUTRAL_FACILITY_IS_NEEDED_ALWAYS_RESOURCE,
 // facility continues to exist (i.e. provide technology, supply etc.) until construction is complete
 	FACILITY_IS_MORPHING_RESOURCE,
 // facility is used during the building but is not lost at the end
@@ -60,10 +62,15 @@ enum eUnitResourceType
 	// this unit gets created when the construction is finished
 	UNIT_CREATE_RESOURCE,
 
+	// create one unit every X time units, e.g. larvae, but also resource points (CoH)
+	UNIT_CREATE_REGULARLY_RESOURCE, 
+
 	// e.g. new local harvesting technology
 	AFFECTS_RESOURCE_GATHERING_LOCALLY,
 	// e.g. new harvesting technology
 	AFFECTS_RESOURCE_GATHERING_GLOBALLY,
+
+	IS_SPEED_UPGRADE, // count = time (e.g. stim), 0 = permanent
 
 	NOT_BUILDABLE,
 

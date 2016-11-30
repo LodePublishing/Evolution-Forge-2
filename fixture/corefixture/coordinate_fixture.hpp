@@ -15,7 +15,7 @@ struct Coordinate_Fixture
 	const boost::shared_ptr<const Coordinate> test_coordinate;
 
 	Coordinate_Fixture();
-	~Coordinate_Fixture();
+	virtual ~Coordinate_Fixture();
 };
 
 #endif // _COREFIXTURE_COORDINATEFIXTURE_HPP

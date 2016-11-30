@@ -14,7 +14,7 @@ struct Government_Fixture
 	const boost::shared_ptr<const Government> test_government;
 	
 	Government_Fixture();	
-	~Government_Fixture();
+	virtual ~Government_Fixture();
 };
 
 #endif // _COREFIXTURE_GOVERNMENTFIXTURE_HPP

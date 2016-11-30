@@ -27,6 +27,7 @@ public:
 	// it is a list of list, all lists in the top list are ORed (makes only sense with prerequisites)
 	const std::list<std::list<boost::uuids::uuid> >& getUnitTypeIDList() const;
 	
+	static const UnitResourceType NOT_BUILDABLE_TYPE;
 	
 private:
 	friend class boost::serialization::access;

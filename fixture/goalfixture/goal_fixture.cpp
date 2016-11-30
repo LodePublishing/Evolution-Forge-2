@@ -3,8 +3,9 @@
 #include <boost/generator_iterator.hpp>
 #pragma warning(pop)
 
-#include "goal_fixture.hpp"
 #include <random_fixture.hpp>
+
+#include "goal_fixture.hpp"
 
 Goal_Fixture::Goal_Fixture():
 	test_unitTypeId(boost::uuids::random_generator()()),

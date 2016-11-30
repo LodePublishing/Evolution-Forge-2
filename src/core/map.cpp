@@ -14,8 +14,8 @@ Map::Map(const std::string& name, const std::vector<boost::shared_ptr<Location> 
 	locationVector(locationVector),
 	pathList(pathList),
 	locationMap(),
-	positionIndexMap(),
-	indexPositionMap(),
+	idIndexMap(),
+	indexIdMap(),
 	minDistance()
 {
 	processLocations();
@@ -30,8 +30,8 @@ Map::Map(const boost::uuids::uuid id, const std::string& name, const std::vector
 	locationVector(locationVector),
 	pathList(pathList),
 	locationMap(),
-	positionIndexMap(),
-	indexPositionMap(),
+	idIndexMap(),
+	indexIdMap(),
 	minDistance()
 {
 	processLocations();
@@ -43,48 +43,35 @@ Map::Map(const boost::uuids::uuid id, const std::string& name, const std::vector
 Map::~Map()
 {}
 
-
 void Map::processLocations() {
 	int index = 0;
 	for(std::vector<boost::shared_ptr<Location> >::const_iterator i = locationVector.begin(); i != locationVector.end(); i++) {
-		positionIndexMap.insert(std::pair<const unsigned int, const unsigned int>((*i)->getPosition(), index));
-		indexPositionMap.insert(std::pair<const unsigned int, const unsigned int>(index, (*i)->getPosition()));
-		locationMap.insert(std::pair<const unsigned int, const boost::shared_ptr<Location> >((*i)->getPosition(), *i));
+		idIndexMap.insert(std::pair<const boost::uuids::uuid, const unsigned int>((*i)->getId(), index));
+		indexIdMap.insert(std::pair<const unsigned int, const boost::uuids::uuid>(index, (*i)->getId()));
+		locationMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<Location> >((*i)->getId(), *i));
 		index++;
 	}
 }
 
+// needs to be called after deserialization
+void Map::initialize() {
+	processLocations();
+
+	for(std::list<boost::shared_ptr<const Path> >::const_iterator i = pathList.begin(); i != pathList.end(); i++) {
+		const boost::shared_ptr<Location> source_location = getLocation((*i)->getSourceLocationId());
+		source_location->addPath(*i);
+	}
+}
+
+
+
 void Map::processPaths() {
 	for(std::list<boost::shared_ptr<const Path> >::const_iterator i = pathList.begin(); i != pathList.end(); i++) {
 		// TODO Test for multiple paths for the same source&target?
-		getLocationAt((*i)->getSourceLocationPosition())->addPath(*i);
+		getLocation((*i)->getSourceLocationId())->addPath(*i);
 	}
 
 	// "paths" are initialized at the end of the initialization process (see "initialize", they need to be in the correct sequence, first all paths from locations 0, then from location 1 etc.
-}
-
-const boost::shared_ptr<Location> Map::getLocationAt(const unsigned int position) const {
-	std::map<const unsigned int, const boost::shared_ptr<Location> >::const_iterator locmapentry = locationMap.find(position);
-	if(locmapentry == locationMap.end()) {
-		throw "No location found at that position";
-	}
-	return locmapentry->second;
-}
-
-unsigned int Map::getLocationIndex(const unsigned int position) const {
-	std::map<const unsigned int, const unsigned int>::const_iterator indexentry = positionIndexMap.find(position);
-	if(indexentry == positionIndexMap.end()) {
-		throw "No index found at that position";
-	}
-	return indexentry->second;
-}
-
-unsigned int Map::getLocationPosition(const unsigned int index) const {
-	std::map<const unsigned int, const unsigned int>::const_iterator positionentry = indexPositionMap.find(index);
-	if(positionentry == indexPositionMap.end()) {
-		throw "No index found at that position";
-	}
-	return positionentry->second;
 }
 
 const std::string Map::toString() const {
@@ -108,7 +95,7 @@ void Map::calculateDistanceMap() {
 
 	for(std::list<boost::shared_ptr<const Path> >::const_iterator j = pathList.begin(); j != pathList.end(); j++) {
 		weights.push_back((*j)->getDistance());
-		add_edge(getLocationIndex((*j)->getSourceLocationPosition()), getLocationIndex((*j)->getTargetLocationPosition()), g);
+		add_edge(getLocationIndex((*j)->getSourceLocationId()), getLocationIndex((*j)->getTargetLocationId()), g);
 
 		//std::cout << getLocationIndex((*j)->getSourceLocationPosition()) << " -> " << getLocationIndex((*j)->getTargetLocationPosition()) << " = " << (*j)->getDistance() << std::endl;
 	}
@@ -122,28 +109,13 @@ void Map::calculateDistanceMap() {
 	std::vector<unsigned int> d(V, (std::numeric_limits<unsigned int>::max)());
 	minDistance = std::vector<std::vector<unsigned int> >(V,std::vector<unsigned int>(V));
 	johnson_all_pairs_shortest_paths(g, minDistance, distance_map(&d[0]));
-	
-/*	for (int k = 0; k < V; ++k)
-		std::cout << std::setw(5) << k;
-	std::cout << std::endl;
 
-	for (int i = 0; i < V; ++i) {
-		std::cout << std::setw(6) << i << " (" << getLocationPosition(i) << ") -> ";
-		for (int j = 0; j < V; ++j) {
-			if (minDistance[i][j] == (std::numeric_limits<int>::max)())
-				std::cout << std::setw(5) << "inf";
-			else
-				std::cout << std::setw(5) << minDistance[i][j];
-		}
-		std::cout << std::endl;
-	}
-	*/
 	unsigned int j = 0;
 	for(std::vector<boost::shared_ptr<Location> >::const_iterator location = locationVector.begin(); location != locationVector.end(); location++) {
-		std::map<unsigned int, unsigned int> distancemap;
+		std::map<const boost::uuids::uuid, const unsigned int> distancemap;
 		unsigned int i = 0;
 		for(std::vector<boost::shared_ptr<Location> >::const_iterator target_location = locationVector.begin(); target_location != locationVector.end(); target_location++) {
-			distancemap[getLocationPosition(i)] = minDistance[j][i];
+			distancemap.insert(std::pair<const boost::uuids::uuid, const unsigned int>(getLocationId(i), minDistance[j][i]));
 			i++;
 		}
 		(*location)->setDistanceMap(distancemap);
@@ -152,19 +124,26 @@ void Map::calculateDistanceMap() {
 
 }
 
-// needs to be called after deserialization
-void Map::initialize() {
-	int index = 0;
-
-	for(std::vector<boost::shared_ptr<Location> >::const_iterator i = locationVector.begin(); i != locationVector.end(); i++) {
-		locationMap.insert(std::pair<unsigned int, boost::shared_ptr<Location> >((*i)->getPosition(), *i));
-		positionIndexMap.insert(std::pair<unsigned int, unsigned int>((*i)->getPosition(), index));
-		indexPositionMap.insert(std::pair<unsigned int, unsigned int>(index, (*i)->getPosition()));
-		index++;
+unsigned int Map::getLocationIndex(const boost::uuids::uuid locationId) const {
+	std::map<const boost::uuids::uuid, const unsigned int>::const_iterator indexentry = idIndexMap.find(locationId);
+	if(indexentry == idIndexMap.end()) {
+		throw std::exception();
 	}
+	return indexentry->second;
+}
 
-	for(std::list<boost::shared_ptr<const Path> >::const_iterator i = pathList.begin(); i != pathList.end(); i++) {
-		const boost::shared_ptr<Location> source_location = getLocationAt((*i)->getSourceLocationPosition());
-		source_location->addPath(*i);
+const boost::shared_ptr<Location> Map::getLocation(const boost::uuids::uuid locationId) const {
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<Location> >::const_iterator locationentry = locationMap.find(locationId);
+		if(locationentry == locationMap.end()) {
+		throw std::exception();
 	}
+	return locationentry->second;
+}
+
+const boost::uuids::uuid Map::getLocationId(const unsigned int index) const {
+	std::map<const unsigned int, const boost::uuids::uuid>::const_iterator identry = indexIdMap.find(index);
+	if(identry == indexIdMap.end()) {
+		throw std::exception();
+	}
+	return identry->second;
 }

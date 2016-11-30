@@ -20,8 +20,8 @@ class Path;
 class Location : public UUID<Location>, public Coordinate
 {
 public:
-	Location(const boost::uuids::uuid id, const std::string& name, const unsigned int position, const signed int x, const signed int y);
-	Location(const std::string& name, const unsigned int position, const signed int x, const signed int y);
+	Location(const boost::uuids::uuid id, const std::string& name, const signed int x, const signed int y);
+	Location(const std::string& name, const signed int x, const signed int y);
 	~Location();
 
 	void addPath(const boost::shared_ptr<const Path> path);
@@ -29,12 +29,11 @@ public:
 	unsigned int getAirDistance(const boost::shared_ptr<const Location> targetLocation) const;
 	unsigned int getGroundDistance(const boost::shared_ptr<const Location> targetLocation) const;
 
-	unsigned int getPosition() const;
 	const std::string& getName() const;
 	const std::string toString() const;
 	const std::list<boost::shared_ptr<const Path> >& getPaths() const;
 	
-	void setDistanceMap(const std::map<unsigned int, unsigned int> distanceMap);
+	void setDistanceMap(const std::map<const boost::uuids::uuid, const unsigned int> distanceMap);
 
 	static const unsigned int MAX_DISTANCE;
 
@@ -52,7 +51,6 @@ private:
 
 		const boost::uuids::uuid& id = location->getId();
 		const std::string& name = location->getName();
-		const unsigned int& position = location->getPosition();
 		const signed int& x = location->getX();
 		const signed int& y = location->getY();
 
@@ -61,7 +59,6 @@ private:
 
 		ar & BOOST_SERIALIZATION_NVP(id)
 		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(position)
 		   & BOOST_SERIALIZATION_NVP(x)
 		   & BOOST_SERIALIZATION_NVP(y);
 	}
@@ -71,35 +68,28 @@ private:
 	{
 		boost::uuids::uuid id;
 		std::string name;
-		unsigned int position;
 		signed int x;
 		signed int y;
 
 		ar & BOOST_SERIALIZATION_NVP(id)
 		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(position)
 		   & BOOST_SERIALIZATION_NVP(x)
 		   & BOOST_SERIALIZATION_NVP(y);
 
 		if(version > 0) {
 		}
 
-		::new(location)Location(id, name, position, x, y);
+		::new(location)Location(id, name, x, y);
 	}
 
 	const std::string name;
-	const unsigned int position;
 
 	std::list<boost::shared_ptr<const Path> > paths;	
 	// key is the location position
-	std::map<unsigned int, unsigned int> distanceMap;
+	std::map<const boost::uuids::uuid, const unsigned int> distanceMap;
 
 	Location& operator=(const Location& object);
 };
-
-inline unsigned int Location::getPosition() const {
-	return position;
-}
 
 inline const std::string& Location::getName() const {
 	return name;
@@ -109,7 +99,7 @@ inline const std::list<boost::shared_ptr<const Path> >& Location::getPaths() con
 	return paths;
 }
 
-inline void Location::setDistanceMap(const std::map<unsigned int, unsigned int> distanceMap) {
+inline void Location::setDistanceMap(const std::map<const boost::uuids::uuid, const unsigned int> distanceMap) {
 	this->distanceMap = distanceMap;
 }
 

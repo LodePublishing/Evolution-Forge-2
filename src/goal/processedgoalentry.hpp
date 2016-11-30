@@ -1,14 +1,14 @@
-#ifndef _CORE_PROCESSEDGOALENTRY_HPP
-#define _CORE_PROCESSEDGOALENTRY_HPP
+#ifndef _GOAL_PROCESSEDGOALENTRY_HPP
+#define _GOAL_PROCESSEDGOALENTRY_HPP
 
 #include <map>
 
-#include <goalentry.hpp>
 #include <units.hpp>
 #include <rules.hpp>
 #include <map.hpp>
 #include <player.hpp>
 
+#include "goalentry.hpp"
 #include "processedgoal.hpp"
 
 
@@ -20,7 +20,7 @@ public:
 
 	const std::list<std::list<std::list<Goal> > >& getGoalList() const;
 	const std::map<UnitLocalNeutralKey, ProcessedGoal>& getProcessedGoalMap() const;
-	const std::list<unsigned int>& getBuildableUnits(const unsigned int locationId);
+	const std::list<boost::uuids::uuid>& getBuildableUnits(const boost::uuids::uuid locationId) const;
 
 	std::string getGoalString() const;
 	void addGoal(std::list<std::list<Goal> >& goal);
@@ -36,7 +36,7 @@ private:
 	// fill this list with all goals from goalEntry
 	// then add all steps in between as a goal (for fitness calculation)
 	std::list<std::list<std::list<Goal> > > goalList;
-	std::map<const unsigned int, std::list<unsigned int> > buildableUnits;
+	std::map<const boost::uuids::uuid, std::list<boost::uuids::uuid> > buildableUnits; // location -> unitTypeList
 
 	// TODO Buildable at start
 	//TODO once buildableUnits are calculated make a tree, starting with the start units -> this when processing the build order!
@@ -73,8 +73,12 @@ private:
 //		const bool isError(const unsigned int j, const unsigned int unit) const;
 };
 
-inline const std::list<unsigned int>& ProcessedGoalEntry::getBuildableUnits(const unsigned int locationId) {
-	return buildableUnits[locationId];
+inline const std::list<boost::uuids::uuid>& ProcessedGoalEntry::getBuildableUnits(const boost::uuids::uuid locationId) const {
+	const std::map<const boost::uuids::uuid, std::list<boost::uuids::uuid> >::const_iterator i = buildableUnits.find(locationId);
+	if(i == buildableUnits.end()) {
+		throw std::exception();
+	}
+	return i->second;
 }
 
 inline const std::map<UnitLocalNeutralKey, ProcessedGoal>& ProcessedGoalEntry::getProcessedGoalMap() const {
@@ -86,4 +90,4 @@ inline const std::list<std::list<std::list<Goal> > >& ProcessedGoalEntry::getGoa
 }
 
 
-#endif
+#endif // _GOAL_PROCESSEDGOALENTRY_HPP

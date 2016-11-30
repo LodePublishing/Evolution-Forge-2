@@ -7,7 +7,6 @@
 
 #include <goal.hpp>
 
-#include <random_fixture.hpp>
 
 struct Goal_Fixture
 {
@@ -20,7 +19,7 @@ struct Goal_Fixture
 	const boost::shared_ptr<const Goal> test_goal;
 	
 	Goal_Fixture();
-	~Goal_Fixture();
+	virtual ~Goal_Fixture();
 };
 
 #endif // _COREFIXTURE_GOALFIXTURE_HPP

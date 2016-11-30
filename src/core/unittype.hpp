@@ -9,6 +9,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/assign/list_of.hpp>
 #pragma warning(pop)
 
 #include <uuid.hpp>
@@ -17,47 +18,45 @@
 #include "race.hpp"
 #include "enums/unitmovementtypeenums.hpp"
 
-#include "globalstorage.hpp"
 
 class UnitType : public UUID<UnitType>
 {
 public:
-
+	
 	UnitType(const boost::uuids::uuid id,
 		const std::string& name, 
-		const boost::shared_ptr<const Race> race,
-		const unsigned int buildTime,
-		const unsigned int maxCount,		
-		const bool corporeal,
-		const eUnitMovementType movementType, 
-		const unsigned int speed,
-		const std::list<UnitResourceType>& resources);
+		const boost::shared_ptr<const Race> race, // TODO relevant?
+		const std::list<UnitResourceType>& resources = boost::assign::list_of(UnitResourceType::NOT_BUILDABLE_TYPE),
+		const bool corporeal = false,
+		const unsigned int maxCount = 0,
+		const unsigned int buildTime = 0,		
+		const eUnitMovementType movementType = NO_MOVEMENT_TYPE,
+		const unsigned int speed = 0,
+		const unsigned int upgradedSpeed = 0);
 
 	UnitType(const std::string& name, 
 		const boost::shared_ptr<const Race> race,
-		const unsigned int buildTime,
-		const unsigned int maxCount,		
-		const bool corporeal,
-		const eUnitMovementType movementType, 
-		const unsigned int speed,
-		const std::list<UnitResourceType>& resources);
+		const std::list<UnitResourceType>& resources = boost::assign::list_of(UnitResourceType::NOT_BUILDABLE_TYPE),
+		const bool corporeal = false,
+		const unsigned int maxCount = 0,
+		const unsigned int buildTime = 0,
+		const eUnitMovementType movementType = NO_MOVEMENT_TYPE, 
+		const unsigned int speed = 0,
+		const unsigned int upgradedSpeed = 0);
 	
 	~UnitType();
 
 	const std::string& getName() const;
-	unsigned int getBuildTime() const;
-	boost::uuids::uuid getRaceId() const;	
-	unsigned int getSpeed() const;
-	eUnitMovementType getMovementType() const;
-	bool isCorporeal() const;
-
-	const std::list<UnitResourceType>& getResources() const;	// TODO evtl Map machen
-
 	const boost::shared_ptr<const Race> getRace() const;
+	const boost::uuids::uuid getRaceId() const;
+	const std::list<UnitResourceType>& getResources() const; // TODO evtl Map machen
+	bool isCorporeal() const;
 	unsigned int getMaxCount() const;
+	unsigned int getBuildTime() const;	
+	eUnitMovementType getMovementType() const;
+	unsigned int getSpeed() const;
+	unsigned int getUpgradedSpeed();
 
-	static const unsigned int MAX_COUNT;
-	
 private:
 	friend class boost::serialization::access;
 
@@ -65,73 +64,21 @@ private:
 	void serialize(Archive &ar, const unsigned int version)
 	{ }
 
-	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const UnitType* unitType, const unsigned int version) { 
-
-		const boost::uuids::uuid& id = unitType->getId();
-		const std::string& name = unitType->getName();
-		const boost::uuids::uuid& raceId = unitType->getRaceId();
-		const unsigned int& buildTime = unitType->getBuildTime();
-		const unsigned int& maxCount = unitType->getMaxCount();
-		const bool& corporeal = unitType->isCorporeal();
-		const eUnitMovementType& movementType = unitType->getMovementType();
-		const unsigned int& speed = unitType->getSpeed();
-		const std::list<UnitResourceType>& resources = unitType->getResources();
-
-		if(version > 0) {
-		}
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(raceId)
-		   & BOOST_SERIALIZATION_NVP(buildTime)
-		   & BOOST_SERIALIZATION_NVP(maxCount)
-		   & BOOST_SERIALIZATION_NVP(corporeal)
-		   & BOOST_SERIALIZATION_NVP(movementType)
-		   & BOOST_SERIALIZATION_NVP(speed)
-		   & BOOST_SERIALIZATION_NVP(resources);
-	}
-
-	template<class Archive> 
-	inline friend void load_construct_data(Archive& ar, UnitType*& unitType, const unsigned int version)
-	{
-		boost::uuids::uuid id;
-		std::string name;
-		boost::uuids::uuid raceId;
-		unsigned int buildTime;
-		unsigned int maxCount;
-		bool corporeal;
-		eUnitMovementType movementType;
-		unsigned int speed;
-		std::list<UnitResourceType> resources;
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(raceId)
-		   & BOOST_SERIALIZATION_NVP(buildTime)
-		   & BOOST_SERIALIZATION_NVP(maxCount)
-		   & BOOST_SERIALIZATION_NVP(corporeal)
-		   & BOOST_SERIALIZATION_NVP(movementType)
-		   & BOOST_SERIALIZATION_NVP(speed)
-		   & BOOST_SERIALIZATION_NVP(resources);
-
-		if(version > 0) {
-		}
-
-		::new(unitType)UnitType(id, name, GlobalStorage::instance().getRace(raceId), buildTime, maxCount, corporeal, movementType, speed, resources);
-	}
+	template<class Archive> friend void save_construct_data(Archive &ar, const UnitType* unitType, const unsigned int version);
+	template<class Archive> friend void load_construct_data(Archive& ar, UnitType*& unitType, const unsigned int version);
 
 	// mandatory fields
 	const std::string name;
 	const boost::shared_ptr<const Race> race;
 	const boost::uuids::uuid raceId;
-	const unsigned int buildTime;
+	const std::list<UnitResourceType> resources;
 	// maximal number of units of this type a player can have
 	const unsigned int maxCount;
+	const unsigned int buildTime;
 	const bool corporeal;
 	const eUnitMovementType movementType;
-	const unsigned int speed;
-	const std::list<UnitResourceType> resources;
+	const unsigned int speed;	
+	const unsigned int upgradedSpeed;
 	
 	UnitType& operator=(const UnitType& other);	
 };
@@ -156,7 +103,7 @@ inline const boost::shared_ptr<const Race> UnitType::getRace() const {
 	return race;
 }
 
-inline boost::uuids::uuid UnitType::getRaceId() const {
+inline const boost::uuids::uuid UnitType::getRaceId() const {
 	return raceId;
 }
 
@@ -166,6 +113,10 @@ inline bool UnitType::isCorporeal() const {
 
 inline unsigned int UnitType::getSpeed() const {
 	return speed;
+}
+
+inline unsigned int UnitType::getUpgradedSpeed() const {
+	return upgradedSpeed;
 }
 
 inline eUnitMovementType UnitType::getMovementType() const {

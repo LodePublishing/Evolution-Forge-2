@@ -14,8 +14,8 @@ struct Distance_Fixture
 
 	const boost::shared_ptr<const Distance> test_distance;
 
-	~Distance_Fixture();
 	Distance_Fixture();
+	virtual ~Distance_Fixture();
 };
 
 #endif // _COREFIXTURE_DISTANCEFIXTURE_HPP

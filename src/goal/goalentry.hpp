@@ -1,5 +1,5 @@
-#ifndef _CORE_GOALENTRY_HPP
-#define _CORE_GOALENTRY_HPP
+#ifndef _GOAL_GOALENTRY_HPP
+#define _GOAL_GOALENTRY_HPP
 
 #include <string>
 #include <vector>
@@ -83,5 +83,5 @@ inline const std::string& GoalEntry::getName() const {
 }
 
 
-#endif // _CORE_GOALENTRY_HPP
+#endif // _GOAL_GOALENTRY_HPP
 

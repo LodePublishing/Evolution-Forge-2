@@ -1,5 +1,5 @@
-#ifndef _CORE_DISTANCE_HPP
-#define _CORE_DISTANCE_HPP
+#ifndef _MISC_DISTANCE_HPP
+#define _MISC_DISTANCE_HPP
 
 // is similar to the SDL version "size"
 
@@ -95,5 +95,4 @@ inline unsigned int Distance::getLength() const {
 	return static_cast<unsigned int>(sqrt(static_cast<float>(width * width + height * height)));
 }
 
-#endif // _CORE_DISTANCE_HPP
-
+#endif // _MISC_DISTANCE_HPP

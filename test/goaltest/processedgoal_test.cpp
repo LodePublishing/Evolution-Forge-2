@@ -1,7 +1,3 @@
-#ifdef WIN32
-	#define BOOST_TEST_MODULE GoalTest
-#endif
-
 #pragma warning(push, 0)  
 #include <boost/test/unit_test.hpp>
 #pragma warning(pop)

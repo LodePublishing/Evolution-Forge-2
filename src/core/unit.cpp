@@ -37,9 +37,9 @@ Unit::Unit(
 	unitLocalNeutralKey(location->getId(), unitType->getId()),
 	unitGlobalKey(playerId, unitType->getId())
 {
+	// TODO sanity check? currently you can produce say a space marine in an SCV...
 	for(std::list<boost::shared_ptr<Unit> >::iterator i = this->occupiedFacilityList.begin(); i != this->occupiedFacilityList.end(); i++) {
 		occupiedFacilityIdList.push_back((*i)->getId());
-		globalUnits->removeOneLocalAvailable((*i)->getLocalKey());
 	}	
 }
 
@@ -94,10 +94,6 @@ void Unit::initialize(const boost::shared_ptr<Units> units) {
 	for(std::list<boost::uuids::uuid>::const_iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
 		constructingUnitList.push_back(units->getUnit(*i));
 	}
-}
-
-void Unit::removeUnit() {
-	globalUnits->removeUnit(shared_from_this());
 }
 
 // remove unit from all occupied facilities

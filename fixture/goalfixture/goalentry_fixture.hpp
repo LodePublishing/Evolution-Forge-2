@@ -18,7 +18,7 @@ struct GoalEntry_Fixture
 	const boost::shared_ptr<const GoalEntry> test_goalentry;
 	
 	GoalEntry_Fixture();
-	~GoalEntry_Fixture();
+	virtual ~GoalEntry_Fixture();
 
 private:
 	const std::list<std::list<std::list<Goal> > > init_goallist_helper();	

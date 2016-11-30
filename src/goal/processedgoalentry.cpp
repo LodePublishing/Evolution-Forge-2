@@ -1,7 +1,10 @@
 #include "processedgoalentry.hpp"
 
 
-ProcessedGoalEntry::ProcessedGoalEntry(const boost::shared_ptr<const GoalEntry> goalEntry, const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Map> map, const boost::shared_ptr<const Units> startingUnits, const boost::shared_ptr<const Rules> rules)
+ProcessedGoalEntry::ProcessedGoalEntry(const boost::shared_ptr<const GoalEntry> goalEntry, const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Map> map, const boost::shared_ptr<const Units> startingUnits, const boost::shared_ptr<const Rules> rules):
+goalList(),
+buildableUnits(),
+processedGoalMap()
 {
 	for(std::list<std::list<std::list<Goal> > >::const_iterator i = goalEntry->getGoalList().begin(); i != goalEntry->getGoalList().end(); i++) {
 		std::list<std::list<Goal> > new_goals_1;
@@ -95,8 +98,8 @@ void ProcessedGoalEntry::calculateReachableUnits(const boost::shared_ptr<const R
 
 					case PRODUCE_SUPPLY_RESOURCE:
 						for(std::vector<boost::shared_ptr<Location> >::const_iterator location2 = map->getLocationVector().begin(); location2 != map->getLocationVector().end(); location2++) {
-							for(std::list<std::list<unsigned int> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
-								for(std::list<unsigned int>::const_iterator l = k->begin(); l != k->end(); l++) {
+							for(std::list<std::list<boost::uuids::uuid> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
+								for(std::list<boost::uuids::uuid>::const_iterator l = k->begin(); l != k->end(); l++) {
 									alsoProduce.push_back(UnitLocalNeutralKey((*location2)->getId(), *l)); 
 								}
 							}
@@ -123,9 +126,9 @@ void ProcessedGoalEntry::calculateReachableUnits(const boost::shared_ptr<const R
 						{
 							bool anyReachable = false;
 
-							for(std::list<std::list<unsigned int> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
+							for(std::list<std::list<boost::uuids::uuid> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
 								bool allReachable = true;
-								for(std::list<unsigned int>::const_iterator l = k->begin(); l != k->end(); l++) {
+								for(std::list<boost::uuids::uuid>::const_iterator l = k->begin(); l != k->end(); l++) {
 									if(!processedGoalMap[UnitLocalNeutralKey((*location)->getId(), *l)].isHaveable()) {
 										allReachable = false;
 										break;
@@ -150,9 +153,9 @@ void ProcessedGoalEntry::calculateReachableUnits(const boost::shared_ptr<const R
 							isResource = true;
 							// any location! -> later: also allow local resources
 							for(std::vector<boost::shared_ptr<Location> >::const_iterator location2 = map->getLocationVector().begin(); location2 != map->getLocationVector().end(); location2++) {
-								for(std::list<std::list<unsigned int> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
+								for(std::list<std::list<boost::uuids::uuid> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
 									bool allReachable = true;
-									for(std::list<unsigned int>::const_iterator l = k->begin(); l != k->end(); l++) {
+									for(std::list<boost::uuids::uuid>::const_iterator l = k->begin(); l != k->end(); l++) {
 										if(!processedGoalMap[UnitLocalNeutralKey((*location2)->getId(), *l)].isHaveable()) {
 											allReachable = false;
 											break;
@@ -176,8 +179,8 @@ void ProcessedGoalEntry::calculateReachableUnits(const boost::shared_ptr<const R
 
 
 					case UNIT_CREATE_RESOURCE:
-						for(std::list<std::list<unsigned int> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
-							for(std::list<unsigned int>::const_iterator l = k->begin(); l != k->end(); l++) {
+						for(std::list<std::list<boost::uuids::uuid> >::const_iterator k = j->getUnitTypeIDList().begin(); k != j->getUnitTypeIDList().end(); k++) {
+							for(std::list<boost::uuids::uuid>::const_iterator l = k->begin(); l != k->end(); l++) {
 								alsoProduce.push_back(UnitLocalNeutralKey((*location)->getId(), *l));
 							}
 						}
@@ -536,8 +539,8 @@ void ProcessedGoalEntry::checkGoalRelated(const boost::shared_ptr<const Rules> r
 					case FACILITY_IS_LOST_RESOURCE:
 					case FACILITY_IS_MORPHING_RESOURCE:
 						{								
-							for(std::list<std::list<unsigned int> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
-								for(std::list<unsigned int>::const_iterator n = m->begin(); n != m->end(); n++) {
+							for(std::list<std::list<boost::uuids::uuid> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
+								for(std::list<boost::uuids::uuid>::const_iterator n = m->begin(); n != m->end(); n++) {
 									// this is a bonus Unit, TODO?
 									if(processedGoalMap[UnitLocalNeutralKey(i->first.locationId, *n)].setWasChecked(true)) {
 										change = true;
@@ -552,9 +555,9 @@ void ProcessedGoalEntry::checkGoalRelated(const boost::shared_ptr<const Rules> r
 						// OR goal bonus auf alle locations
 					case GLOBAL_FACILITY_IS_MORPHING_RESOURCE:
 						{
-							for(std::list<std::list<unsigned int> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
+							for(std::list<std::list<boost::uuids::uuid> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
 								for(std::vector<boost::shared_ptr<Location> >::const_iterator j = map->getLocationVector().begin(); j != map->getLocationVector().end(); j++) {
-									for(std::list<unsigned int>::const_iterator n = m->begin(); n != m->end(); n++) {
+									for(std::list<boost::uuids::uuid>::const_iterator n = m->begin(); n != m->end(); n++) {
 										// this is a bonus Unit, TODO?
 										if(processedGoalMap[UnitLocalNeutralKey((*j)->getId(), *n)].setWasChecked(true)) {
 											change = true;
@@ -572,8 +575,8 @@ void ProcessedGoalEntry::checkGoalRelated(const boost::shared_ptr<const Rules> r
 					case FACILITY_IS_NEEDED_UNTIL_COMPLETE_RESOURCE:
 					case FACILITY_IS_NEEDED_ALWAYS_RESOURCE:	
 						{
-							for(std::list<std::list<unsigned int> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
-								for(std::list<unsigned int>::const_iterator n = m->begin(); n != m->end(); n++) {
+							for(std::list<std::list<boost::uuids::uuid> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
+								for(std::list<boost::uuids::uuid>::const_iterator n = m->begin(); n != m->end(); n++) {
 									if(processedGoalMap[UnitLocalNeutralKey(i->first.locationId, *n)].setWasChecked(true)) {
 										change = true;
 									}
@@ -588,9 +591,9 @@ void ProcessedGoalEntry::checkGoalRelated(const boost::shared_ptr<const Rules> r
 					case NORMAL_GLOBAL_RESOURCE: // global resource
 					case GLOBAL_PREREQUISITE_RESOURCE: // global resource, look anywhere
 						{
-							for(std::list<std::list<unsigned int> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
+							for(std::list<std::list<boost::uuids::uuid> >::const_iterator m = l->getUnitTypeIDList().begin(); m != l->getUnitTypeIDList().end(); m++) {
 								for(std::vector<boost::shared_ptr<Location> >::const_iterator i = map->getLocationVector().begin(); i != map->getLocationVector().end(); i++) {
-									for(std::list<unsigned int>::const_iterator n = m->begin(); n != m->end(); n++) {
+									for(std::list<boost::uuids::uuid>::const_iterator n = m->begin(); n != m->end(); n++) {
 										if(processedGoalMap[UnitLocalNeutralKey((*i)->getId(), *n)].setWasChecked(true)) {
 											change = true;
 										}

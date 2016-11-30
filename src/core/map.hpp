@@ -40,10 +40,11 @@ public:
 	const std::string toString() const;
 	const std::vector<boost::shared_ptr<Location> >& getLocationVector() const;
 	const std::list<boost::shared_ptr<const Path> >& getPathList() const;
-	const boost::shared_ptr<Location> getLocation(const unsigned index) const;
-	const boost::shared_ptr<Location> getLocationAt(const unsigned int position) const;
-	unsigned int getLocationIndex(const unsigned int position) const;
-	unsigned int getLocationPosition(const unsigned int index) const;
+
+	const boost::shared_ptr<Location> getLocationByIndex(const unsigned index) const;
+	const boost::shared_ptr<Location> getLocation(const boost::uuids::uuid locationId) const;
+	unsigned int getLocationIndex(const boost::uuids::uuid locationId) const;
+	const boost::uuids::uuid getLocationId(const unsigned int index) const;
 	
 private:
 	friend class boost::serialization::access;
@@ -92,9 +93,9 @@ private:
 	const std::vector<boost::shared_ptr<Location> > locationVector;
 	const std::list<boost::shared_ptr<const Path> > pathList;
 	
-	std::map<const unsigned int, const boost::shared_ptr<Location> > locationMap; // position -> location
-	std::map<const unsigned int, const unsigned int> positionIndexMap; // position -> index
-	std::map<const unsigned int, const unsigned int> indexPositionMap; // index -> position
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<Location> > locationMap; // uuid -> location
+	std::map<const boost::uuids::uuid, const unsigned int> idIndexMap; // uuid -> index
+	std::map<const unsigned int, const boost::uuids::uuid> indexIdMap; // index -> uuid
 
 	//cached entries:
 	std::vector<std::vector<unsigned int> > minDistance;
@@ -115,7 +116,7 @@ inline const std::list<boost::shared_ptr<const Path> >& Map::getPathList() const
 	return pathList;
 }
 
-inline const boost::shared_ptr<Location> Map::getLocation(const unsigned index) const {
+inline const boost::shared_ptr<Location> Map::getLocationByIndex(const unsigned index) const {
 	return locationVector[index];
 }
 

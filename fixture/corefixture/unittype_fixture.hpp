@@ -9,8 +9,12 @@
 
 #include <unittype.hpp>
 
+#include "race_fixture.hpp"
+
 struct UnitType_Fixture
 {
+	const Race_Fixture raceFixture;
+
 	const std::string test_unitName1;
 	const std::string test_unitName2;
 	
@@ -39,8 +43,11 @@ struct UnitType_Fixture
 
 	const std::list<UnitResourceType> test_resources;
 
+	const boost::shared_ptr<UnitType> test_unittype;
+	const boost::shared_ptr<UnitType> test_unittype_noncorporeal;
+
 	UnitType_Fixture();
-	~UnitType_Fixture();
+	virtual ~UnitType_Fixture();
 	
 private:
 	const std::list<UnitResourceType> init_resourceslist_helper();

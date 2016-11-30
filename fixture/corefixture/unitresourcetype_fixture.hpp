@@ -16,7 +16,7 @@ struct UnitResourceType_Fixture
 	const boost::shared_ptr<const UnitResourceType> test_unitResourceType;
 
 	UnitResourceType_Fixture();
-	~UnitResourceType_Fixture();
+	virtual ~UnitResourceType_Fixture();
 
 private:
 	const std::list<std::list<boost::uuids::uuid> > init_unittypeidlist_helper();

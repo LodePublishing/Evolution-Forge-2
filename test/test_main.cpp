@@ -2,7 +2,7 @@
 #define BOOST_TEST_DYN_LINK
 #endif
 
-#define BOOST_TEST_MODULE Master Test Suite
+#define BOOST_TEST_MODULE MainTest
 
 #include <iostream>
 
@@ -15,4 +15,4 @@ struct GlobalStorage_Fixture {
 	~GlobalStorage_Fixture() {std::cout << "teardown" << std::endl;}
 };
 
-BOOST_GLOBAL_FIXTURE( GlobalStorage_Fixture );
+BOOST_GLOBAL_FIXTURE( GlobalStorage_Fixture )

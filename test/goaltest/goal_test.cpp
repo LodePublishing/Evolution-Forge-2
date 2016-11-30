@@ -26,20 +26,6 @@ BOOST_FIXTURE_TEST_SUITE( Goal_test, Goal_Fixture )
 		BOOST_CHECK_EQUAL(new_test_goal.getTime(), test_time);
 	}
 
-
-	BOOST_AUTO_TEST_CASE (Goal_comparator)
-	{
-		Goal test_goal3(test_unitTypeId, test_locationId, test_count, test_time);
-		Goal test_goal2(test_unitTypeId, test_locationId+10, test_count, test_time);
-		Goal test_goal1(*test_goal);
-
-		bool equal = (test_goal1 == test_goal3);
-		bool smaller = (test_goal1 < test_goal2);
-	
-		BOOST_CHECK_EQUAL(equal, true);
-		BOOST_CHECK_EQUAL(smaller, true);
-	}
-
 	BOOST_AUTO_TEST_CASE (Goal_constructor_bonus)
 	{
 	// 0 count should be ok (bonus!), also test default time

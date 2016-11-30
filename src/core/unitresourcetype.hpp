@@ -10,55 +10,76 @@
 
 #include "enums/unitresourcetypeenums.hpp"
 
-
 class UnitResourceType
 {
 public:
 	UnitResourceType(const eUnitResourceType resourceType, 
-		const std::list<std::list<unsigned int> >& unitTypeIDList, 
-		const signed int amount);
+		const signed int amount,
+		const std::list<std::list<unsigned int> >& unitTypeIdList);
 	~UnitResourceType() {}
-
-
-	eUnitResourceType getResourceType() const;
 	
+	eUnitResourceType getResourceType() const;
+	signed int getAmount() const;
+
 	// returns the ID of the unit type that is needed (e.g. the supply resource, a facility unit type id etc.)
 	// it is a list of list, all lists in the top list are ORed (makes only sense with prerequisites)
 	const std::list<std::list<unsigned int> >& getUnitTypeIDList() const;
-	signed int getAmount() const;
-
-	static const char* const ResourceType_tag_string;
-	static const char* const UnitTypeIDList_tag_string;
-	static const char* const Amount_tag_string;
+	
 	
 private:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(ResourceType_tag_string, resourceType);
-		ar & boost::serialization::make_nvp(UnitTypeIDList_tag_string, unitTypeIDList);
-		ar & boost::serialization::make_nvp(Amount_tag_string, amount);
+
+	template<class Archive> 
+	void serialize(Archive &ar, const unsigned int version)
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const UnitResourceType* unitResourceType, const unsigned int version) { 
+
+		const eUnitResourceType& resourceType = unitResourceType->getResourceType();
+		const signed int& amount = unitResourceType->getAmount();
+		const std::list<std::list<unsigned int> >& unitTypeIdList = unitResourceType->getUnitTypeIDList();
+
 		if(version > 0) {
 		}
+
+		ar & BOOST_SERIALIZATION_NVP(resourceType)
+		   & BOOST_SERIALIZATION_NVP(amount)
+		   & BOOST_SERIALIZATION_NVP(unitTypeIdList);
 	}
-	// only for serialization / deserialization
-	UnitResourceType();
+
+	template<class Archive> 
+	inline friend void load_construct_data(Archive& ar, UnitResourceType*& unitResourceType, const unsigned int version)
+	{
+		eUnitResourceType resourceType;
+		signed int amount;
+		std::list<std::list<unsigned int> > unitTypeIdList; // corresponding unit (for some types)
+
+		ar & BOOST_SERIALIZATION_NVP(resourceType)
+		   & BOOST_SERIALIZATION_NVP(amount)
+		   & BOOST_SERIALIZATION_NVP(unitTypeIdList);
+					
+		if(version > 0) {
+		}
+
+		::new(unitResourceType)UnitResourceType(resourceType, amount, unitTypeIdList);
+	}
 
 	eUnitResourceType resourceType;
-	std::list<std::list<unsigned int> > unitTypeIDList; // corresponding unit (for some types)
 	signed int amount;
+	std::list<std::list<unsigned int> > unitTypeIdList; // corresponding unit (for some types)
 };
 
 inline eUnitResourceType UnitResourceType::getResourceType() const {
 	return resourceType;
 }
 
-inline const std::list<std::list<unsigned int> >& UnitResourceType::getUnitTypeIDList() const {
-	return unitTypeIDList;
-}
-
 inline signed int UnitResourceType::getAmount() const {
 	return amount;
+}
+
+inline const std::list<std::list<unsigned int> >& UnitResourceType::getUnitTypeIDList() const {
+	return unitTypeIdList;
 }
 
 #endif

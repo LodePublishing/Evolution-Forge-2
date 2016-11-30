@@ -8,26 +8,55 @@
 #include <boost/serialization/nvp.hpp>
 #pragma warning(pop)
 
-class Government
+#include "id.hpp"
+
+class Government : public ID<Government>
 {
 public:
-	Government(const std::string& name);
+	Government(const std::string name);
+	Government(const unsigned int id, const std::string name);
 	~Government();
 	
 	const std::string& getName() const;
 
 private:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(Name_tag_string, name);
+
+	template<class Archive> 
+	void serialize(Archive &ar, const unsigned int version)
+	{ }	
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const Government* government, const unsigned int version) { 
+
+		const unsigned int& id = government->getId();
+		const std::string& name = government->getName();
+
 		if(version > 0) {
 		}
-	}		
-	Government() {}
 
-	std::string name;
-	static const char* const Name_tag_string;
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name);
+	}
+
+	template<class Archive> 
+	inline friend void load_construct_data(Archive& ar, Government*& government, const unsigned int version)
+	{
+		unsigned int id;
+		std::string name;
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name);
+		
+		if(version > 0) {
+		}
+
+		::new(government)Government(id, name);
+	}
+
+	const std::string name;
+
+	Government& operator=(const Government& other);
 };
 
 inline const std::string& Government::getName() const {

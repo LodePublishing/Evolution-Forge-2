@@ -1,7 +1,6 @@
 #ifndef _CORE_RULES_HPP
 #define _CORE_RULES_HPP
 
-
 #include <map>
 
 #pragma warning(push, 0)  
@@ -9,6 +8,8 @@
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 #pragma warning(pop)
 
 #include <loadsave.hpp>
@@ -19,68 +20,71 @@
 class Rules : public LoadSave<Rules>, public ID<Rules>
 {
 public:
-	Rules(const std::string& name);
-	~Rules();
+	Rules(const unsigned int id,
+		const std::string& name, 
+		const std::list<boost::shared_ptr<const UnitType> > unitTypeList);
+	Rules(const std::string& name, 
+		const std::list<boost::shared_ptr<const UnitType> > unitTypeList);
+	~Rules();	
 
-	void addUnitType(const UnitType& unitType);
-	void addRace(const Race& race);
-
-	const std::list<Race>& getRaceList() const;
 	const std::string& getName() const;
-
-	const UnitType& getUnitType(unsigned int unitTypeID) const;
-	const std::map<unsigned int, UnitType>& getUnitTypeMap() const;
-
-	// call after deserialization to properly assign race IDs to the unitTypes
-	void initializeRaces();
-
-	//void initializeTemporaryVariables(); TODO
-
+	const boost::shared_ptr<const UnitType> getUnitType(unsigned int unitTypeId) const;
+	const std::list<boost::shared_ptr<const UnitType> >& getUnitTypeList() const;	
 	unsigned int getUnitTypeCount() const;
-
-	// needs to be public to allow deserialization (loading)
-	Rules() {}
 
 private:
 	friend class boost::serialization::access;
 	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(ID_tag_string, id);
-		ar & boost::serialization::make_nvp(Name_tag_string, name);
-		ar & boost::serialization::make_nvp(RaceList_tag_string, raceList);
-		ar & boost::serialization::make_nvp(UnitTypeMap_tag_string, unitTypeMap);
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const Rules* rules, const unsigned int version) { 
+
+		const unsigned int& id = rules->getId();
+		const std::string& name = rules->getName();
+		const std::list<boost::shared_ptr<const UnitType> >& unitTypeList = rules->getUnitTypeList();
+
 		if(version > 0) {
 		}
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(unitTypeList);
 	}
 
-	std::string name;
-	std::list<Race> raceList;
-	std::map<unsigned int, UnitType> unitTypeMap;
+	template<class Archive> 
+	inline friend void load_construct_data(Archive& ar, Rules*& rules, const unsigned int version)
+	{
+		unsigned int id;
+		std::string name;
+		std::list<boost::shared_ptr<const UnitType> > unitTypeList;
 
-	static const char* const UnitTypeMap_tag_string;
-	static const char* const RaceList_tag_string;
-	static const char* const Name_tag_string;
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(unitTypeList);
 
+		if(version > 0) {
+		}
+
+		::new(rules)Rules(id, name, unitTypeList);
+	}
+
+	void initializeUnitTypes();
+
+	const std::string name;
+	const std::list<boost::shared_ptr<const UnitType> > unitTypeList;
+	
+	std::map<const unsigned int, const boost::shared_ptr<const UnitType> > unitTypeMap;
+
+	Rules& operator=(const Rules& other);
 };
 
-inline const std::map<unsigned int, UnitType>& Rules::getUnitTypeMap() const {
-	return unitTypeMap;
+inline const std::list<boost::shared_ptr<const UnitType> >& Rules::getUnitTypeList() const {
+	return unitTypeList;
 }
 
 inline unsigned int Rules::getUnitTypeCount() const {
-	return unitTypeMap.size();
-}
-
-inline const UnitType& Rules::getUnitType(unsigned int unitTypeID) const {
-	const std::map<unsigned int, UnitType>::const_iterator i = unitTypeMap.find(unitTypeID);
-	if(i == unitTypeMap.end()) {
-		throw "Could not find unit type ID";
-	}
-	return (*i).second;
-}
-
-inline const std::list<Race>& Rules::getRaceList() const {
-	return raceList;
+	return unitTypeList.size();
 }
 
 inline const std::string& Rules::getName() const {

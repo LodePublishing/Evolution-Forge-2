@@ -33,7 +33,6 @@ class Distance
 		const std::string toString() const;
 
 	private:
-		Distance() {}
 		unsigned int width;
 		unsigned int height;
 

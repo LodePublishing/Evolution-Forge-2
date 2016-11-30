@@ -4,14 +4,11 @@ Race::Race(const std::string& name):
 	name(name)
 {}
 
-Race::~Race()
+
+Race::Race(const unsigned int id, const std::string& name):
+	ID<Race>(id),
+	name(name)
 {}
 
-// only for serialization / deserialization
-Race::Race():
-	name("invalid")
-{
-}
-
-
-const char* const Race::Name_tag_string = "name";
+Race::~Race()
+{}

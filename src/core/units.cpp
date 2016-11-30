@@ -3,20 +3,32 @@
 
 Units::Units():
 	unitList(),
-	unitListMap()
-	{}
+	unitMap(),
+	globalNeutralAvailable(),
+	globalNeutralTotal(),
+	globalAvailable(),
+	globalTotal(),
+	localAvailable(),
+	localTotal(),
+	localNeutralAvailable(),
+	localNeutralTotal()
+{ }
 
-// call this after filling unitList by any other means than add/removeUnit!
-// for example after serialization!
-void Units::calculateAvailableAndTotal() {
-
-	for(std::list<Unit*>::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
-		if((*i)->isAvailable()) {
-			addOneLocalAvailable((*i)->getLocalKey());
-		}
-		addOneLocalTotal((*i)->getLocalKey());
-	}
+/// TODO, requires initializeUnitList etc.
+Units::Units(const std::list<boost::shared_ptr<Unit> > unitList):
+	unitList(unitList),
+	unitMap(),
+	globalNeutralAvailable(),
+	globalNeutralTotal(),
+	globalAvailable(),
+	globalTotal(),
+	localAvailable(),
+	localTotal(),
+	localNeutralAvailable(),
+	localNeutralTotal()
+{ 	
 }
+
 
 Units::~Units()
 { 
@@ -25,65 +37,80 @@ Units::~Units()
 
 void Units::clear()
 {
-	for(std::list<Unit*>::iterator i = unitList.begin(); i != unitList.end(); i++) {
+	for(std::list<boost::shared_ptr<Unit> >::iterator i = unitList.begin(); i != unitList.end(); i++) {
 		(*i)->clearConstructions();
 	}
 
-	for(std::list<Unit*>::iterator i = unitList.begin(); i != unitList.end(); i++) {
-		delete *i;
-	}	
 	unitList.clear();
-	unitListMap.clear();
-	localAvailable.clear();
-	globalTotal.clear();
+	unitMap.clear();
 
-	// clear children? -> Graph!
+	localAvailable.clear();
+	localTotal.clear();
+	globalAvailable.clear();
+	globalTotal.clear();
+	localNeutralAvailable.clear();
+	localNeutralTotal.clear();
+	globalNeutralAvailable.clear();
+	globalNeutralTotal.clear();
 }
 
 Units::Units(const Units& object)
 {
-	for(std::list<Unit*>::const_iterator i = object.unitList.begin(); i != object.unitList.end(); i++) {
-		addUnit(new Unit(**i));
+	// TODO evtl direkt einzelne Felder initialisieren, sind ja eh shared pointer? mmmh...
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = object.unitList.begin(); i != object.unitList.end(); i++) {
+		addUnit(boost::shared_ptr<Unit>(new Unit(**i)));
 	}
-	
-	// parent has to be assigned seperately!
-	//parent = object.parent;
 }
 
 Units& Units::operator=(const Units& object)
 {
 	clear();
 
-	//parent = NULL;
-
-	for(std::list<Unit*>::const_iterator i = object.unitList.begin(); i != object.unitList.end(); i++) {
-		addUnit(new Unit(**i));
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = object.unitList.begin(); i != object.unitList.end(); i++) {
+		addUnit(boost::shared_ptr<Unit>(new Unit(**i)));
 	}
-
-	// parent 
-	//parent = object.parent;
 
 	return(*this);
 }
 
+void Units::initializeUnitList() {
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
+		unitMap.insert(std::pair<unsigned int, const boost::shared_ptr<Unit> >((*i)->getId(), *i));
+		addLocalUnit(*i);
+	}
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
+		(*i)->initialize(shared_from_this());
+	}
+}
+
 // simply adds a unit to the list
-void Units::addUnit(Unit* unit) {
+void Units::addUnit(const boost::shared_ptr<Unit> unit) {
 	unitList.push_back(unit);
-	unitListMap[unit->getID()] = unit;
+	unitMap.insert(std::pair<unsigned int, const boost::shared_ptr<Unit> >(unit->getId(), unit));
+
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unit->getOccupiedFacilityList().begin(); i != unit->getOccupiedFacilityList().end(); i++) {
+		(*i)->addConstructingUnit(unit);
+	}
 
 	addLocalUnit(unit);
 }
 
-void Units::removeUnit(Unit* unit) {
+void Units::addUnits(const std::list<boost::shared_ptr<Unit> > unitList) {
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
+		addUnit(*i);
+	}
+}
+
+void Units::removeUnit(const boost::shared_ptr<Unit> unit) {
 	BOOST_ASSERT(unit->isUnderConstruction() || getLocalTotal(unit->getLocalKey()) > 0);
 
 	// TODO erase units that need this facility to build? maybe only primary units... TODO... resources etc. :o
 	// TODO check "available"
 	bool found = false;
-	for(std::list<Unit*>::iterator i = unitList.begin(); i != unitList.end(); i++) {
-		if((*i)->getID() == unit->getID()) {
+	for(std::list<boost::shared_ptr<Unit> >::iterator i = unitList.begin(); i != unitList.end(); i++) {
+		if((*i)->getId() == unit->getId()) {
 
-			unitListMap.erase(unit->getID());
+			unitMap.erase(unit->getId());
 			unitList.erase(i);
 
 			found = true;
@@ -94,34 +121,27 @@ void Units::removeUnit(Unit* unit) {
 
 	removeLocalUnit(unit);
 
-	//if(parent != NULL) {
-	//	parent->removeUnit(unit);
-	//} else {
-		unit->clearConstructions();
-		delete unit;
-	//}
+	unit->clearConstructions();
 }
 
-void Units::addLocalUnit(Unit* unit) {
+void Units::addLocalUnit(const boost::shared_ptr<Unit> unit) {
 	if(unit->isAvailable()) {
 		addOneLocalAvailable(unit->getLocalKey());
+		addOneLocalNeutralAvailable(unit->getLocalNeutralKey());
 	}
 	addOneLocalTotal(unit->getLocalKey());
+	addOneLocalNeutralTotal(unit->getLocalNeutralKey());
 }
 
-void Units::removeLocalUnit(Unit* unit) {
+void Units::removeLocalUnit(const boost::shared_ptr<Unit> unit) {
 	if(unit->isAvailable()) {
 		removeOneLocalAvailable(unit->getLocalKey());
 	}
 	removeOneLocalTotal(unit->getLocalKey());
 }
 
-
-
 void Units::process() {
-	for(std::list<Unit*>::iterator i = unitList.begin(); i != unitList.end(); i++) {
+	for(std::list<boost::shared_ptr<Unit> >::iterator i = unitList.begin(); i != unitList.end(); i++) {
 		(*i)->process();
 	}	
 }
-
-const char* const Units::UnitList_tag_string = "unit_list";

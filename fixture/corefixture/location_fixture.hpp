@@ -1,22 +1,32 @@
-#ifndef _CORETEST_LOCATIONFIXTURE_HPP
-#define _CORETEST_LOCATIONFIXTURE_HPP
+#ifndef _COREFIXTURE_LOCATIONFIXTURE_HPP
+#define _COREFIXTURE_LOCATIONFIXTURE_HPP
+
+#pragma warning(push, 0)  
+#include <boost/smart_ptr.hpp>
+#pragma warning(pop)
 
 #include <location.hpp>
-#include <units.hpp>
 
-struct Location_Fixture
+#include <random_fixture.hpp>
+
+#include "path_fixture.hpp"
+
+
+struct Location_Fixture : public Random_Fixture
 {
 	Location_Fixture();
 	~Location_Fixture();
 
-	unsigned int test_position;
+	const Path_Fixture path_fixture;
+
 	const std::string test_name;
-	Coordinate* test_coordinate;
-	Units* test_units;
+	const unsigned int test_position;	
+	const signed int test_x;
+	const signed int test_y;
 
-	Location* test_location;
+	const boost::shared_ptr<Location> test_location;
 
-	time_t seed;
+	
 };
 
-#endif // _CORETEST_LOCATIONFIXTURE_HPP
+#endif // _COREFIXTURE_LOCATIONFIXTURE_HPP

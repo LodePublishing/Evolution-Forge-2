@@ -1,14 +1,20 @@
-#ifndef _CORETEST_MAPFIXTURE_HPP
-#define _CORETEST_MAPFIXTURE_HPP
+#ifndef _COREFIXTURE_MAPFIXTURE_HPP
+#define _COREFIXTURE_MAPFIXTURE_HPP
+
+#pragma warning(push, 0)  
+#include <boost/smart_ptr.hpp>
+#pragma warning(pop)
 
 #include <vector>
 #include <string>
-#include <coordinate.hpp>
 #include <map.hpp>
 #include <units.hpp>
 
-struct Map_Fixture
+#include <random_fixture.hpp>
+
+struct Map_Fixture : public Random_Fixture
 {
+public:
 	Map_Fixture();
 	~Map_Fixture();
 
@@ -18,16 +24,17 @@ struct Map_Fixture
 	const std::string test_filename_raw;
 
 	std::vector<unsigned int> test_position;
-	std::vector<std::string> test_location_name;
-	std::vector<unsigned int> test_distance;
-	std::vector<Coordinate> test_coordinate;
+	const std::vector<std::string> test_location_name;
+	const std::vector<unsigned int> test_distance;
 
-	Map* test_map;
-	Units* test_units;
-	std::vector<Location*> locations;
-	std::vector<Path*> paths;
+	const boost::shared_ptr<Map> test_map;
 
-	time_t seed;
+private:
+	const std::vector<boost::shared_ptr<Location> > init_locationvector_helper();
+	const std::list<boost::shared_ptr<const Path> > init_pathlist_helper();
+	const std::vector<unsigned int> init_positionvector_helper();
+	const std::vector<std::string> init_locationnamevector_helper();
+	const std::vector<unsigned int> init_distancevector_helper();
 };
 
-#endif // _CORETEST_MAPFIXTURE_HPP
+#endif // _COREFIXTURE_MAPFIXTURE_HPP

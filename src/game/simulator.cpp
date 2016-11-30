@@ -98,8 +98,8 @@ const bool Simulator::tryBuildGene(const BuildOrder& buildOrder)
 	// TODO if a code has finished then 0 is returned... maybe ignore it or something.
 	const std::list<unsigned int> orderList = buildOrder.getCurrentCode();
 
-	const unsigned int playerID = buildOrder.getPlayerID();
-	const Player& player = game->getPlayer(playerID);
+	const unsigned int playerId = buildOrder.getPlayerId();
+	const Player& player = game->getPlayer(playerId);
 	unsigned int location = 0;
 
 
@@ -117,9 +117,9 @@ const bool Simulator::tryBuildGene(const BuildOrder& buildOrder)
 				break;
 			}
 
-			const UnitLocalKey localKey(location, playerID, j->getUnitTypeID());
-			const UnitLocalNeutralKey localNeutralKey(location, j->getUnitTypeID());
-			const UnitGlobalKey globalKey(playerID, j->getUnitTypeID());
+			const UnitLocalKey localKey(location, playerId, j->getUnitTypeId());
+			const UnitLocalNeutralKey localNeutralKey(location, j->getUnitTypeId());
+			const UnitGlobalKey globalKey(playerId, j->getUnitTypeId());
 
 			const unsigned int amount = j->getAmount();
 			// TODO a real neutral player? What about neutral units in building queues?

@@ -1,28 +1,34 @@
-#ifndef _CORETEST_UNITFIXTURE_HPP
-#define _CORETEST_UNITFIXTURE_HPP
+#ifndef _COREFIXTURE_UNITFIXTURE_HPP
+#define _COREFIXTURE_UNITFIXTURE_HPP
+
+#pragma warning(push, 0)  
+#include <boost/smart_ptr.hpp>
+#pragma warning(pop)
+
+#include <random_fixture.hpp>
 
 #include "map_fixture.hpp"
 #include "player_fixture.hpp"
 #include "unittype_fixture.hpp"
 
-struct Unit_Fixture
+class Units;
+
+struct Unit_Fixture : public Random_Fixture
 {
 	Unit_Fixture();
 	~Unit_Fixture();
 
-	unsigned int test_construction_time;
 	const UnitType_Fixture unitTypeFixture;
 	const Player_Fixture playerFixture;
 	const Map_Fixture mapFixture;
 
-	GoalEntry* test_goalEntry;
-	Player* test_player;
-	Race* test_race;
+	unsigned int test_construction_time;
 
-	UnitType* unitType1;
-	UnitType* unitType2;
+	const boost::shared_ptr<Units> test_units;
+	const boost::shared_ptr<const UnitType> unitType1;
+	const boost::shared_ptr<const UnitType> unitType2;
 
-	time_t seed;
+	// TODO evtl unitTypes in unitTypeFixture definieren
 };
 
-#endif // _CORETEST_UNITFIXTURE_HPP
+#endif // _COREFIXTURE_UNITFIXTURE_HPP

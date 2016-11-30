@@ -17,7 +17,7 @@ public:
 	const std::map<unsigned int, UnitResourceType> getChangeResource() const;
 
 private:
-	std::map<unsigned int, UnitResourceType> changeResource; // unitTypeID -> resourceType, need to be in a map in order to swiftly gather identical resource increases together.
+	std::map<unsigned int, UnitResourceType> changeResource; // unitTypeId -> resourceType, need to be in a map in order to swiftly gather identical resource increases together.
 };
 
 inline const std::map<unsigned int, UnitResourceType> TimeChange::getChangeResource() const {

@@ -4,21 +4,9 @@
 #include "government.hpp"
 #include "id.hpp"
 #include "goalentry.hpp"
+#include "units.hpp"
 
-/*
-1. table-Klassen laden raw-data aus den XMLs (IDs speichern!)
-2. Sobald alle geladen sind: IDs bei allen Tabellen nachladen
-3. Sobald alle nachgeladen sind: Eigentliche Klassen initialisieren
-
-reloadTables reinmachen
-
-Tabellen:
-
-getById reinmachen
-
-Entries:
-
-assignArray reinmachen*/
+#include "globalstorage.hpp"
 
 /**
 * Player holds global information unique to each player like
@@ -29,64 +17,104 @@ class Player : public ID<Player>
 {
 public:
 	Player(const std::string& name,
-		const Government& government,
-		const GoalEntry* const goalEntry);
-	~Player();
-	
+		const boost::shared_ptr<const Government> government,
+		const boost::shared_ptr<const GoalEntry> goalEntry,
+		const boost::shared_ptr<const Units> startingUnits);
+
+	Player(const unsigned int id,
+		const std::string& name,
+		const boost::shared_ptr<const Government> government,
+		const boost::shared_ptr<const GoalEntry> goalEntry,
+		const boost::shared_ptr<const Units> startingUnits);
+
+	~Player();	
 	
 	const std::string& getName() const;
-	const Government* getGovernment() const;
-
-	const GoalEntry* getGoalEntry()  const;
-	unsigned int getGoalID() const;
-
-	// called after deserialization!
-	void setGoalEntry(const GoalEntry* const goalEntry);
-	
-	static const char* const Name_tag_string;
-	static const char* const Government_tag_string;
-	static const char* const GoalEntryID_tag_string;
+	const boost::shared_ptr<const Government> getGovernment() const;
+	unsigned int getGovernmentId() const;
+	const boost::shared_ptr<const GoalEntry> getGoalEntry()  const;
+	unsigned int getGoalEntryId() const;
+	const boost::shared_ptr<const Units> getStartingUnits() const;
 
 private:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(ID_tag_string, id);
-		ar & boost::serialization::make_nvp(Name_tag_string, name);
-		ar & boost::serialization::make_nvp(Government_tag_string, government);
-		ar & boost::serialization::make_nvp(GoalEntryID_tag_string, goalEntryID);
+
+	template<class Archive> 
+	void serialize(Archive &ar, const unsigned int version)
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const Player* player, const unsigned int version) { 
+
+		const unsigned int& id = player->getId();
+		const std::string& name = player->getName();
+		const unsigned int& governmentId = player->getGovernmentId();
+		const unsigned int& goalEntryId = player->getGoalEntryId();
+		const boost::shared_ptr<const Units>& startingUnits = player->getStartingUnits();
+
 		if(version > 0) {
 		}
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(governmentId)
+		   & BOOST_SERIALIZATION_NVP(goalEntryId)
+		   & BOOST_SERIALIZATION_NVP(startingUnits);
 	}
-	// only use for serialization / deserialization
-	Player():government(NULL),goalEntry(NULL) {}
 
-	std::string name;
-	Government* government;
-	unsigned int goalEntryID;
+	template<class Archive> 
+	inline friend void load_construct_data(Archive& ar, Player*& player, const unsigned int version)
+	{
+		unsigned int id;
+		std::string name;
+		unsigned int governmentId;
+		unsigned int goalEntryId;
+		boost::shared_ptr<const Units> startingUnits;
+		
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(governmentId)
+		   & BOOST_SERIALIZATION_NVP(goalEntryId)
+		   & BOOST_SERIALIZATION_NVP(startingUnits);
+		   
+		if(version > 0) {
+		}
 
-	// temporary variable
-	const GoalEntry* goalEntry;
+		::new(player)Player(id, name, GLOBAL_STORAGE.getGovernment(governmentId), GLOBAL_STORAGE.getGoalEntry(goalEntryId), startingUnits);
+	}
 
-	
+	const std::string name;
+	const boost::shared_ptr<const Government> government;
+	const unsigned int governmentId;
+	const boost::shared_ptr<const GoalEntry> goalEntry;
+	const unsigned int goalEntryId;
+	const boost::shared_ptr<const Units> startingUnits;
+
+	Player& operator=(const Player& other);
 };
-
-
-inline const GoalEntry* Player::getGoalEntry()  const {
-	return goalEntry;
-}
-
-inline unsigned int Player::getGoalID() const {
-	return goalEntryID;
-}
-
-
-inline const Government* Player::getGovernment() const {
-	return government;
-}
 
 inline const std::string& Player::getName() const {
 	return name;
+}
+
+inline const boost::shared_ptr<const Government> Player::getGovernment() const {
+	return government;
+}
+
+inline unsigned int Player::getGovernmentId() const {
+	return governmentId;
+}
+
+inline const boost::shared_ptr<const GoalEntry> Player::getGoalEntry()  const {
+	return goalEntry;
+}
+
+inline unsigned int Player::getGoalEntryId() const {
+	return goalEntryId;
+}
+
+inline const boost::shared_ptr<const Units> Player::getStartingUnits() const {
+	return startingUnits;
 }
 
 #endif

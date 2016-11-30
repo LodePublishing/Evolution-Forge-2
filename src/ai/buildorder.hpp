@@ -11,7 +11,7 @@ public:
 	BuildOrder(int locationCount);
 	const Code& getCode(int location) const;
 	const std::vector<unsigned int> getCurrentCode() const;
-	const unsigned int getPlayerID() const;
+	const unsigned int getPlayerId() const;
 	const bool isFinished() const;
 	const bool isCalculationDone() const;
 	// later: make this abstract
@@ -21,7 +21,7 @@ public:
 	const unsigned int getTimeOfLastCodeExecution() const;
 
 private:
-	unsigned int playerID;
+	unsigned int playerId;
 	std::vector<Code> code;
 	bool goalsReached;
 	// temporary variable
@@ -41,8 +41,8 @@ inline const Code& BuildOrder::getCode(int location) const {
 	return code[location];
 }
 
-inline const unsigned int BuildOrder::getPlayerID() const {
-	return playerID;
+inline const unsigned int BuildOrder::getPlayerId() const {
+	return playerId;
 }
 /*
 

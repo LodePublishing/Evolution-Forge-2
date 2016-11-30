@@ -1,21 +1,15 @@
 #ifndef _GAMEBROODWAR_BROODWAR_HPP
 #define _GAMEBROODWAR_BROODWAR_HPP
 // TODO abstrakte Klasse für alle Games
-// Test
+
 #include "gamedata.hpp"
 
 class Broodwar : public GameData
 {
 public:
 	Broodwar();
-	~Broodwar();
-private:
-	Race* neutralRace;
-	Race* terraRace;
-	Race* protossRace;
-	Race* zergRace;
-};
-
+	~Broodwar();	
+	const boost::shared_ptr<const Rules> getRules() const;
 enum eBroodwarUnits
 {
 	MINERAL,
@@ -33,6 +27,25 @@ enum eBroodwarUnits
 	BARRACKS,
 	SPACE_MARINE
 };
+
+private:
+
+
+	const boost::shared_ptr<const Race> neutralRace;
+	const boost::shared_ptr<const Race> terraRace;
+	const boost::shared_ptr<const Race> protossRace;
+	const boost::shared_ptr<const Race> zergRace;
+	const boost::shared_ptr<const Rules> rules;
+
+	Broodwar& operator=(const Broodwar& other);
+	Broodwar(const Broodwar& other);
+
+	const std::list<boost::shared_ptr<const UnitType> > init_unittypelist_helper();
+};
+
+inline const boost::shared_ptr<const Rules> Broodwar::getRules() const {
+	return rules;
+}
 
 /*
 enum eBroodwarUnits

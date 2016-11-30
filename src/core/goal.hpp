@@ -11,64 +11,85 @@
 class Goal
 {
 	public:
-		Goal(const unsigned int unitTypeID, const unsigned int locationID, const unsigned int count, const unsigned int time = GOAL_MAX_TIME);
+		Goal(const unsigned int unitTypeId, const unsigned int locationId, const unsigned int count, const unsigned int time = GOAL_MAX_TIME);
 		~Goal();
 		bool operator<(const Goal& goal);
 		Goal(const Goal& goal);
-		Goal& operator=(const Goal& goal);
+		bool operator==(const Goal& goal) const;
 
-		unsigned int getUnitTypeID() const;
+		unsigned int getUnitTypeId() const;
 		unsigned int getTime() const;
 		unsigned int getCount() const;
-		unsigned int getLocationID() const;
+		unsigned int getLocationId() const;
 
 		static const unsigned int GOAL_MAX_TIME;
 
-		static const char* const unitTypeID_tag_string;
-		static const char* const locationID_tag_string;
-		static const char* const count_tag_string;
-		static const char* const time_tag_string;
-
 	private:
 		friend class boost::serialization::access;
-		template<class Archive> void serialize(Archive &ar, const unsigned int version)
-		{
-			ar & boost::serialization::make_nvp(unitTypeID_tag_string, unitTypeID);
-			ar & boost::serialization::make_nvp(locationID_tag_string, locationID);
-			ar & boost::serialization::make_nvp(count_tag_string, count);
-			ar & boost::serialization::make_nvp(time_tag_string, time);
+
+		template<class Archive> 
+		void serialize(Archive &ar, const unsigned int version)
+		{ }
+
+		template<class Archive>
+		friend inline void save_construct_data(Archive &ar, const Goal* goal, const unsigned int version) { 
+
+			const unsigned int& unitTypeId = goal->getUnitTypeId();
+			const unsigned int& locationId = goal->getLocationId();
+			const unsigned int& count = goal->getCount();
+			const unsigned int& time = goal->getTime();
+
 			if(version > 0) {
 			}
-		}
-		Goal() {}
 
-		unsigned int unitTypeID;
-		unsigned int locationID;
+			ar & BOOST_SERIALIZATION_NVP(unitTypeId)
+			   & BOOST_SERIALIZATION_NVP(locationId)
+			   & BOOST_SERIALIZATION_NVP(count)
+			   & BOOST_SERIALIZATION_NVP(time);
+		} 
+
+		template<class Archive> 
+		friend inline void load_construct_data(Archive& ar, Goal*& goal, const unsigned int version)
+		{
+			unsigned int unitTypeId;
+			unsigned int locationId;
+			unsigned int count;
+			unsigned int time;
+
+			ar & BOOST_SERIALIZATION_NVP(unitTypeId)
+			   & BOOST_SERIALIZATION_NVP(locationId)
+			   & BOOST_SERIALIZATION_NVP(count)
+			   & BOOST_SERIALIZATION_NVP(time);
+
+			if(version > 0) {
+			}
+
+			::new(goal)Goal(unitTypeId, locationId, count, time);
+		}
+
+		// TODO actual pointers?
+		unsigned int unitTypeId;
+		unsigned int locationId;
 
 		// count can be 0! Then it is a 'bonus'
 		unsigned int count;
 		unsigned int time;
 };
 
-
-inline unsigned int Goal::getUnitTypeID() const
-{
-	return unitTypeID;
+inline unsigned int Goal::getUnitTypeId() const {
+	return unitTypeId;
 }
 
-inline unsigned int Goal::getTime() const
-{
+inline unsigned int Goal::getTime() const {
 	return time;
 }
 
-inline unsigned int Goal::getCount() const
-{
+inline unsigned int Goal::getCount() const {
 	return count;
 }
 
-inline unsigned int Goal::getLocationID() const
-{
-	return locationID;
+inline unsigned int Goal::getLocationId() const {
+	return locationId;
 }
 
 

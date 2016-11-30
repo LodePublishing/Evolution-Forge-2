@@ -3,12 +3,12 @@
 #include "distance.hpp"
 
  void Distance::setWidth(const unsigned int width) {
-	assert(width <= 10000);
+	BOOST_ASSERT(width <= 10000);
 	this->width = width;
 }
 
 void Distance::setHeight(const unsigned int height) {
-	assert(height <= 10000);
+	BOOST_ASSERT(height <= 10000);
 	this->height = height;
 }
   

@@ -6,6 +6,7 @@
 
 #pragma warning(push, 0)  
 #include <boost/serialization/base_object.hpp>
+#include <boost/shared_ptr.hpp>
 #pragma warning(pop)
 
 #include "player.hpp"
@@ -23,81 +24,106 @@ class Units;
 class Game : public LoadSave<Game>
 {
 public:
-	Game(const Rules* const rules,
-		const Map* const map,
-		const Units* const startingUnits,
-		const unsigned int startingTime);
+	Game(const boost::shared_ptr<const Rules> rules,
+		const boost::shared_ptr<const Map> map,
+		const unsigned int startingTime,
+		const std::list<boost::shared_ptr<const Player> > playerList);
 	~Game();
-
-	const Player* getPlayer(unsigned int playerID) const;
-	const Units* getStartingUnits() const;
-	const Map* getMap() const;
-	const Rules* getRules() const;
-
 	
+	const boost::shared_ptr<const Map> getMap() const;
 	unsigned int getMapId() const;
+
+	const boost::shared_ptr<const Rules> getRules() const;
 	unsigned int getRulesId() const;
 
-	void addPlayer(const Player* player);
-	void assignMap(const Map* const map);
-	void assignRules(const Rules* const rules);
+	const boost::shared_ptr<const Player> getPlayer(const unsigned int playerId) const;
+	const std::list<unsigned int> getPlayerIdList() const;
 
 	unsigned int getStartingTime() const;
-
-	void initialize(std::map<int, Rules*> rulesStorage, std::map<int, Map*> mapStorage);
-
-	// needs to be public to allow deserialization (loading)
-	Game():startingUnits(NULL),rules(NULL),map(NULL) {}
+	1. Alle mit ID auch Save/Load
+	2. Jeweils Reload Tests dazu schreiben
+	3. Global Storage lädt/schreibt alle von Platte	
+	4. Tests dazu schreiben
 
 private:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(Rules_tag_string, rulesId);
-		ar & boost::serialization::make_nvp(PlayerList_tag_string, playerMap);
-		ar & boost::serialization::make_nvp(Map_tag_string, mapId);
-		ar & boost::serialization::make_nvp(StartingTime_tag_string, startingTime);
-		ar & boost::serialization::make_nvp(StartingUnits_tag_string, startingUnits);
-		// paths are saved in the map! Need to be reassigned!
+
+	template<class Archive> 
+	void serialize(Archive& ar, const unsigned int version)
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const Game* game, const unsigned int version) { 
+		const unsigned int& rulesId = game->getRulesId();
+		const unsigned int& mapId = game->getMapId();
+		const unsigned int& startingTime = game->getStartingTime();
+		const std::list<unsigned int>& playerIdList = game->getPlayerIdList();
+
 		if(version > 0) {
 		}
+
+		ar & BOOST_SERIALIZATION_NVP(rulesId)
+		   & BOOST_SERIALIZATION_NVP(mapId)
+		   & BOOST_SERIALIZATION_NVP(startingTime)
+		   & BOOST_SERIALIZATION_NVP(playerIdList);
+	} 
+
+	template<class Archive> 
+	friend inline void load_construct_data(Archive& ar, Game*& game, const unsigned int version)
+	{
+		unsigned int rulesId;
+		unsigned int mapId;
+		unsigned int startingTime;
+		std::list<unsigned int> playerIdList;
+		std::list<boost::shared_ptr<const Player> > playerList;		
+
+		ar & BOOST_SERIALIZATION_NVP(rulesId)
+		   & BOOST_SERIALIZATION_NVP(mapId)
+		   & BOOST_SERIALIZATION_NVP(startingTime)
+		   & BOOST_SERIALIZATION_NVP(playerIdList);
+
+		for(std::list<unsigned int>::const_iterator i = playerIdList.begin(); i != playerIdList.end(); i++) {
+			playerList.push_back(GLOBAL_STORAGE.getPlayer(*i));
+		}
+
+		if(version > 0) {
+		}
+
+		::new(game)Game(GLOBAL_STORAGE.getRules(rulesId), GLOBAL_STORAGE.getMap(mapId), startingTime, playerList);
 	}
 
-	std::list<unsigned int> playerList;
-	std::map<unsigned int, const Player*> playerMap; // playerID -> player
+	const boost::shared_ptr<const Rules> rules;
+	const unsigned int rulesId;
 
-	Units* startingUnits;
+	const boost::shared_ptr<const Map> map;
+	const unsigned int mapId;
+	
+	const unsigned int startingTime;
 
-	const Rules* rules;
-	unsigned int rulesId;
+	const std::list<boost::shared_ptr<const Player> > playerList;
+	std::list<unsigned int> playerIdList;
+	std::map<const unsigned int, const boost::shared_ptr<const Player> > playerMap; // playerId -> player	
 
-	const Map* map;
-	unsigned int mapId;
-
-
-	unsigned int startingTime;
-
-	static const char* const Rules_tag_string;
-	static const char* const PlayerList_tag_string;
-	static const char* const Map_tag_string;	
-	static const char* const StartingTime_tag_string;
-	static const char* const StartingUnits_tag_string;
+	Game& operator=(const Game& other);
 };
 
-inline const Player* Game::getPlayer(unsigned int playerID) const {
-	const std::map<unsigned int, const Player*>::const_iterator i = playerMap.find(playerID);
+inline const boost::shared_ptr<const Player> Game::getPlayer(const unsigned int playerId) const {
+	const std::map<const unsigned int, const boost::shared_ptr<const Player> >::const_iterator i = playerMap.find(playerId);
 	if(i == playerMap.end()) {
 		throw "Could not find player ID";
 	}
 	return i->second;
 }
 
+inline const std::list<unsigned int> Game::getPlayerIdList() const {
+	return playerIdList;
+}
 
-inline const Rules* Game::getRules() const {
+inline const boost::shared_ptr<const Rules> Game::getRules() const {
 	return rules;
 }
 
-inline const Map* Game::getMap() const {
+inline const boost::shared_ptr<const Map> Game::getMap() const {
 	return map;
 }
 
@@ -107,10 +133,6 @@ inline unsigned int Game::getMapId() const {
 
 inline unsigned int Game::getRulesId() const {
 	return rulesId;
-}
-
-inline const Units* Game::getStartingUnits() const {
-	return startingUnits;
 }
 
 inline unsigned int Game::getStartingTime() const {

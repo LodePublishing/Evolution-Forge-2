@@ -9,70 +9,121 @@
 
 // create new unit
 Unit::Unit(
-	const UnitType* unitType,
-	const Player* player, 
-	Location* location,
-
+	const boost::shared_ptr<const Player> player,
+	const boost::shared_ptr<const UnitType> unitType,
+	const boost::shared_ptr<const Location> location,
+	const boost::shared_ptr<Units> globalUnits,
+	const unsigned int count,
 	const unsigned int remainingConstructionTime,
-	std::list<Unit*> occupiedFacility
+	const std::list<boost::shared_ptr<Unit> > occupiedFacilityList
 	):
-player(player),
+	player(player),
+	playerId(player->getId()),
 	unitType(unitType),
+	unitTypeId(unitType->getId()),
 	location(location),
+	locationId(location->getId()),
 	goalLocation(location),
+	goalLocationId(location->getId()),
+	globalUnits(globalUnits),
+	count(count),
 	remainingConstructionTime(remainingConstructionTime),
 	remainingMovementTime(0),
-	occupiedFacility(occupiedFacility),
-	constructingUnit(),
-	unitLocalKey(location->getID(), player->getID(), unitType->getID()),
-	unitGlobalKey(player->getID(), unitType->getID()),
-	unitLocalNeutralKey(location->getID(), unitType->getID()),
-	playerId(player->getID()),
-	unitTypeId(unitType->getID()),
-	locationId(location->getID()),
-	goalLocationId(location->getID())
+	occupiedFacilityList(occupiedFacilityList),
+	occupiedFacilityIdList(),
+	constructingUnitList(),
+	constructingUnitIdList(),
+	unitLocalKey(location->getId(), playerId, unitType->getId()),
+	unitLocalNeutralKey(location->getId(), unitType->getId()),
+	unitGlobalKey(playerId, unitType->getId())
 {
-	// TODO, beim Abspeichern müssen die IDs aktualisiert werden
-
-	location->getGlobalUnits()->addUnit(this);
-
-	for(std::list<Unit*>::iterator i = occupiedFacility.begin(); i != occupiedFacility.end(); i++) {
-		occupiedFacilityId.push_back((*i)->getID());
-		(*i)->addConstructingUnit(this);
-	}
+	for(std::list<boost::shared_ptr<Unit> >::iterator i = this->occupiedFacilityList.begin(); i != this->occupiedFacilityList.end(); i++) {
+		occupiedFacilityIdList.push_back((*i)->getId());
+		globalUnits->removeOneLocalAvailable((*i)->getLocalKey());
+	}	
 }
 
 
+
+Unit::Unit(
+	const unsigned int id,
+	const boost::shared_ptr<const Player> player, 
+	const boost::shared_ptr<const UnitType> unitType,
+	const boost::shared_ptr<const Location> location,
+	const boost::shared_ptr<const Location> goalLocation,
+	const unsigned int count,
+	const unsigned int remainingMovementTime,
+	const unsigned int remainingConstructionTime,
+	const std::list<unsigned int> occupiedFacilityIdList,
+	const std::list<unsigned int> constructingUnitIdList
+	):
+	ID<Unit>(id),
+	player(player),
+	playerId(player->getId()),
+	unitType(unitType),
+	unitTypeId(unitType->getId()),
+	location(location),
+	locationId(location->getId()),
+	goalLocation(goalLocation),
+	goalLocationId(goalLocation->getId()),
+	globalUnits(),
+	count(count),
+	remainingConstructionTime(remainingConstructionTime),
+	remainingMovementTime(remainingMovementTime),
+	occupiedFacilityList(),
+	occupiedFacilityIdList(occupiedFacilityIdList),
+	constructingUnitList(),
+	constructingUnitIdList(constructingUnitIdList),
+	unitLocalKey(location->getId(), playerId, unitType->getId()),
+	unitLocalNeutralKey(location->getId(), unitType->getId()),
+	unitGlobalKey(playerId, unitType->getId())
+{ }
+
+void Unit::initialize(const boost::shared_ptr<Units> units) {
+	globalUnits = units;
+
+	occupiedFacilityList.clear();
+	constructingUnitList.clear();
+
+	for(std::list<unsigned int>::const_iterator i = occupiedFacilityIdList.begin(); i != occupiedFacilityIdList.end(); i++) {
+		occupiedFacilityList.push_back(units->getUnit(*i));
+
+		globalUnits->removeOneLocalAvailable(occupiedFacilityList.back()->getLocalKey());
+	}
+
+	for(std::list<unsigned int>::const_iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
+		constructingUnitList.push_back(units->getUnit(*i));
+	}
+}
+
 void Unit::removeUnit() {
-	location->getGlobalUnits()->removeUnit(this);
+	globalUnits->removeUnit(shared_from_this());
 }
 
 void Unit::clearConstructions()
 {
-	for(std::list<Unit*>::const_iterator u = occupiedFacility.begin(); u != occupiedFacility.end(); u++) {
-		(*u)->removeFromConstruction(this);
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator u = occupiedFacilityList.begin(); u != occupiedFacilityList.end(); u++) {
+		(*u)->removeFromConstruction(shared_from_this());
 	}
 
-	for(std::list<Unit*>::const_iterator u = constructingUnit.begin(); u != constructingUnit.end(); u++) {
-		(*u)->cancelConstruction(this);
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator u = constructingUnitList.begin(); u != constructingUnitList.end(); u++) {
+		(*u)->cancelConstruction(shared_from_this());
 	}
 }
-
 
 Unit::~Unit() {
 	//if(!this->isUnderConstruction()) {
-	//	location->getGlobalUnits()->removeUnit(this);
+	//	globalUnits->removeUnit(this);
 	//}
 
 }
-
 
 /*
 // adds a unit to the construction queue of the unit
 bool Unit::addToConstruction(Unit* unit) {
 	if(isAvailable()) {
 		constructingUnit.push_back(unit);
-		location->getGlobalUnits()->removeOneLocalAvailable(getLocalKey());
+		globalUnits->removeOneLocalAvailable(getLocalKey());
 		return true;
 	} else {
 		return false;
@@ -80,15 +131,14 @@ bool Unit::addToConstruction(Unit* unit) {
 	// TODO multiple construction slots?
 }*/ // TODO?
 
-
-void Unit::removeFromConstruction(Unit* unit) {
+void Unit::removeFromConstruction(const boost::shared_ptr<const Unit> unit) {
 	bool was_constructing = isConstructing();
 
-	for(std::list<Unit*>::iterator i = constructingUnit.begin(); i != constructingUnit.end(); i++) {
-		if((*i)->getID() == unit->getID()) {
-			constructingUnit.erase(i);
+	for(std::list<boost::shared_ptr<Unit> >::iterator i = constructingUnitList.begin(); i != constructingUnitList.end(); i++) {
+		if((*i)->getId() == unit->getId()) {
+			constructingUnitList.erase(i);
 			if(was_constructing && !isConstructing()) {
-				location->getGlobalUnits()->addOneLocalAvailable(getLocalKey());
+				globalUnits->addOneLocalAvailable(getLocalKey());
 				// TODO multiple construction slots?
 			}
 			return;
@@ -97,19 +147,19 @@ void Unit::removeFromConstruction(Unit* unit) {
 }
 // TODO
 
-void Unit::cancelConstruction(Unit* unit) {
-//	location->getGlobalUnits()->removeUnit(this); 
-	for(std::list<Unit*>::const_iterator u = occupiedFacility.begin(); u != occupiedFacility.end(); u++) {
-		if(unit->getID() != (*u)->getID()) { // ignore the facility itself! otherwise their constructingUnits list gets corrupted TODO? Explanation
-			(*u)->removeFromConstruction(this);
+void Unit::cancelConstruction(boost::shared_ptr<const Unit> unit) {
+//	globalUnits->removeUnit(this); 
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator u = occupiedFacilityList.begin(); u != occupiedFacilityList.end(); u++) {
+		if(unit->getId() != (*u)->getId()) { // ignore the facility itself! otherwise their constructingUnits list gets corrupted TODO? Explanation
+			(*u)->removeFromConstruction(shared_from_this());
 		}
 	}
-	occupiedFacility.clear();
+	occupiedFacilityList.clear();
 }
 
 
-void Unit::setGoalLocation(Location* goalLocation) {
-	if(this->goalLocation->getID() == goalLocation->getID()) {
+void Unit::setGoalLocation(boost::shared_ptr<const Location> goalLocation) {
+	if(this->goalLocation->getId() == goalLocation->getId()) {
 		remainingMovementTime = 0;
 		return;
 	}
@@ -123,7 +173,7 @@ void Unit::setGoalLocation(Location* goalLocation) {
 
 	switch(unitType->getMovementType()) {
 		case NO_MOVEMENT_TYPE:
-			assert(false);
+			BOOST_ASSERT(false);
 			break;
 		case FLYING_MOVEMENT_TYPE:
 			remainingMovementTime = location->getAirDistance(goalLocation);
@@ -133,7 +183,7 @@ void Unit::setGoalLocation(Location* goalLocation) {
 			break;
 		case MOVEMENT_TYPE_TYPES:
 		default:
-			assert(false);
+			BOOST_ASSERT(false);
 			break;
 	}
 	remainingMovementTime /=  unitType->getSpeed();
@@ -146,11 +196,11 @@ void Unit::process() {
 	if(isMoving()) {
 		remainingMovementTime--;
 		if(remainingMovementTime == 0) {
-			location->getGlobalUnits()->removeLocalUnit(this);
+			globalUnits->removeLocalUnit(shared_from_this());
 			location = goalLocation;
-			unitLocalKey.locationID = location->getID();
-			unitLocalNeutralKey.locationID = location->getID();
-			location->getGlobalUnits()->addLocalUnit(this);
+			unitLocalKey.locationId = location->getId();
+			unitLocalNeutralKey.locationId = location->getId();
+			globalUnits->addLocalUnit(shared_from_this());
 		}
 	} else
 		// TODO maybe include the application of special UnitType / FacilityType rules
@@ -158,13 +208,13 @@ void Unit::process() {
 			remainingConstructionTime--;
 			if(remainingConstructionTime == 0) {
 				// remove this unit from all construction queues of the facilities
-				for(std::list<Unit*>::iterator i = occupiedFacility.begin(); i != occupiedFacility.end(); i++) {
-					(*i)->removeFromConstruction(this);
+				for(std::list<boost::shared_ptr<Unit> >::iterator i = occupiedFacilityList.begin(); i != occupiedFacilityList.end(); i++) {
+					(*i)->removeFromConstruction(shared_from_this());
 				}
-				occupiedFacility.clear();
+				occupiedFacilityList.clear();
 
 				// make this unit available
-				location->getGlobalUnits()->addOneLocalAvailable(getLocalKey());
+				globalUnits->addOneLocalAvailable(getLocalKey());
 
 			}
 
@@ -173,61 +223,17 @@ void Unit::process() {
 		}
 }
 
-void Unit::assignPlayer(Player* player) {
-	BOOST_ASSERT(player->getID() == playerId);
-
-	this->player = player;
-
-	unitLocalKey.playerID = playerId;
-	unitGlobalKey.playerID = playerId;
+void Unit::addOccupiedFacility(const boost::shared_ptr<Unit> facility) {
+	this->occupiedFacilityList.push_back(facility);
 }
 
-void Unit::assignUnitType(const UnitType* unitType) {
-	BOOST_ASSERT(unitType->getID() == this->unitTypeId);
-
-	this->unitType = unitType;
-
-	unitLocalKey.unitTypeID = unitTypeId;
-	unitLocalNeutralKey.unitTypeID = unitTypeId;
-	unitGlobalKey.unitTypeID = unitTypeId;
-}
-
-void Unit::assignLocation(Location* location) {
-	BOOST_ASSERT(location->getID() == locationId);
-
-	this->location = location;
-
-	unitLocalKey.locationID = locationId;
-	unitLocalNeutralKey.locationID = locationId;
-}
-
-void Unit::assignGoalLocation(Location* goalLocation) {
-	BOOST_ASSERT(goalLocation->getID() == goalLocationId);
-
-	this->goalLocation = goalLocation;
-}
-
-
-void Unit::addOccupiedFacility(Unit* facility) {
-	this->occupiedFacility.push_back(facility);
-}
-
-void Unit::addConstructingUnit(Unit* unit) {
+void Unit::addConstructingUnit(const boost::shared_ptr<Unit> unit) {
 	bool was_available = this->isAvailable();
 
-	this->constructingUnit.push_back(unit);
+	this->constructingUnitList.push_back(unit);
 
 	// is this facility became available again? Notify the listeners
 	if(this->isAvailable() != was_available) {
-		location->getGlobalUnits()->removeOneLocalAvailable(getLocalKey());
+		globalUnits->removeOneLocalAvailable(getLocalKey());
 	}
 }
-
-const char* const Unit::PlayerID_tag_string = "player";
-const char* const Unit::UnitTypeID_tag_string = "type";
-const char* const Unit::LocationID_tag_string = "location";
-const char* const Unit::GoalLocationID_tag_string = "goal_location";
-const char* const Unit::RemainingMovingTime_tag_string = "remaining_movement_time";
-const char* const Unit::RemainingConstructionTime_tag_string = "remaining_construction_time";
-const char* const Unit::OccupiedFacilitiesIDsList_tag_string = "occupied_facilities";
-const char* const Unit::ConstructingUnitsIDsList_tag_string = "constructing_units";

@@ -9,8 +9,9 @@ BOOST_FIXTURE_TEST_SUITE( Player_test, Player_Fixture )
 	BOOST_AUTO_TEST_CASE (Player_constructor)
 {
 	BOOST_CHECK_EQUAL(test_player->getName(), test_player_name);
-	BOOST_CHECK_EQUAL(test_player->getGovernment()->getName(), test_government_name);
+	BOOST_CHECK_EQUAL(test_player->getGovernment()->getName(), test_governmentFixture.test_government_name);
 	BOOST_CHECK_EQUAL(test_player->getGoalEntry()->getName(), test_goalEntryFixture.test_goalentry_name);
+	// TODO startingUnits
 }
 
 

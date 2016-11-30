@@ -1,46 +1,42 @@
 #include "rules.hpp"
 
-
-Rules::Rules(const std::string& name):
+Rules::Rules(const std::string& name, 
+	const std::list<boost::shared_ptr<const UnitType> > unitTypeList):
 	name(name),
-	raceList(),
+	unitTypeList(unitTypeList),
 	unitTypeMap()
 {
+	initializeUnitTypes();
+}
+
+Rules::Rules(
+	const unsigned int id,
+	const std::string& name, 
+	const std::list<boost::shared_ptr<const UnitType> > unitTypeList):
+	ID<Rules>(id),
+	name(name),
+	unitTypeList(unitTypeList),
+	unitTypeMap()
+{
+	initializeUnitTypes();
 }
 
 Rules::~Rules()
 {
 }
 
-void Rules::addUnitType(const UnitType& unitType)
+void Rules::initializeUnitTypes()
 {
-	this->unitTypeMap.insert(std::pair<unsigned int, UnitType>(unitType.getID(), unitType));
+	for(std::list<boost::shared_ptr<const UnitType> >::const_iterator i = unitTypeList.begin(); i != unitTypeList.end(); i++) {
+		this->unitTypeMap.insert(std::pair<const unsigned int, const boost::shared_ptr<const UnitType> >((*i)->getId(), *i));
+	}	
 }
 
-void Rules::addRace(const Race& race)
-{
-	this->raceList.push_back(race);
-}
-
-// call after deserialization
-void Rules::initializeRaces() {
-	// TODO std::map
-	for(std::map<unsigned int, UnitType>::iterator i = unitTypeMap.begin(); i != unitTypeMap.end(); i++) {
-		bool found = false;
-		for(std::list<Race>::const_iterator j = raceList.begin(); j != raceList.end(); j++) {
-			if(j->getID() == i->second.getRaceID()) {
-				i->second.setRace(&(*j));
-				found = true;
-				break;
-			}
-		}
-		if(!found) {
-			throw "Race ID of this unit type is not in the rules.";
-		}
+// TODO make const unit type? How to load from disk then?
+const boost::shared_ptr<const UnitType> Rules::getUnitType(unsigned int unitTypeId) const {
+	const std::map<const unsigned int, const boost::shared_ptr<const UnitType> >::const_iterator i = unitTypeMap.find(unitTypeId);
+    if(i == unitTypeMap.end()) {
+		throw "Could not find unit type ID";
 	}
+    return i->second;
 }
-
-
-const char* const Rules::UnitTypeMap_tag_string = "UnitTypeMap";
-const char* const Rules::Name_tag_string = "name";
-const char* const Rules::RaceList_tag_string = "RaceList";

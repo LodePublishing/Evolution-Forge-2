@@ -1,9 +1,15 @@
-#ifndef _CORETEST_PATHFIXTURE_HPP
-#define _CORETEST_PATHFIXTURE_HPP
+#ifndef _COREFIXTURE_PATHFIXTURE_HPP
+#define _COREFIXTURE_PATHFIXTURE_HPP
+
+#pragma warning(push, 0)  
+#include <boost/smart_ptr.hpp>
+#pragma warning(pop)
 
 #include <path.hpp>
 
-struct Path_Fixture
+#include <random_fixture.hpp>
+
+struct Path_Fixture : public Random_Fixture
 {
 	Path_Fixture();
 	~Path_Fixture();
@@ -12,9 +18,7 @@ struct Path_Fixture
 	unsigned int test_target_position;
 	unsigned int test_distance;
 
-	Path* test_path;
-
-	time_t seed;
+	const boost::shared_ptr<const Path> test_path;
 };
 
-#endif // _CORETEST_PATHFIXTURE_HPP
+#endif // _COREFIXTURE_PATHFIXTURE_HPP

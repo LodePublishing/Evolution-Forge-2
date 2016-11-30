@@ -5,26 +5,30 @@
 #include "player.hpp"
 
 Player::Player(const std::string& name,
-		const Government& government,
-		const GoalEntry* const goalEntry):
+		const boost::shared_ptr<const Government> government,
+		const boost::shared_ptr<const GoalEntry> goalEntry,
+		const boost::shared_ptr<const Units> startingUnits):
 	name(name),
-	government(new Government(government)),
+	government(government),
+	governmentId(government->getId()),
 	goalEntry(goalEntry),
-	goalEntryID(goalEntry->getID())
+	goalEntryId(goalEntry->getId()),
+	startingUnits(startingUnits)
+{}
+
+Player::Player(const unsigned int id,
+		const std::string& name,
+		const boost::shared_ptr<const Government> government,
+		const boost::shared_ptr<const GoalEntry> goalEntry,
+		const boost::shared_ptr<const Units> startingUnits):
+	ID<Player>(id),
+	name(name),
+	government(government),
+	governmentId(government->getId()),
+	goalEntry(goalEntry),
+	goalEntryId(goalEntry->getId()),
+	startingUnits(startingUnits)
 {}
 
 Player::~Player()
-{
-	delete government;
-}
-
-// needs to be called after deserialization
-void Player::setGoalEntry(const GoalEntry* const goalEntry) {
-	BOOST_ASSERT(goalEntry->getID() == goalEntryID);
-
-	this->goalEntry = goalEntry;
-}
-
-const char* const Player::Name_tag_string = "name";
-const char* const Player::Government_tag_string = "government";
-const char* const Player::GoalEntryID_tag_string = "goalentry";
+{}

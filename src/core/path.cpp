@@ -11,6 +11,17 @@ Path::Path(const unsigned int sourceLocationPosition, const unsigned int targetL
 {
 }
 
+Path::Path(const unsigned int id,
+	const unsigned int sourceLocationPosition, 
+	const unsigned int targetLocationPosition,
+	const unsigned int locationDistance):
+	ID<Path>(id),
+	sourceLocationPosition(sourceLocationPosition),
+	targetLocationPosition(targetLocationPosition),
+	locationDistance(locationDistance)
+{
+}
+
 Path::~Path() 
 {}
 
@@ -20,7 +31,3 @@ const std::string Path::toString() const
 	os << sourceLocationPosition << " -> " << targetLocationPosition << " [" << locationDistance << "km]";
 	return os.str();
 }
-
-const char* const Path::Source_tag_string = "source";
-const char* const Path::Target_tag_string = "target";
-const char* const Path::Distance_tag_string = "distance";

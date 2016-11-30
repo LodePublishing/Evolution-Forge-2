@@ -8,68 +8,93 @@
 #pragma warning(push, 0)  
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/list.hpp>
+#include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
 #include "id.hpp"
 #include "coordinate.hpp"
 
-class Units;
 class Path;
 
-class Location : public ID<Location>
+class Location : public ID<Location>, public Coordinate
 {
 public:
-	Location(const std::string& name, const unsigned int position, const Coordinate& coordinate, Units* globalUnits);
+	Location(const unsigned int id, const std::string& name, const unsigned int position, const signed int x, const signed int y);
+	Location(const std::string& name, const unsigned int position, const signed int x, const signed int y);
 	~Location();
 
-	void addPath(const Path* const path);
+	void addPath(const boost::shared_ptr<const Path> path);
 
-	unsigned int getAirDistance(const Location* const targetLocation) const;
-	unsigned int getGroundDistance(const Location* const targetLocation) const;
+	unsigned int getAirDistance(const boost::shared_ptr<const Location> targetLocation) const;
+	unsigned int getGroundDistance(const boost::shared_ptr<const Location> targetLocation) const;
 
 	unsigned int getPosition() const;
-	Coordinate* getCoordinate() const; // TODO const operators required?!
 	const std::string& getName() const;
 	const std::string toString() const;
-	const std::list<const Path*>& getPaths() const;
+	const std::list<boost::shared_ptr<const Path> >& getPaths() const;
 	
-	void setDistanceMap(std::map<unsigned int, unsigned int> distanceMap);
-
-	Units* getGlobalUnits() const;
+	void setDistanceMap(const std::map<unsigned int, unsigned int> distanceMap);
 
 	static const unsigned int MAX_DISTANCE;
+
+	Location(const Location& object);
+
 private:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(ID_tag_string, id);
-		ar & boost::serialization::make_nvp(Position_tag_string, position);
-		ar & boost::serialization::make_nvp(Coordinate_tag_string, coordinate);
-		ar & boost::serialization::make_nvp(Name_tag_string, name);
-		// paths are saved in the map! Need to be reassigned!
+
+	template<class Archive> 
+	void serialize(Archive &ar, const unsigned int version)
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const Location* location, const unsigned int version) { 
+
+		const unsigned int& id = location->getId();
+		const std::string& name = location->getName();
+		const unsigned int& position = location->getPosition();
+		const signed int& x = location->getX();
+		const signed int& y = location->getY();
+
 		if(version > 0) {
 		}
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(position)
+		   & BOOST_SERIALIZATION_NVP(x)
+		   & BOOST_SERIALIZATION_NVP(y);
 	}
-	// only use for serialization / deserialization
-	Location():coordinate(NULL),globalUnits(NULL) {}
 
-	std::string name;
-	unsigned int position;
-	Coordinate* coordinate;
-	
-	// TODO add Units for testing of process in Unit test
-	// temp variables
-	Units* globalUnits;
+	template<class Archive> 
+	friend inline void load_construct_data(Archive& ar, Location*& location, const unsigned int version)
+	{
+		unsigned int id;
+		std::string name;
+		unsigned int position;
+		signed int x;
+		signed int y;
 
-	std::list<const Path*> paths;	
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(position)
+		   & BOOST_SERIALIZATION_NVP(x)
+		   & BOOST_SERIALIZATION_NVP(y);
+
+		if(version > 0) {
+		}
+
+		::new(location)Location(id, name, position, x, y);
+	}
+
+	const std::string name;
+	const unsigned int position;
+
+	std::list<boost::shared_ptr<const Path> > paths;	
 	// key is the location position
 	std::map<unsigned int, unsigned int> distanceMap;
 
-	static const char* const Position_tag_string;
-	static const char* const Coordinate_tag_string;
-	static const char* const Name_tag_string;
+	Location& operator=(const Location& object);
 };
-
 
 inline unsigned int Location::getPosition() const {
 	return position;
@@ -79,23 +104,13 @@ inline const std::string& Location::getName() const {
 	return name;
 }
 
-inline const std::list<const Path*>& Location::getPaths() const {
+inline const std::list<boost::shared_ptr<const Path> >& Location::getPaths() const {
 	return paths;
 }
 
-inline Coordinate* Location::getCoordinate() const {
-	return coordinate;
-}
-
-
-inline void Location::setDistanceMap(std::map<unsigned int, unsigned int> distanceMap) {
+inline void Location::setDistanceMap(const std::map<unsigned int, unsigned int> distanceMap) {
 	this->distanceMap = distanceMap;
 }
-
-inline Units* Location::getGlobalUnits() const {
-	return globalUnits;
-}
-
 
 #endif // _CORE_LOCATION_HPP
 

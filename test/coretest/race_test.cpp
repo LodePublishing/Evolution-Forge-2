@@ -9,12 +9,12 @@ BOOST_FIXTURE_TEST_SUITE( Race_test, Race_Fixture )
 	BOOST_AUTO_TEST_CASE (Race_constructor)
 	{
 		BOOST_CHECK_EQUAL(test_race->getName(), test_race_name);
-		BOOST_CHECK_EQUAL(test_race->getID(), 0);
+		BOOST_CHECK_EQUAL(test_race->getId(), 0);
 	}
 
 	BOOST_AUTO_TEST_CASE (Race_ID)
 	{ 
-		int id1 = test_race->getID();
+		int id1 = test_race->getId();
 
 		std::list<Race*> races;
 		for(int i = 0; i < 98; i++) {
@@ -22,7 +22,7 @@ BOOST_FIXTURE_TEST_SUITE( Race_test, Race_Fixture )
 		}
 		
 		Race* test_race2 = new Race(test_race_name);
-		int id2 = test_race2->getID();
+		int id2 = test_race2->getId();
 		
 		BOOST_CHECK_EQUAL(id1+99, id2);
 

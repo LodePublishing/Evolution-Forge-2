@@ -1,77 +1,65 @@
-#include <iostream>
-#include <time.h>
-
 #pragma warning(push, 0)  
 #include <boost/random.hpp>
 #include <boost/generator_iterator.hpp>
+#include <boost/assign/list_of.hpp>
 #pragma warning(pop)
+
+#include <globalstorage.hpp>
 
 #include "map_fixture.hpp"
 
 Map_Fixture::Map_Fixture():
-test_map_name("map"),
+	Random_Fixture(),
+	test_map_name("map"),
 	test_file_name("Map1"),
 	test_filename_xml("demofile.xml"),
 	test_filename_raw("demofile.txt"),
-	seed(time(0))
+	test_position(init_positionvector_helper()),
+	test_location_name(init_locationnamevector_helper()),
+	test_distance(init_distancevector_helper()),
+	test_map(boost::shared_ptr<Map>(new Map(test_map_name, init_locationvector_helper(), init_pathlist_helper())))
 {
-	boost::mt19937 generator(static_cast<boost::uint32_t>(seed));
-	boost::uniform_int<> distribution(1, 100);
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > rnd(generator,  distribution); 
-	std::cout << "Setting up map fixture (seed " << seed << ")" << std::endl;
-
-	test_position.push_back(1);
-	test_position.push_back(2);
-	test_position.push_back(33);
-	test_position.push_back(5);
-
-	test_location_name.push_back("Location1"); 
-	test_location_name.push_back("Location2"); 
-	test_location_name.push_back("Location3");
-	test_location_name.push_back("Location4");
-
-	test_coordinate.push_back(Coordinate(1,1));
-	test_coordinate.push_back(Coordinate(10,1));
-	test_coordinate.push_back(Coordinate(20,10));
-	test_coordinate.push_back(Coordinate(1,10));
-
-	test_distance.push_back(11); 
-	test_distance.push_back(12); 
-	test_distance.push_back(13); 
-	test_distance.push_back(14); 
-	test_distance.push_back(24);
-
-	test_map = new Map(test_map_name);
-	test_units = new Units();
-
-
-	for(int i = 0; i < 4; i++) {
-		locations.push_back(new Location(test_location_name[i], test_position[i], test_coordinate[i], test_units));
-		test_map->addLocation(locations[i]);
-	}
-
-	paths.push_back(new Path(locations[0]->getPosition(), locations[1]->getPosition(), test_distance[0]));
-	test_map->addPath(paths[0]);
-	paths.push_back(new Path(locations[1]->getPosition(), locations[2]->getPosition(), test_distance[1]));
-	test_map->addPath(paths[1]);
-	paths.push_back(new Path(locations[1]->getPosition(), locations[3]->getPosition(), test_distance[4]));
-	test_map->addPath(paths[2]);
-	paths.push_back(new Path(locations[2]->getPosition(), locations[3]->getPosition(), test_distance[2]));
-	test_map->addPath(paths[3]);
-	paths.push_back(new Path(locations[3]->getPosition(), locations[0]->getPosition(), test_distance[3]));
-	test_map->addPath(paths[4]);
-	test_map->addPathsFromLocations();
-	// TODO sorting map needs entries in orderly fashion (first all paths from location index 0, then index 1, etc.pp.
-
-	test_map->calculateDistanceMap();
+	GLOBAL_STORAGE.addMap(test_map);	
 }
 
 Map_Fixture::~Map_Fixture() 
 {
-	delete test_map;
-	delete test_units;
-
 	Map::resetCounter();
 	Location::resetCounter();
 	Path::resetCounter();
+}
+
+const std::vector<unsigned int> Map_Fixture::init_positionvector_helper() {
+	std::vector<unsigned int> positionVector = boost::assign::list_of(1)(2)(33)(5);
+	return positionVector;
+}
+
+const std::vector<std::string> Map_Fixture::init_locationnamevector_helper() {
+	std::vector<std::string> locationNameVector = boost::assign::list_of("Location1")("Location2")("Location3")("Location4");
+	return locationNameVector;
+}
+
+const std::vector<unsigned int> Map_Fixture::init_distancevector_helper() {
+	std::vector<unsigned int> distanceVector = boost::assign::list_of(11)(12)(13)(14)(24);
+	return distanceVector;
+}
+
+const std::vector<boost::shared_ptr<Location> > Map_Fixture::init_locationvector_helper() {
+	std::vector<boost::shared_ptr<Location> > locationVector;
+	// don't use boost::assign::list_of, otherwise the locations are initialized in the wrong order!
+		locationVector.push_back(boost::shared_ptr<Location>(new Location(test_location_name[0], test_position[0], 1, 1)));
+		locationVector.push_back(boost::shared_ptr<Location>(new Location(test_location_name[1], test_position[1], 10, 1)));
+		locationVector.push_back(boost::shared_ptr<Location>(new Location(test_location_name[2], test_position[2], 20, 10)));
+		locationVector.push_back(boost::shared_ptr<Location>(new Location(test_location_name[3], test_position[3], 1, 10)));
+	return locationVector;
+}
+
+const std::list<boost::shared_ptr<const Path> > Map_Fixture::init_pathlist_helper() {
+	std::list<boost::shared_ptr<const Path> > pathList = boost::assign::list_of
+		(boost::shared_ptr<Path>(new Path(test_position[0], test_position[1], test_distance[0])))
+		(boost::shared_ptr<Path>(new Path(test_position[1], test_position[2], test_distance[1])))
+		(boost::shared_ptr<Path>(new Path(test_position[1], test_position[3], test_distance[4])))
+		(boost::shared_ptr<Path>(new Path(test_position[2], test_position[3], test_distance[2])))
+		(boost::shared_ptr<Path>(new Path(test_position[3], test_position[0], test_distance[3])));
+	return pathList;
 }

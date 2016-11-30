@@ -4,6 +4,7 @@
 
 #include <distance_fixture.hpp>
 
+#include <sstream>
 
 BOOST_FIXTURE_TEST_SUITE( Distance_test, Distance_Fixture )
 
@@ -11,6 +12,20 @@ BOOST_FIXTURE_TEST_SUITE( Distance_test, Distance_Fixture )
 	{
 		BOOST_CHECK_EQUAL(test_distance->getWidth(), test_width);
 		BOOST_CHECK_EQUAL(test_distance->getHeight(), test_height);
+
+		std::ostringstream os;
+		os << (test_width) << "x" << (test_height);
+		BOOST_CHECK_EQUAL(test_distance->toString(), os.str());
+	}
+
+	BOOST_AUTO_TEST_CASE (Distance_set)
+	{
+		Distance test_distance2(test_width, test_height);
+		test_distance2.setWidth(test_width*2);
+		BOOST_CHECK_EQUAL(test_distance2.getWidth(), test_width*2);
+
+		test_distance2.setHeight(test_height*2);
+		BOOST_CHECK_EQUAL(test_distance2.getHeight(), test_height*2);		
 	}
 
 	BOOST_AUTO_TEST_CASE (Distance_copy_constructor)

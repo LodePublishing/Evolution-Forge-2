@@ -1,10 +1,14 @@
 #include "government.hpp"
 
-Government::Government(const std::string& name):
+Government::Government(const std::string name):
 	name(name)
 {}
 
-Government::~Government()
+Government::Government(const unsigned int id, const std::string name):
+	ID<Government>(id),
+	name(name)
 {}
 
-const char* const Government::Name_tag_string = "name";
+
+Government::~Government()
+{}

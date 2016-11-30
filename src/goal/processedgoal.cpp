@@ -1,16 +1,14 @@
 #include "processedgoal.hpp"
 
-ProcessedGoal::ProcessedGoal(const bool isHaveable, const bool isBuildable, const bool isBuildableAtStart)://, const bool isBonus)://, const bool isCheckedAtStart):
+ProcessedGoal::ProcessedGoal(const bool isHaveable, const bool isBuildable):
 	haveable(isHaveable),
 	buildable(isBuildable),
-	buildableAtStart(isBuildableAtStart)
-	//, bonus(isBonus)	
-	//, checkedAtStart(isCheckedAtStart)
+	checked(false)
 {}
 
 ProcessedGoal::ProcessedGoal():
 	haveable(false),
 	buildable(false),
-	buildableAtStart(false)
+	checked(false)
 {
 }

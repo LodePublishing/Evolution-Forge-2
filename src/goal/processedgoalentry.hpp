@@ -11,32 +11,50 @@
 
 #include "processedgoal.hpp"
 
+
 class ProcessedGoalEntry
 {
 public:
-	ProcessedGoalEntry(const GoalEntry* const goalEntry, const Player* const player, const Map& map, const Units& startingUnits, const Rules* const rules);
+	ProcessedGoalEntry(const boost::shared_ptr<const GoalEntry> goalEntry, const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Map> map, const boost::shared_ptr<const Units> startingUnits, const boost::shared_ptr<const Rules> rules);
 	~ProcessedGoalEntry();
 
 	const std::list<std::list<std::list<Goal> > >& getGoalList() const;
-	const std::list<std::list<std::list<Goal> > >& getBonusList() const;
+	const std::map<UnitLocalNeutralKey, ProcessedGoal>& getProcessedGoalMap() const;
+	const std::list<unsigned int>& getBuildableUnits(const unsigned int locationId);
+
+	std::string getGoalString() const;
+	void addGoal(std::list<std::list<Goal> >& goal);
+
+	void fillBuildableListAndAddGoals(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map, const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Units> startingUnits); 
+
 private:
-	
+	void eraseRedundantGoals();
 	// call as soon as all goals were added
 	// recalculate whenever goalentry has changed
 
-	void fillBuildableListAndAddGoals(const Rules* const rules, const Map& map, const Player* const player, const Units& startingUnits); 
 	void eraseUnreachableORGoals();
 	// fill this list with all goals from goalEntry
 	// then add all steps in between as a goal (for fitness calculation)
 	std::list<std::list<std::list<Goal> > > goalList;
-	std::list<std::list<std::list<Goal> > > bonusList;
+	std::map<const unsigned int, std::list<unsigned int> > buildableUnits;
 
-	// all unitTypeIDs which buildings are buildable
-	std::list<unsigned int> buildableList;
+	// TODO Buildable at start
+	//TODO once buildableUnits are calculated make a tree, starting with the start units -> this when processing the build order!
+
 
 	// all units that could theoretically be build based on the startingUnits
-	std::map<UnitLocalNeutralKey, ProcessedGoal> processedGoalMap; // unitTypeID -> location -> buildable/isgoal etc.
-	
+	std::map<UnitLocalNeutralKey, ProcessedGoal> processedGoalMap; // unitTypeId -> location -> buildable/isgoal etc.
+
+	void clearProcessedGoalMap(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map);
+	void initializeProcessedGoalMap(const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Units> startingUnits);
+	void calculateReachableUnits(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map);
+	bool checkIfGoalsHaveable() const;
+
+	void uncheckProcessedGoalMap(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map);
+	void removeProcessedGoalFromMapIfUnchecked(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map);
+	void checkGoalRelated(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map);
+	void fillBuildableUnits();
+
 //		void addSpecialUnitsToBuildableList(); TODO?
 //		void recheckTooManyGoals(); for special things like building addons
 //		std::vector<unsigned int> phaenoToGenotype;
@@ -54,5 +72,18 @@ private:
 //		void giveBonusTo(const unsigned int unit, unsigned int caller, std::vector< std::vector<bool> >& checked);
 //		const bool isError(const unsigned int j, const unsigned int unit) const;
 };
+
+inline const std::list<unsigned int>& ProcessedGoalEntry::getBuildableUnits(const unsigned int locationId) {
+	return buildableUnits[locationId];
+}
+
+inline const std::map<UnitLocalNeutralKey, ProcessedGoal>& ProcessedGoalEntry::getProcessedGoalMap() const {
+	return processedGoalMap;
+}
+
+inline const std::list<std::list<std::list<Goal> > >& ProcessedGoalEntry::getGoalList() const {
+	return goalList;
+}
+
 
 #endif

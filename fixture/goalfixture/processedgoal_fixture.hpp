@@ -2,23 +2,17 @@
 #define _GOALTEST_PROCESSEDGOALFIXTURE_HPP
 
 #include <processedgoal.hpp>
+#include <random_fixture.hpp>
 
-struct ProcessedGoal_Fixture
+struct ProcessedGoal_Fixture : public Random_Fixture
 {
 	ProcessedGoal_Fixture();
 	~ProcessedGoal_Fixture();
 
-	const std::string test_filename_xml;
-	const std::string test_file_name;
-
-	bool test_isHaveable;
-	bool test_isBuildable;
-	bool test_isBuildableAtStart;
-
+	const bool test_isHaveable;
+	const bool test_isBuildable;
 
 	ProcessedGoal* test_processedgoal;
-
-	time_t seed;
 };
 
 

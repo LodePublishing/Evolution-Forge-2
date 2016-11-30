@@ -1,16 +1,12 @@
 #include "goalentry.hpp"
 
-/*
-GoalEntry::GoalEntry(std::string goal_name, std::list<std::list<std::list<Goal> > > goalList) :
-	name(goal_name),
-	goalList(goalList)
-{
-}
+GoalEntry::GoalEntry(const unsigned int id, const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList):
+	ID<GoalEntry>(id), 
+	name(name), 
+	goalList(goalList) 
+{ }
 
-
-GoalEntry::~GoalEntry()
-{ }*/
-
-
-const char* const GoalEntry::Name_tag_string = "name";
-const char* const GoalEntry::GoalList_tag_string = "goalList";
+GoalEntry::GoalEntry(const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList):
+	name(name),
+	goalList(goalList) 
+{ }

@@ -21,32 +21,57 @@
 class GoalEntry : public ID<GoalEntry>
 {
 public:
-	GoalEntry(const std::string& goal_name, const std::list<std::list<std::list<Goal> > >& goalList):name(goal_name),goalList(goalList) {}
+	GoalEntry(const unsigned int id, const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
+	GoalEntry(const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
 	~GoalEntry() {}
 
 	const std::string& getName() const;
-	// AND list ... OR list :)
+
+	// ALL [std::list<std::list<Goal> >]s in the std::list<[std::list<std::list<Goal> >] > list have to be fulfilled (AND)
+	// ANY [std::list<Goal>]s in the std::list<[std::list<Goal>] > list have to be fulfilled (OR)
+	// ALL [Goal]s in the std::list<Goal> have to be fulfilled (AND)
 	const std::list<std::list<std::list<Goal> > >& getGoalList() const;
-
-
-	static const char* const Name_tag_string;
-	static const char* const GoalList_tag_string;
 
 private:
 	friend class boost::serialization::access;
 
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(ID_tag_string, id);
-		ar & boost::serialization::make_nvp(Name_tag_string, name);
-		ar & boost::serialization::make_nvp(GoalList_tag_string, goalList);
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const GoalEntry* goalEntry, const unsigned int version) { 
+
+		const unsigned int& id = goalEntry->getId();
+		const std::string& name = goalEntry->getGoalList();
+		const std::list<std::list<std::list<Goal> > >& goalList = goalEntry->getGoalList();
+
 		if(version > 0) {
 		}
-	}
-	GoalEntry() {}
 
-	std::string name;
-	std::list<std::list<std::list<Goal> > > goalList;
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(goalList);
+	} 
+
+	template<class Archive> 
+	friend inline void load_construct_data(Archive& ar, GoalEntry*& goalEntry, const unsigned int version)
+	{
+		unsigned int id;
+		std::string name;
+		std::list<std::list<std::list<Goal> > > goalList;
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(name)
+		   & BOOST_SERIALIZATION_NVP(goalList);
+
+		::new(goalEntry)GoalEntry(id, name, goalList);
+	}
+
+	const std::string name;
+	const std::list<std::list<std::list<Goal> > > goalList;
+
+	GoalEntry& operator=(const GoalEntry& other);
 };
 
 inline const std::list<std::list<std::list<Goal> > >& GoalEntry::getGoalList() const {

@@ -5,31 +5,25 @@ class ProcessedGoal
 {
 public:
 	ProcessedGoal();
-	ProcessedGoal(const bool isHaveable, const bool isBuildable, const bool isBuildableAtStart);//, const bool isCheckedAtStart);
+	ProcessedGoal(const bool isHaveable, const bool isBuildable);
 	~ProcessedGoal() {}
 
 	bool isHaveable() const;
 	bool isBuildable() const;
-	bool isBuildableAtStart() const;
+	bool wasChecked() const;
 
 	void setHaveable(const bool haveable);
 	void setBuildable(const bool buildable);
-	void setBuildableAtStart(const bool buildableAtStart);
-
-	// temporary variable to prevent endless recursion in case of a set field 'create' TODO
-	//const bool isCheckedAtStart() const;
-
+	bool setWasChecked(const bool checked);
+	
 private:
 	bool haveable; // all buildable units XOR all starting units
-	//bool goal; // all units that give points
 	bool buildable; // all buildable units
-	// temporary variables for faster calculation
-	bool buildableAtStart;
 	
-	//bool checkedAtStart;  TODO?
-	bool bonus;
+	// temporary item to finalize the values
+	bool checked;
 
-	// no "bonus", the tree is generated completely (so all solutions are valid)
+	// no "bonus", the tree is generated completely (so all solutions are valid) TODO?
 };
 
 
@@ -41,14 +35,22 @@ inline bool ProcessedGoal::isBuildable() const {
 	return buildable;
 }
 
-inline bool ProcessedGoal::isBuildableAtStart() const {
-	return buildableAtStart;
+inline bool ProcessedGoal::wasChecked() const {
+	return checked;
+}
+
+inline bool ProcessedGoal::setWasChecked(const bool checked) {
+	if(this->checked != checked) {
+		this->checked = checked;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 inline void ProcessedGoal::setHaveable(const bool haveable) {
 	this->haveable = haveable;
-	if(!haveable) {
-		buildableAtStart = false;
+	if(!haveable) {		
 		buildable = false;
 	}
 }
@@ -57,18 +59,9 @@ inline void ProcessedGoal::setBuildable(const bool buildable) {
 	this->buildable = buildable;
 	if(buildable) {
 		haveable = true;
-	} else {
-		buildableAtStart = false;
 	}
 }
 
-inline void ProcessedGoal::setBuildableAtStart(const bool buildableAtStart) {
-	this->buildableAtStart = buildableAtStart;
-	if(buildableAtStart) {
-		buildable = true;
-		haveable = true;
-	}
-}
 
 
 #endif // _CORE_PROCESSEDGOAL_HPP

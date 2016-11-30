@@ -6,17 +6,10 @@
 class GameData
 {
 public:
-	const Rules* getRules() const;
-
+	virtual const boost::shared_ptr<const Rules> getRules() const = 0;
 protected:
-	GameData(Rules* rules);
-	~GameData();
-
-	Rules* rules;
+	GameData() {}
+	virtual ~GameData() {}
 };
-
-inline const Rules* GameData::getRules() const {
-	return rules;
-}	
 
 #endif // _GAMES_GAMEDATA_HPP

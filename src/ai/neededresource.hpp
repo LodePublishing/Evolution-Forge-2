@@ -15,9 +15,9 @@ public:
 
 	// temporary variables holding the needed resources
 	// together with TimeChange a time can be calculated how long this build order has to wait until a new unit can be built
-	std::map<UnitGlobalKey, unsigned int> neededGlobalResources; // playerID -> unitTypeID -> amount
-	std::map<UnitLocalKey, unsigned int> neededLocalResources; // locationID -> playerID -> unitTypeID -> amount
-	std::map<UnitLocalNeutralKey, unsigned int> neededLocalNeutralResources; // locationID -> unitTypeID -> amount
+	std::map<UnitGlobalKey, unsigned int> neededGlobalResources; // playerId -> unitTypeId -> amount
+	std::map<UnitLocalKey, unsigned int> neededLocalResources; // locationId -> playerId -> unitTypeId -> amount
+	std::map<UnitLocalNeutralKey, unsigned int> neededLocalNeutralResources; // locationId -> unitTypeId -> amount
 
 private:
 

@@ -13,6 +13,7 @@ class Coordinate
 {
 public:
 	Coordinate(const Coordinate& coordinate);
+	virtual ~Coordinate() {}
 	Coordinate(const signed int x, const signed int y);
 	Coordinate& operator=(const Coordinate& coordinate);
 	bool operator==(const Coordinate& coordinate) const;
@@ -34,19 +35,19 @@ public:
 
 	signed int getX() const;
 	signed int getY() const;
-	static const char* const x_tag_string;
-	static const char* const y_tag_string;
 
-private:
+protected:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
+	
+	template<class Archive> 
+	void serialize(Archive &ar, const unsigned int version)
 	{
-		ar & boost::serialization::make_nvp(x_tag_string, x);
-		ar & boost::serialization::make_nvp(y_tag_string, y);
+		ar & BOOST_SERIALIZATION_NVP(x);
+		   & BOOST_SERIALIZATION_NVP(y);
+
 		if(version > 0) {
 		}
-	}
-	Coordinate() {}
+	}	
 
 	signed int x;
 	signed int y;
@@ -62,8 +63,6 @@ inline Coordinate::Coordinate(const signed int x, const signed int y):
 	BOOST_ASSERT(x >= -10000 && x <= 10000);
 	BOOST_ASSERT(y >= -10000 && y <= 10000);	
 }
-
-
 
 inline signed int Coordinate::getX() const {
 	return x;

@@ -3,7 +3,7 @@
 
 #include <list>
 
-// contains directly the unitTypeID, not just some genotype
+// contains directly the unitTypeId, not just some genotype
 class Code 
 {
 public:

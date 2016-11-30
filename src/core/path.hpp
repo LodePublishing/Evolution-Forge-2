@@ -17,8 +17,12 @@
 class Path : public ID<Path>
 {
 public:
-
-	Path(const unsigned int sourceLocationPosition, const unsigned int targetLocationPosition,
+	Path(const unsigned int id,
+		const unsigned int sourceLocationPosition, 
+		const unsigned int targetLocationPosition,
+		const unsigned int locationDistance);
+	Path(const unsigned int sourceLocationPosition, 
+		const unsigned int targetLocationPosition,
 		const unsigned int locationDistance);
 	~Path();
 
@@ -31,33 +35,55 @@ public:
 	unsigned int getDistance() const;
 	const std::string toString() const;
 
-	
-
-	static const char* const Source_tag_string;
-	static const char* const Target_tag_string;
-	static const char* const Distance_tag_string;
-
 private:
 	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & boost::serialization::make_nvp(ID_tag_string, id);
-		ar & boost::serialization::make_nvp(Source_tag_string, sourceLocationPosition);
-		ar & boost::serialization::make_nvp(Target_tag_string, targetLocationPosition);
-		ar & boost::serialization::make_nvp(Distance_tag_string, locationDistance);
-		// targetLocation needs to be reassigned!
+
+	template<class Archive> 
+	void serialize(Archive &ar, const unsigned int version)
+	{ }
+
+	template<class Archive>
+	friend inline void save_construct_data(Archive &ar, const Path* path, const unsigned int version) { 
+
+		const unsigned int& id = path->getId();
+		const unsigned int& sourceLocationPosition = path->getSourceLocationPosition();
+		const unsigned int& targetLocationPosition = path->getTargetLocationPosition();
+		const unsigned int& locationDistance = path->getDistance();
+
 		if(version > 0) {
 		}
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(sourceLocationPosition)
+		   & BOOST_SERIALIZATION_NVP(targetLocationPosition)
+		   & BOOST_SERIALIZATION_NVP(locationDistance);
 	}
-	// only use for serialization / deserialization
-	Path() {}
 
-	unsigned int sourceLocationPosition;
-	unsigned int targetLocationPosition;
-	unsigned int locationDistance;
-	
+	template<class Archive> 
+	inline friend void load_construct_data(Archive& ar, Path*& path, const unsigned int version)
+	{
+		unsigned int id;
+		unsigned int sourceLocationPosition;
+		unsigned int targetLocationPosition;
+		unsigned int locationDistance;
+
+		ar & BOOST_SERIALIZATION_NVP(id)
+		   & BOOST_SERIALIZATION_NVP(sourceLocationPosition)
+		   & BOOST_SERIALIZATION_NVP(targetLocationPosition)
+		   & BOOST_SERIALIZATION_NVP(locationDistance);
+
+		if(version > 0) {
+		}
+
+		::new(path)Path(id, sourceLocationPosition, targetLocationPosition, locationDistance);
+	}
+
+	const unsigned int sourceLocationPosition;
+	const unsigned int targetLocationPosition;
+	const unsigned int locationDistance;
+
+	Path& operator=(const Path& other);
 };
-
 
 inline unsigned int Path::getDistance() const {
 	return locationDistance;

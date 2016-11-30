@@ -1,27 +1,37 @@
-#ifndef _CORETEST_RULESFIXTURE_HPP
-#define _CORETEST_RULESFIXTURE_HPP
+#ifndef _COREFIXTURE_RULESFIXTURE_HPP
+#define _COREFIXTURE_RULESFIXTURE_HPP
+
+#pragma warning(push, 0)  
+#include <boost/smart_ptr.hpp>
+#pragma warning(pop)
 
 #include <rules.hpp>
+
+#include <random_fixture.hpp>
+
 #include "unittype_fixture.hpp"
 
-struct Rules_Fixture
+
+struct Rules_Fixture : public Random_Fixture
 {
+public:
 	Rules_Fixture();
 	~Rules_Fixture();
 
 	const std::string test_filename_xml;
 	const std::string test_file_name;
 	const std::string test_rules_name;
+
 	const UnitType_Fixture unitTypeFixture;
 
-	Race* test_race;
-	UnitType* unitType1;
-	UnitType* unitType2;
+	const boost::shared_ptr<const UnitType> unitType1;
+	const boost::shared_ptr<const UnitType> unitType2;
 
-	Rules* test_rules;
+	const boost::shared_ptr<const Rules> test_rules;
 
-	time_t seed;
+private:
+	const std::list<boost::shared_ptr<const UnitType> > init_unittypelist_helper();
 };
 
 
-#endif // _CORETEST_RULESFIXTURE_HPP
+#endif // _COREFIXTURE_RULESFIXTURE_HPP

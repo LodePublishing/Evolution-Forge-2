@@ -8,19 +8,21 @@
 #include <boost/assert.hpp>
 #pragma warning(pop)
 
+#include <uuid.hpp>
+
 class Goal
 {
 	public:
-		Goal(const unsigned int unitTypeId, const unsigned int locationId, const unsigned int count, const unsigned int time = GOAL_MAX_TIME);
+		Goal(const boost::uuids::uuid unitTypeId, const boost::uuids::uuid locationId, const unsigned int count, const unsigned int time = GOAL_MAX_TIME);
 		~Goal();
 		bool operator<(const Goal& goal);
 		Goal(const Goal& goal);
 		bool operator==(const Goal& goal) const;
 
-		unsigned int getUnitTypeId() const;
+		boost::uuids::uuid getUnitTypeId() const;
+		boost::uuids::uuid getLocationId() const;
 		unsigned int getTime() const;
-		unsigned int getCount() const;
-		unsigned int getLocationId() const;
+		unsigned int getCount() const;		
 
 		static const unsigned int GOAL_MAX_TIME;
 
@@ -34,8 +36,8 @@ class Goal
 		template<class Archive>
 		friend inline void save_construct_data(Archive &ar, const Goal* goal, const unsigned int version) { 
 
-			const unsigned int& unitTypeId = goal->getUnitTypeId();
-			const unsigned int& locationId = goal->getLocationId();
+			const boost::uuids::uuid& unitTypeId = goal->getUnitTypeId();
+			const boost::uuids::uuid& locationId = goal->getLocationId();
 			const unsigned int& count = goal->getCount();
 			const unsigned int& time = goal->getTime();
 
@@ -51,8 +53,8 @@ class Goal
 		template<class Archive> 
 		friend inline void load_construct_data(Archive& ar, Goal*& goal, const unsigned int version)
 		{
-			unsigned int unitTypeId;
-			unsigned int locationId;
+			boost::uuids::uuid unitTypeId;
+			boost::uuids::uuid locationId;
 			unsigned int count;
 			unsigned int time;
 
@@ -68,16 +70,20 @@ class Goal
 		}
 
 		// TODO actual pointers?
-		unsigned int unitTypeId;
-		unsigned int locationId;
+		boost::uuids::uuid unitTypeId;
+		boost::uuids::uuid locationId;
 
 		// count can be 0! Then it is a 'bonus'
 		unsigned int count;
 		unsigned int time;
 };
 
-inline unsigned int Goal::getUnitTypeId() const {
+inline boost::uuids::uuid Goal::getUnitTypeId() const {
 	return unitTypeId;
+}
+
+inline boost::uuids::uuid Goal::getLocationId() const {
+	return locationId;
 }
 
 inline unsigned int Goal::getTime() const {
@@ -86,10 +92,6 @@ inline unsigned int Goal::getTime() const {
 
 inline unsigned int Goal::getCount() const {
 	return count;
-}
-
-inline unsigned int Goal::getLocationId() const {
-	return locationId;
 }
 
 

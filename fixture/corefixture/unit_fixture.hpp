@@ -5,30 +5,19 @@
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <random_fixture.hpp>
+#include <unit.hpp>
 
-#include "map_fixture.hpp"
-#include "player_fixture.hpp"
-#include "unittype_fixture.hpp"
-
-class Units;
-
-struct Unit_Fixture : public Random_Fixture
+struct Unit_Fixture
 {
-	Unit_Fixture();
-	~Unit_Fixture();
+	const unsigned int test_construction_time;
 
-	const UnitType_Fixture unitTypeFixture;
-	const Player_Fixture playerFixture;
-	const Map_Fixture mapFixture;
-
-	unsigned int test_construction_time;
-
-	const boost::shared_ptr<Units> test_units;
 	const boost::shared_ptr<const UnitType> unitType1;
 	const boost::shared_ptr<const UnitType> unitType2;
 
 	// TODO evtl unitTypes in unitTypeFixture definieren
+
+	Unit_Fixture();
+	~Unit_Fixture();
 };
 
 #endif // _COREFIXTURE_UNITFIXTURE_HPP

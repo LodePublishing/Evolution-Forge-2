@@ -8,22 +8,18 @@
 #include <unitresourcetype.hpp>
 #include <enums/unitresourcetypeenums.hpp>
 
-#include <random_fixture.hpp>
-
-struct UnitResourceType_Fixture : public Random_Fixture
+struct UnitResourceType_Fixture
 {
-public:
+	const eUnitResourceType test_eUnitResourceType;
+	const signed int test_amount;
+	const std::list<std::list<boost::uuids::uuid> > test_unitTypeIdList;
+	const boost::shared_ptr<const UnitResourceType> test_unitResourceType;
+
 	UnitResourceType_Fixture();
 	~UnitResourceType_Fixture();
 
-	const eUnitResourceType test_unitResourceType;
-	signed int test_amount;
-	const std::list<std::list<unsigned int> > test_unitTypeIdList;	
-
-	const boost::shared_ptr<const UnitResourceType> test_unitresourcetype;
-
 private:
-	const std::list<std::list<unsigned int> > init_unittypeidlist_helper();
+	const std::list<std::list<boost::uuids::uuid> > init_unittypeidlist_helper();
 };
 
 #endif // _COREFIXTURE_UNITRESOURCETYPEFIXTURE_HPP

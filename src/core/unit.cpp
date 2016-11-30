@@ -46,7 +46,7 @@ Unit::Unit(
 
 
 Unit::Unit(
-	const unsigned int id,
+	const boost::uuids::uuid id,
 	const boost::shared_ptr<const Player> player, 
 	const boost::shared_ptr<const UnitType> unitType,
 	const boost::shared_ptr<const Location> location,
@@ -54,10 +54,10 @@ Unit::Unit(
 	const unsigned int count,
 	const unsigned int remainingMovementTime,
 	const unsigned int remainingConstructionTime,
-	const std::list<unsigned int> occupiedFacilityIdList,
-	const std::list<unsigned int> constructingUnitIdList
+	const std::list<boost::uuids::uuid> occupiedFacilityIdList,
+	const std::list<boost::uuids::uuid> constructingUnitIdList
 	):
-	ID<Unit>(id),
+	UUID<Unit>(id),
 	player(player),
 	playerId(player->getId()),
 	unitType(unitType),
@@ -85,13 +85,13 @@ void Unit::initialize(const boost::shared_ptr<Units> units) {
 	occupiedFacilityList.clear();
 	constructingUnitList.clear();
 
-	for(std::list<unsigned int>::const_iterator i = occupiedFacilityIdList.begin(); i != occupiedFacilityIdList.end(); i++) {
+	for(std::list<boost::uuids::uuid>::const_iterator i = occupiedFacilityIdList.begin(); i != occupiedFacilityIdList.end(); i++) {
 		occupiedFacilityList.push_back(units->getUnit(*i));
 
 		globalUnits->removeOneLocalAvailable(occupiedFacilityList.back()->getLocalKey());
 	}
 
-	for(std::list<unsigned int>::const_iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
+	for(std::list<boost::uuids::uuid>::const_iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
 		constructingUnitList.push_back(units->getUnit(*i));
 	}
 }
@@ -100,36 +100,41 @@ void Unit::removeUnit() {
 	globalUnits->removeUnit(shared_from_this());
 }
 
+// remove unit from all occupied facilities
+// cancels all constructions that this facility currently builds
 void Unit::clearConstructions()
 {
 	for(std::list<boost::shared_ptr<Unit> >::const_iterator u = occupiedFacilityList.begin(); u != occupiedFacilityList.end(); u++) {
 		(*u)->removeFromConstruction(shared_from_this());
 	}
+	occupiedFacilityList.clear();
+	occupiedFacilityIdList.clear();
 
 	for(std::list<boost::shared_ptr<Unit> >::const_iterator u = constructingUnitList.begin(); u != constructingUnitList.end(); u++) {
 		(*u)->cancelConstruction(shared_from_this());
 	}
+	constructingUnitList.clear();
+	constructingUnitIdList.clear();
 }
 
 Unit::~Unit() {
 	//if(!this->isUnderConstruction()) {
 	//	globalUnits->removeUnit(this);
-	//}
-
+	//} TODO?
 }
 
-/*
+
 // adds a unit to the construction queue of the unit
-bool Unit::addToConstruction(Unit* unit) {
+bool Unit::addToConstruction(const boost::shared_ptr<Unit> unit) {
 	if(isAvailable()) {
-		constructingUnit.push_back(unit);
+		constructingUnitList.push_back(unit);
 		globalUnits->removeOneLocalAvailable(getLocalKey());
 		return true;
 	} else {
 		return false;
 	}
 	// TODO multiple construction slots?
-}*/ // TODO?
+} // TODO?
 
 void Unit::removeFromConstruction(const boost::shared_ptr<const Unit> unit) {
 	bool was_constructing = isConstructing();
@@ -141,20 +146,27 @@ void Unit::removeFromConstruction(const boost::shared_ptr<const Unit> unit) {
 				globalUnits->addOneLocalAvailable(getLocalKey());
 				// TODO multiple construction slots?
 			}
-			return;
+			for(std::list<boost::uuids::uuid>::iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
+				if(*i == unit->getId()) {
+					constructingUnitIdList.erase(i);
+					return;
+				}
+			}
+			BOOST_ASSERT(false);
 		}
 	}
 }
-// TODO
 
+// cancels the construction of a building
+// all units which were occupied by the construction need to be notified
 void Unit::cancelConstruction(boost::shared_ptr<const Unit> unit) {
-//	globalUnits->removeUnit(this); 
 	for(std::list<boost::shared_ptr<Unit> >::const_iterator u = occupiedFacilityList.begin(); u != occupiedFacilityList.end(); u++) {
 		if(unit->getId() != (*u)->getId()) { // ignore the facility itself! otherwise their constructingUnits list gets corrupted TODO? Explanation
 			(*u)->removeFromConstruction(shared_from_this());
 		}
 	}
 	occupiedFacilityList.clear();
+	occupiedFacilityIdList.clear();
 }
 
 
@@ -212,25 +224,26 @@ void Unit::process() {
 					(*i)->removeFromConstruction(shared_from_this());
 				}
 				occupiedFacilityList.clear();
+				occupiedFacilityIdList.clear();
 
-				// make this unit available
-				globalUnits->addOneLocalAvailable(getLocalKey());
+				// add this unit
+				globalUnits->addLocalUnit(shared_from_this());
 
 			}
-
-			// TODO , je nach Typ!
-			// TODO, aufpassen beim Aufräumen, in welcher Reihenfolge was gelöscht wird! Evtl erst mal alle Listen leeren und dann erst löschen...
 		}
 }
 
 void Unit::addOccupiedFacility(const boost::shared_ptr<Unit> facility) {
 	this->occupiedFacilityList.push_back(facility);
+	this->occupiedFacilityIdList.push_back(facility->getId());
 }
 
+// adds a unit to the building queue
 void Unit::addConstructingUnit(const boost::shared_ptr<Unit> unit) {
 	bool was_available = this->isAvailable();
 
 	this->constructingUnitList.push_back(unit);
+	this->constructingUnitIdList.push_back(unit->getId());
 
 	// is this facility became available again? Notify the listeners
 	if(this->isAvailable() != was_available) {

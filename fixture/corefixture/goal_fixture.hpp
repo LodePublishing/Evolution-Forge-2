@@ -9,18 +9,18 @@
 
 #include <random_fixture.hpp>
 
-struct Goal_Fixture : public Random_Fixture
+struct Goal_Fixture
 {
-	Goal_Fixture();
-	~Goal_Fixture();
+	const boost::uuids::uuid test_unitTypeId;
+	const boost::uuids::uuid test_locationId;
 
-	unsigned int test_unitTypeId;
-	unsigned int test_locationId;
-
-	unsigned int test_count;
-	unsigned int test_time;
+	const unsigned int test_count;
+	const unsigned int test_time;
 
 	const boost::shared_ptr<const Goal> test_goal;
+	
+	Goal_Fixture();
+	~Goal_Fixture();
 };
 
 #endif // _COREFIXTURE_GOALFIXTURE_HPP

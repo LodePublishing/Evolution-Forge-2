@@ -4,8 +4,7 @@
 
 #include <coordinate_fixture.hpp>
 
-
-BOOST_FIXTURE_TEST_SUITE( Coordinate_test, Coordinate_Fixture )
+BOOST_FIXTURE_TEST_SUITE( Coordinate_test, Coordinate_Fixture)
 
 	BOOST_AUTO_TEST_CASE (Coordinate_constructor)
 	{

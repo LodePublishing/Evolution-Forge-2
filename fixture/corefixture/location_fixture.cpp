@@ -4,21 +4,18 @@
 #pragma warning(pop)
 
 #include "location_fixture.hpp"
+#include "path_fixture.hpp"
+#include <random_fixture.hpp>
 
 Location_Fixture::Location_Fixture():
-	Random_Fixture(),
-	path_fixture(),
-
 	test_name("Test_Location"),	
-	test_position(rnd()),
-	test_x(rnd()),
-	test_y(rnd()),
+	test_position(Random_Fixture::instance().rnd()),
+	test_x(Random_Fixture::instance().rnd()),
+	test_y(Random_Fixture::instance().rnd()),
 	test_location(boost::shared_ptr<Location>(new Location(test_name, test_position, test_x, test_y)))
 {
-	test_location->addPath(path_fixture.test_path);
+	test_location->addPath(GlobalFixture etc... Path_Fixture::instance().test_path);
 }
 
 Location_Fixture::~Location_Fixture() 
-{
-	Location::resetCounter();
-}
+{ }

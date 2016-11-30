@@ -1,6 +1,6 @@
 #include "goal.hpp"
 
-Goal::Goal(const unsigned int unitTypeId, const unsigned int locationId, const unsigned int count, const unsigned int time) :
+Goal::Goal(const boost::uuids::uuid unitTypeId, const boost::uuids::uuid locationId, const unsigned int count, const unsigned int time) :
 	unitTypeId(unitTypeId),
 	locationId(locationId),
 	count(count),

@@ -4,16 +4,21 @@
 #pragma warning(push, 0)
 #include <boost/random/variate_generator.hpp>
 #include <boost/random.hpp> 
+#include <boost/uuid/uuid_generators.hpp>
 #pragma warning(pop)
 
-class Random_Fixture
-{
-protected:
-	Random_Fixture();
-	virtual ~Random_Fixture() {}
+#include <singleton.hpp>
 
+class Random_Fixture : public Singleton<Random_Fixture>
+{
+	friend class Singleton<Random_Fixture>;
+public:
 	unsigned int rnd();
+	~Random_Fixture();
+protected:		
+	Random_Fixture(const Random_Fixture& other):seed(other.seed),generator(other.generator),distribution(other.distribution),rndgenerator(other.rndgenerator){}
 private:
+	Random_Fixture();
 	time_t seed;
 	boost::mt19937 generator;
 	boost::uniform_int<> distribution;

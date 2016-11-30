@@ -3,6 +3,7 @@
 #pragma warning(pop)
 
 #include <location_fixture.hpp>
+#include <path_fixture.hpp>
 
 BOOST_FIXTURE_TEST_SUITE( Location_test, Location_Fixture )
 
@@ -12,9 +13,9 @@ BOOST_FIXTURE_TEST_SUITE( Location_test, Location_Fixture )
 		BOOST_CHECK_EQUAL(test_location->getName(), test_name);		
 		BOOST_CHECK_EQUAL(test_location->getX(), test_x);
 		BOOST_CHECK_EQUAL(test_location->getY(), test_y);
-		BOOST_CHECK_EQUAL(test_location->getPaths().front()->getSourceLocationPosition(), path_fixture.test_path->getSourceLocationPosition());
-		BOOST_CHECK_EQUAL(test_location->getPaths().front()->getTargetLocationPosition(), path_fixture.test_path->getTargetLocationPosition());
-		BOOST_CHECK_EQUAL(test_location->getPaths().front()->getDistance(), path_fixture.test_path->getDistance());
+		BOOST_CHECK_EQUAL(test_location->getPaths().front()->getSourceLocationPosition().test_path->getSourceLocationPosition());
+		BOOST_CHECK_EQUAL(test_location->getPaths().front()->getTargetLocationPosition().test_path->getTargetLocationPosition());
+		BOOST_CHECK_EQUAL(test_location->getPaths().front()->getDistance().test_path->getDistance());
 
 	}
 

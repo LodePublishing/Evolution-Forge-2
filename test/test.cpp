@@ -30,8 +30,8 @@ private:
 	friend class boost::serialization::access;
 	template<class Archive> 
 	void serialize(Archive &ar, const unsigned int version) {
-			// hier nur: Superklassen aufrufen! ID etc.
-		//ar  & BOOST_SERIALIZATION_BASE_OBJECT_NVP(ID o.ae.);
+			// hier nur: Superklassen aufrufen! UUID etc.
+		//ar  & BOOST_SERIALIZATION_BASE_OBJECT_NVP(UUID o.ae.);
 	}
 
 	template<class Archive>

@@ -7,15 +7,13 @@
 
 #include <race.hpp>
 
-#include <random_fixture.hpp>
-
-struct Race_Fixture : public Random_Fixture
+struct Race_Fixture
 {
-	Race_Fixture();
-	~Race_Fixture();
-	
 	const std::string test_race_name;
 	const boost::shared_ptr<const Race> test_race;
+
+	Race_Fixture();
+	~Race_Fixture();
 };
 
 

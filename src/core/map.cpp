@@ -24,8 +24,8 @@ Map::Map(const std::string& name, const std::vector<boost::shared_ptr<Location> 
 
 }
 
-Map::Map(const unsigned int id, const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList):
-	ID<Map>(id),
+Map::Map(const boost::uuids::uuid id, const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList):
+	UUID<Map>(id),
 	name(name),
 	locationVector(locationVector),
 	pathList(pathList),

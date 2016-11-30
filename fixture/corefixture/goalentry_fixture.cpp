@@ -4,6 +4,7 @@
 
 #include <time.h>
 #include "goalentry_fixture.hpp"
+#include <random_fixture.hpp>
 
 GoalEntry_Fixture::GoalEntry_Fixture():
 	test_goalentry_name("my_goalentry_Name"),
@@ -11,28 +12,27 @@ GoalEntry_Fixture::GoalEntry_Fixture():
 	test_goalentry(boost::shared_ptr<const GoalEntry>(new GoalEntry(test_goalentry_name, test_goalentry_goallist)))		
 { }
 
-GoalEntry_Fixture::~GoalEntry_Fixture() {
-	GoalEntry::resetCounter();
-}
+GoalEntry_Fixture::~GoalEntry_Fixture() { }
 
 const std::list<std::list<std::list<Goal> > > GoalEntry_Fixture::init_goallist_helper() {
 	const std::list<std::list<std::list<Goal> > > l = 
 		boost::assign::list_of
 			(boost::assign::list_of
 				(boost::assign::list_of
-					(Goal(rnd(), rnd(), rnd()))
-					(Goal(rnd(), rnd(), rnd()))
+					(Goal(boost::uuids::random_generator()(), boost::uuids::random_generator()(), Random_Fixture::instance().rnd()))
+					(Goal(boost::uuids::random_generator()(), boost::uuids::random_generator()(), Random_Fixture::instance().rnd()))
 				)
 				(boost::assign::list_of
-					(Goal(rnd(), rnd(), rnd(), rnd()))
+					(Goal(boost::uuids::random_generator()(), boost::uuids::random_generator()(), Random_Fixture::instance().rnd(), Random_Fixture::instance().rnd()))
 				)
 			)
 			(boost::assign::list_of
 				(boost::assign::list_of
-					(Goal(rnd(), rnd(), 0))
-					(Goal(rnd(), rnd(), rnd()))
-					(Goal(rnd(), rnd(), rnd(), 0))
+					(Goal(boost::uuids::random_generator()(), boost::uuids::random_generator()(), 0))
+					(Goal(boost::uuids::random_generator()(), boost::uuids::random_generator()(), Random_Fixture::instance().rnd()))
+					(Goal(boost::uuids::random_generator()(), boost::uuids::random_generator()(), Random_Fixture::instance().rnd(), 0))
 				)
 			);
+	// TODO reale IDs?
 	return l;
 }

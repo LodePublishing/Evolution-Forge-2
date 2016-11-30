@@ -14,14 +14,14 @@
 #include <boost/serialization/nvp.hpp>
 #pragma warning(pop)
 
+#include <uuid.hpp>
+
 #include "goal.hpp"
-#include "id.hpp"
 
-
-class GoalEntry : public ID<GoalEntry>
+class GoalEntry : public UUID<GoalEntry>
 {
 public:
-	GoalEntry(const unsigned int id, const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
+	GoalEntry(const boost::uuids::uuid id, const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
 	GoalEntry(const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
 	~GoalEntry() {}
 
@@ -42,7 +42,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const GoalEntry* goalEntry, const unsigned int version) { 
 
-		const unsigned int& id = goalEntry->getId();
+		const boost::uuids::uuid& id = goalEntry->getId();
 		const std::string& name = goalEntry->getGoalList();
 		const std::list<std::list<std::list<Goal> > >& goalList = goalEntry->getGoalList();
 
@@ -57,7 +57,7 @@ private:
 	template<class Archive> 
 	friend inline void load_construct_data(Archive& ar, GoalEntry*& goalEntry, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
 		std::list<std::list<std::list<Goal> > > goalList;
 

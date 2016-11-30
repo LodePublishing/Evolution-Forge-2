@@ -8,13 +8,13 @@
 #include <boost/serialization/nvp.hpp>
 #pragma warning(pop)
 
-#include "id.hpp"
+#include <uuid.hpp>
 
-class Government : public ID<Government>
+class Government : public UUID<Government>
 {
 public:
 	Government(const std::string name);
-	Government(const unsigned int id, const std::string name);
+	Government(const boost::uuids::uuid id, const std::string name);
 	~Government();
 	
 	const std::string& getName() const;
@@ -29,7 +29,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Government* government, const unsigned int version) { 
 
-		const unsigned int& id = government->getId();
+		const boost::uuids::uuid& id = government->getId();
 		const std::string& name = government->getName();
 
 		if(version > 0) {
@@ -42,7 +42,7 @@ private:
 	template<class Archive> 
 	inline friend void load_construct_data(Archive& ar, Government*& government, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
 
 		ar & BOOST_SERIALIZATION_NVP(id)

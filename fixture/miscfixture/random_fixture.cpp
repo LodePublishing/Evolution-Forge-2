@@ -15,6 +15,9 @@ Random_Fixture::Random_Fixture():
 	std::cout << "[Fixture seed " << seed << "]" << std::endl;
 }
 
+Random_Fixture::~Random_Fixture()
+{ }
+
 unsigned int Random_Fixture::rnd() {
 	return rndgenerator();
 }

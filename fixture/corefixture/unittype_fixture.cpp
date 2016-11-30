@@ -5,16 +5,15 @@
 #pragma warning(pop)
 
 #include "unittype_fixture.hpp"
+#include <random_fixture.hpp>
 
 UnitType_Fixture::UnitType_Fixture():
-	Random_Fixture(),
-	raceFixture(),
 	test_unitName1("Test Unit Name1"), 
 	test_unitName2("Test Unit Name2"), 
-	test_buildtime(rnd()),
-	test_maxcount(rnd()),
+	test_buildtime(Random_Fixture::instance().rnd()),
+	test_maxcount(Random_Fixture::instance().rnd()),
 
-	test_speed(rnd()),
+	test_speed(Random_Fixture::instance().rnd()),
 	test_default_speed(0), 
 	test_unitMovementType(GROUND_MOVEMENT_TYPE), 
 	test_default_movementType(NO_MOVEMENT_TYPE), 
@@ -24,23 +23,21 @@ UnitType_Fixture::UnitType_Fixture():
 	test_resourceType2(FACILITY_IS_NEEDED_UNTIL_COMPLETE_RESOURCE), 
 	test_resourceType3(GLOBAL_PREREQUISITE_RESOURCE),
 
-	test_unitID1(rnd()),
-	test_unitID2(rnd()),
-	test_unitID3(rnd()),
-	test_unitID4(rnd()),
-	test_unitID5(rnd()),
+	test_unitID1(Random_Fixture::instance().rnd()),
+	test_unitID2(Random_Fixture::instance().rnd()),
+	test_unitID3(Random_Fixture::instance().rnd()),
+	test_unitID4(Random_Fixture::instance().rnd()),
+	test_unitID5(Random_Fixture::instance().rnd()),
 
-	test_amount1(rnd()),
-	test_amount2(rnd()),
-	test_amount3(rnd()),
+	test_amount1(Random_Fixture::instance().rnd()),
+	test_amount2(Random_Fixture::instance().rnd()),
+	test_amount3(Random_Fixture::instance().rnd()),
 
 	test_resources(init_resourceslist_helper())
 { }
 
 UnitType_Fixture::~UnitType_Fixture() 
-{
-	UnitType::resetCounter();
-}
+{ }
 
 const std::list<UnitResourceType> UnitType_Fixture::init_resourceslist_helper() {
 	const std::list<UnitResourceType> resourcesList = boost::assign::list_of

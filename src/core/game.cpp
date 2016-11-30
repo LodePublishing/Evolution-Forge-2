@@ -20,7 +20,7 @@ Game::Game(const boost::shared_ptr<const Rules> rules,
 {
 	for(std::list<boost::shared_ptr<const Player> >::const_iterator i = playerList.begin(); i != playerList.end(); i++) {
 		playerIdList.push_back((*i)->getId());
-		playerMap.insert(std::pair<const unsigned int, const boost::shared_ptr<const Player> >((*i)->getId(), *i));
+		playerMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<const Player> >((*i)->getId(), *i));
 	}
 }
 

@@ -7,17 +7,15 @@
 
 #include <distance.hpp>
 
-#include <random_fixture.hpp>
-
-struct Distance_Fixture : public Random_Fixture
+struct Distance_Fixture
 {
-	Distance_Fixture();
-	~Distance_Fixture();
-
-	unsigned int test_width;
-	unsigned int test_height;
+	const unsigned int test_width;
+	const unsigned int test_height;
 
 	const boost::shared_ptr<const Distance> test_distance;
+
+	~Distance_Fixture();
+	Distance_Fixture();
 };
 
 #endif // _COREFIXTURE_DISTANCEFIXTURE_HPP

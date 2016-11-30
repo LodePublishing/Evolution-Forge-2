@@ -26,7 +26,7 @@ BOOST_FIXTURE_TEST_SUITE( Map_test, Map_Fixture )
 	BOOST_CHECK_EQUAL(test_map->getLocationAt(33)->getGroundDistance(test_map->getLocationAt(5)), 13);
 }
 
-BOOST_AUTO_TEST_CASE( Map_invalid_locations_test)
+BOOST_AUTO_TEST_CASE( Map_invalid_locations_test )
 {
 	const boost::shared_ptr<Location> ind_location(new Location("test", 99, 3, 3));
 	bool exception = false;
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE( Map_invalid_locations_test)
 	BOOST_CHECK_EQUAL(exception, true);
 }
 
-BOOST_AUTO_TEST_CASE( Map_no_location_position_test) 
+BOOST_AUTO_TEST_CASE( Map_no_location_position_test ) 
 {
         bool exception = false;
         try {
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( Map_no_location_position_test)
         BOOST_CHECK_EQUAL(exception, true);
 }
 
-BOOST_AUTO_TEST_CASE( Map_location_index_test) 
+BOOST_AUTO_TEST_CASE( Map_location_index_test ) 
 {
         bool exception = false;
         try {
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE( Map_location_index_test)
         BOOST_CHECK_EQUAL(exception, true);
 }
 
-BOOST_AUTO_TEST_CASE( Map_location_position_test) 
+BOOST_AUTO_TEST_CASE( Map_location_position_test ) 
 {
         bool exception = false;
         try {

@@ -47,13 +47,13 @@ void ProcessedGoalEntry::uncheckProcessedGoalMap(const boost::shared_ptr<const R
 	}
 }
 
-// TODO ID List statt tatsaechliche Objecte?
+// TODO UUID List statt tatsaechliche Objecte?
 
 void ProcessedGoalEntry::removeProcessedGoalFromMapIfUnchecked(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map) {
 	for(std::vector<boost::shared_ptr<Location> >::const_iterator i = map->getLocationVector().begin(); i != map->getLocationVector().end(); i++) {
 		for(std::list<boost::shared_ptr<const UnitType> >::const_iterator j = rules->getUnitTypeList().begin(); j != rules->getUnitTypeList().end(); j++) {
 			if(!processedGoalMap[UnitLocalNeutralKey((*i)->getId(), (*j)->getId())].wasChecked()) {
-				// std::cout << "remove ID : Location " << (*i)->getId() << " -> " << j->first << std::endl;
+				// std::cout << "remove UUID : Location " << (*i)->getId() << " -> " << j->first << std::endl;
 				processedGoalMap[UnitLocalNeutralKey((*i)->getId(), (*j)->getId())].setBuildable(false);
 			}
 		}

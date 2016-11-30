@@ -4,13 +4,13 @@
 #pragma warning(pop)
 
 #include "goal_fixture.hpp"
+#include <random_fixture.hpp>
 
 Goal_Fixture::Goal_Fixture():
-	Random_Fixture(),
-	test_unitTypeId(rnd()),
-	test_locationId(rnd()),
-	test_count(rnd()),
-	test_time(rnd()),
+	test_unitTypeId(boost::uuids::random_generator()()),
+	test_locationId(boost::uuids::random_generator()()),
+	test_count(Random_Fixture::instance().rnd()),
+	test_time(Random_Fixture::instance().rnd()),
 	test_goal(boost::shared_ptr<const Goal>(new Goal(test_unitTypeId, test_locationId, test_count, test_time)))
 {
 }

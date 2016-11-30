@@ -16,12 +16,12 @@ Player::Player(const std::string& name,
 	startingUnits(startingUnits)
 {}
 
-Player::Player(const unsigned int id,
+Player::Player(const boost::uuids::uuid id,
 		const std::string& name,
 		const boost::shared_ptr<const Government> government,
 		const boost::shared_ptr<const GoalEntry> goalEntry,
 		const boost::shared_ptr<const Units> startingUnits):
-	ID<Player>(id),
+	UUID<Player>(id),
 	name(name),
 	government(government),
 	governmentId(government->getId()),

@@ -7,18 +7,16 @@
 
 #include <path.hpp>
 
-#include <random_fixture.hpp>
-
-struct Path_Fixture : public Random_Fixture
+struct Path_Fixture
 {
-	Path_Fixture();
-	~Path_Fixture();
-
-	unsigned int test_source_position;
-	unsigned int test_target_position;
-	unsigned int test_distance;
+	const unsigned int test_source_position;
+	const unsigned int test_target_position;
+	const unsigned int test_distance;
 
 	const boost::shared_ptr<const Path> test_path;
+
+	Path_Fixture();
+	~Path_Fixture();
 };
 
 #endif // _COREFIXTURE_PATHFIXTURE_HPP

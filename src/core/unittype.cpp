@@ -4,7 +4,7 @@
 
 #include "unittype.hpp"
 
-UnitType::UnitType(const unsigned int id,
+UnitType::UnitType(const boost::uuids::uuid id,
 		const std::string& name, 
 		const boost::shared_ptr<const Race> race,
 		const unsigned int buildTime,
@@ -13,7 +13,7 @@ UnitType::UnitType(const unsigned int id,
 		const eUnitMovementType movementType, 
 		const unsigned int speed,
 		const std::list<UnitResourceType>& resources):
-	ID<UnitType>(id),
+	UUID<UnitType>(id),
 	name(name),
 	race(race),
 	raceId(race->getId()),

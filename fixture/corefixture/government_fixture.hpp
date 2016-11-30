@@ -7,16 +7,14 @@
 
 #include <government.hpp>
 
-#include <random_fixture.hpp>
-
-struct Government_Fixture : public Random_Fixture
+struct Government_Fixture
 {
-	Government_Fixture();
-	~Government_Fixture();
-
 	const std::string test_government_name;
 
 	const boost::shared_ptr<const Government> test_government;
+	
+	Government_Fixture();	
+	~Government_Fixture();
 };
 
 #endif // _COREFIXTURE_GOVERNMENTFIXTURE_HPP

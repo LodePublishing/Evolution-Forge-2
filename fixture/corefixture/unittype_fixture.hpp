@@ -9,18 +9,8 @@
 
 #include <unittype.hpp>
 
-#include <random_fixture.hpp>
-
-#include "race_fixture.hpp"
-
-struct UnitType_Fixture : public Random_Fixture
+struct UnitType_Fixture
 {
-public:
-	UnitType_Fixture();
-	~UnitType_Fixture();
-
-	const Race_Fixture raceFixture;
-
 	const std::string test_unitName1;
 	const std::string test_unitName2;
 	
@@ -37,11 +27,11 @@ public:
 	const eUnitResourceType test_resourceType2;
 	const eUnitResourceType test_resourceType3;
 
-	const unsigned int test_unitID1;
-	const unsigned int test_unitID2;
-	const unsigned int test_unitID3;
-	const unsigned int test_unitID4;
-	const unsigned int test_unitID5;
+	const boost::uuids::uuid test_unitID1;
+	const boost::uuids::uuid test_unitID2;
+	const boost::uuids::uuid test_unitID3;
+	const boost::uuids::uuid test_unitID4;
+	const boost::uuids::uuid test_unitID5;
 
 	const signed int test_amount1;
 	const signed int test_amount2;
@@ -49,8 +39,12 @@ public:
 
 	const std::list<UnitResourceType> test_resources;
 
+	UnitType_Fixture();
+	~UnitType_Fixture();
+	
 private:
 	const std::list<UnitResourceType> init_resourceslist_helper();
+
 };
 
 #endif // _COREFIXTURE_UNITTYPEFIXTURE_HPP

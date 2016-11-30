@@ -6,7 +6,7 @@
 
 BOOST_FIXTURE_TEST_SUITE( Race_test, Race_Fixture )
 
-	BOOST_AUTO_TEST_CASE (Race_constructor)
+	BOOST_AUTO_TEST_CASE (Race_constructor )
 	{
 		BOOST_CHECK_EQUAL(test_race->getName(), test_race_name);
 		BOOST_CHECK_EQUAL(test_race->getId(), 0);
@@ -30,6 +30,8 @@ BOOST_FIXTURE_TEST_SUITE( Race_test, Race_Fixture )
 		for(std::list<Race*>::iterator i = races.begin(); i != races.end(); i++) {
 			delete *i;
 		}
+
+		TODO clean up
 	}
 
 BOOST_AUTO_TEST_SUITE_END( )

@@ -20,17 +20,19 @@ public:
 	~Units();
 	void clear();
 
-	unsigned int getGlobalNeutralAvailable(const unsigned int key) const;
-	unsigned int getGlobalNeutralTotal(const unsigned int key) const;
+	unsigned int getGlobalNeutralAvailable(const boost::uuids::uuid key) const;
+	unsigned int getGlobalNeutralTotal(const boost::uuids::uuid key) const;
 	unsigned int getGlobalAvailable(const UnitGlobalKey& key) const;
 	unsigned int getGlobalTotal(const UnitGlobalKey& key) const;
 	unsigned int getLocalAvailable(const UnitLocalKey& key) const;
 	unsigned int getLocalTotal(const UnitLocalKey& key) const;
 	unsigned int getLocalNeutralAvailable(const UnitLocalNeutralKey& key) const;
 	unsigned int getLocalNeutralTotal(const UnitLocalNeutralKey& key) const;
+	
+	bool unitExists(const boost::shared_ptr<Unit> unit) const;
 
 	const std::list<boost::shared_ptr<Unit> >& getUnitList() const;
-	const boost::shared_ptr<Unit>& getUnit(const unsigned int unitId) const;
+	const boost::shared_ptr<Unit>& getUnit(const boost::uuids::uuid unitId) const;
 
 	void addUnit(const boost::shared_ptr<Unit> unit);
 	void addUnits(const std::list<boost::shared_ptr<Unit> > unitList);
@@ -39,8 +41,8 @@ public:
 	void addLocalUnit(const boost::shared_ptr<Unit> unit);
 	void removeLocalUnit(const boost::shared_ptr<Unit> unit);
 
-	//void addOneGlobalNeutralAvailable(const unsigned int key); // TODO make private?
-	//void removeOneGlobalNeutralAvailable(const unsigned int key); needed?
+	//void addOneGlobalNeutralAvailable(const boost::uuids::uuid key); // TODO make private?
+	//void removeOneGlobalNeutralAvailable(const boost::uuids::uuid key); needed?
 	void addOneGlobalAvailable(const UnitGlobalKey& key);
 	void removeOneGlobalAvailable(const UnitGlobalKey& key);
 	void addOneLocalAvailable(const UnitLocalKey& key);
@@ -92,10 +94,10 @@ private:
 	// temporary variables (cache etc.)
 
 	// unitID -> Unit map (unique! NOT unitTypeId!)
-	std::map<const unsigned int, const boost::shared_ptr<Unit> > unitMap;
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<Unit> > unitMap;
 
-	std::map<const unsigned int, unsigned int> globalNeutralAvailable; // unitTypeId -> amount
-	std::map<const unsigned int, unsigned int> globalNeutralTotal; // unitTypeId -> amount
+	std::map<const boost::uuids::uuid, unsigned int> globalNeutralAvailable; // unitTypeId -> amount
+	std::map<const boost::uuids::uuid, unsigned int> globalNeutralTotal; // unitTypeId -> amount
 	std::map<const UnitGlobalKey, unsigned int> globalAvailable; // playerId -> unitTypeId -> amount
 	std::map<const UnitGlobalKey, unsigned int> globalTotal; // playerId -> unitTypeId -> amount
 	std::map<const UnitLocalKey, unsigned int> localAvailable; // locationId -> playerId -> unitTypeId -> amount
@@ -104,8 +106,8 @@ private:
 	std::map<const UnitLocalNeutralKey, unsigned int> localNeutralTotal; // locationId -> unitTypeId -> amount
 
 	// these need to be private, no other class has a business administrating the total values!
-	void addOneGlobalNeutralTotal(const unsigned int key);
-	void removeOneGlobalNeutralTotal(const unsigned int key);
+	void addOneGlobalNeutralTotal(const boost::uuids::uuid key);
+	void removeOneGlobalNeutralTotal(const boost::uuids::uuid key);
 	void addOneGlobalTotal(const UnitGlobalKey& key);
 	void removeOneGlobalTotal(const UnitGlobalKey& key);
 	void addOneLocalTotal(const UnitLocalKey& key);
@@ -118,7 +120,7 @@ inline const std::list<boost::shared_ptr<Unit> >& Units::getUnitList() const {
 	return unitList;
 }
 
-inline const boost::shared_ptr<Unit>& Units::getUnit(const unsigned int unitId) const {
+inline const boost::shared_ptr<Unit>& Units::getUnit(const boost::uuids::uuid unitId) const {
 	if(unitMap.find(unitId) == unitMap.end()) {
 		throw "Invalid unit id!";
 	}

@@ -13,14 +13,15 @@
 #pragma warning(pop)
 
 #include <loadsave.hpp>
+#include <uuid.hpp>
 
 #include "unittype.hpp"
-#include "id.hpp"
 
-class Rules : public LoadSave<Rules>, public ID<Rules>
+
+class Rules : public LoadSave<Rules>, public UUID<Rules>
 {
 public:
-	Rules(const unsigned int id,
+	Rules(const boost::uuids::uuid id,
 		const std::string& name, 
 		const std::list<boost::shared_ptr<const UnitType> > unitTypeList);
 	Rules(const std::string& name, 
@@ -28,7 +29,7 @@ public:
 	~Rules();	
 
 	const std::string& getName() const;
-	const boost::shared_ptr<const UnitType> getUnitType(unsigned int unitTypeId) const;
+	const boost::shared_ptr<const UnitType> getUnitType(boost::uuids::uuid unitTypeId) const;
 	const std::list<boost::shared_ptr<const UnitType> >& getUnitTypeList() const;	
 	unsigned int getUnitTypeCount() const;
 
@@ -40,7 +41,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Rules* rules, const unsigned int version) { 
 
-		const unsigned int& id = rules->getId();
+		const boost::uuids::uuid& id = rules->getId();
 		const std::string& name = rules->getName();
 		const std::list<boost::shared_ptr<const UnitType> >& unitTypeList = rules->getUnitTypeList();
 
@@ -55,7 +56,7 @@ private:
 	template<class Archive> 
 	inline friend void load_construct_data(Archive& ar, Rules*& rules, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
 		std::list<boost::shared_ptr<const UnitType> > unitTypeList;
 
@@ -74,7 +75,7 @@ private:
 	const std::string name;
 	const std::list<boost::shared_ptr<const UnitType> > unitTypeList;
 	
-	std::map<const unsigned int, const boost::shared_ptr<const UnitType> > unitTypeMap;
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > unitTypeMap;
 
 	Rules& operator=(const Rules& other);
 };

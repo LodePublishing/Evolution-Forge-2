@@ -13,23 +13,10 @@ Broodwar::Broodwar():
 	protossRace(boost::shared_ptr<const Race>(new Race("Protoss"))),
 	zergRace(boost::shared_ptr<const Race>(new Race("Zerg"))),
 	rules(new Rules("Broodwar", init_unittypelist_helper()))	
-{
-	GLOBAL_STORAGE.addRace(neutralRace);
-	GLOBAL_STORAGE.addRace(terraRace);
-	GLOBAL_STORAGE.addRace(protossRace);
-	GLOBAL_STORAGE.addRace(zergRace);
-
-	GLOBAL_STORAGE.addRules(rules);
-}
+{ }
 
 Broodwar::~Broodwar()
-{ 
-	Rules::resetCounter();
-	Race::resetCounter();
-	UnitType::resetCounter();
-
-	GLOBAL_STORAGE.clear();
-}
+{ }
 
 const std::list<boost::shared_ptr<const UnitType> > Broodwar::init_unittypelist_helper() {
 	std::list<boost::shared_ptr<const UnitType> > unitTypeList;

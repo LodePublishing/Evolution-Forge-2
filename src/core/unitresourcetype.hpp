@@ -8,6 +8,8 @@
 #include <boost/serialization/nvp.hpp>
 #pragma warning(pop)
 
+#include <uuid.hpp>
+
 #include "enums/unitresourcetypeenums.hpp"
 
 class UnitResourceType
@@ -15,7 +17,7 @@ class UnitResourceType
 public:
 	UnitResourceType(const eUnitResourceType resourceType, 
 		const signed int amount,
-		const std::list<std::list<unsigned int> >& unitTypeIdList);
+		const std::list<std::list<boost::uuids::uuid> >& unitTypeIdList);
 	~UnitResourceType() {}
 	
 	eUnitResourceType getResourceType() const;
@@ -23,7 +25,7 @@ public:
 
 	// returns the ID of the unit type that is needed (e.g. the supply resource, a facility unit type id etc.)
 	// it is a list of list, all lists in the top list are ORed (makes only sense with prerequisites)
-	const std::list<std::list<unsigned int> >& getUnitTypeIDList() const;
+	const std::list<std::list<boost::uuids::uuid> >& getUnitTypeIDList() const;
 	
 	
 private:
@@ -38,7 +40,7 @@ private:
 
 		const eUnitResourceType& resourceType = unitResourceType->getResourceType();
 		const signed int& amount = unitResourceType->getAmount();
-		const std::list<std::list<unsigned int> >& unitTypeIdList = unitResourceType->getUnitTypeIDList();
+		const std::list<std::list<boost::uuids::uuid> >& unitTypeIdList = unitResourceType->getUnitTypeIDList();
 
 		if(version > 0) {
 		}
@@ -53,7 +55,7 @@ private:
 	{
 		eUnitResourceType resourceType;
 		signed int amount;
-		std::list<std::list<unsigned int> > unitTypeIdList; // corresponding unit (for some types)
+		std::list<std::list<boost::uuids::uuid> > unitTypeIdList; // corresponding unit (for some types)
 
 		ar & BOOST_SERIALIZATION_NVP(resourceType)
 		   & BOOST_SERIALIZATION_NVP(amount)
@@ -67,7 +69,7 @@ private:
 
 	eUnitResourceType resourceType;
 	signed int amount;
-	std::list<std::list<unsigned int> > unitTypeIdList; // corresponding unit (for some types)
+	std::list<std::list<boost::uuids::uuid> > unitTypeIdList; // corresponding unit (for some types)
 };
 
 inline eUnitResourceType UnitResourceType::getResourceType() const {
@@ -78,7 +80,7 @@ inline signed int UnitResourceType::getAmount() const {
 	return amount;
 }
 
-inline const std::list<std::list<unsigned int> >& UnitResourceType::getUnitTypeIDList() const {
+inline const std::list<std::list<boost::uuids::uuid> >& UnitResourceType::getUnitTypeIDList() const {
 	return unitTypeIdList;
 }
 

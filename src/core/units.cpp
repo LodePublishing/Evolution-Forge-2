@@ -26,8 +26,7 @@ Units::Units(const std::list<boost::shared_ptr<Unit> > unitList):
 	localTotal(),
 	localNeutralAvailable(),
 	localNeutralTotal()
-{ 	
-}
+{ }
 
 
 Units::~Units()
@@ -75,7 +74,7 @@ Units& Units::operator=(const Units& object)
 
 void Units::initializeUnitList() {
 	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
-		unitMap.insert(std::pair<unsigned int, const boost::shared_ptr<Unit> >((*i)->getId(), *i));
+		unitMap.insert(std::pair<boost::uuids::uuid, const boost::shared_ptr<Unit> >((*i)->getId(), *i));
 		addLocalUnit(*i);
 	}
 	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
@@ -86,25 +85,28 @@ void Units::initializeUnitList() {
 // simply adds a unit to the list
 void Units::addUnit(const boost::shared_ptr<Unit> unit) {
 	unitList.push_back(unit);
-	unitMap.insert(std::pair<unsigned int, const boost::shared_ptr<Unit> >(unit->getId(), unit));
+	unitMap.insert(std::pair<boost::uuids::uuid, const boost::shared_ptr<Unit> >(unit->getId(), unit));
 
-	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unit->getOccupiedFacilityList().begin(); i != unit->getOccupiedFacilityList().end(); i++) {
-		(*i)->addConstructingUnit(unit);
+	// don't add the unit if it is still under construction
+	if(unit->isUnderConstruction()) {
+		for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unit->getOccupiedFacilityList().begin(); i != unit->getOccupiedFacilityList().end(); i++) {
+			(*i)->addConstructingUnit(unit);
+		}
+	} else {
+		addLocalUnit(unit);
 	}
-
-	addLocalUnit(unit);
 }
 
-void Units::addUnits(const std::list<boost::shared_ptr<Unit> > unitList) {
-	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
-		addUnit(*i);
-	}
+bool Units::unitExists(const boost::shared_ptr<Unit> unit) const {
+	return getLocalTotal(unit->getLocalKey()) > 0;
 }
 
 void Units::removeUnit(const boost::shared_ptr<Unit> unit) {
-	BOOST_ASSERT(unit->isUnderConstruction() || getLocalTotal(unit->getLocalKey()) > 0);
+	// In order to remove a unit the unit has to exist or at least it has to be under construction
+	BOOST_ASSERT(unitExists(unit) || unit->isUnderConstruction());
 
 	// TODO erase units that need this facility to build? maybe only primary units... TODO... resources etc. :o
+	// interceptors, scarabs etc?
 	// TODO check "available"
 	bool found = false;
 	for(std::list<boost::shared_ptr<Unit> >::iterator i = unitList.begin(); i != unitList.end(); i++) {
@@ -119,18 +121,21 @@ void Units::removeUnit(const boost::shared_ptr<Unit> unit) {
 	}
 	BOOST_ASSERT(found);
 
-	removeLocalUnit(unit);
+	if(!unit->isUnderConstruction()) {
+	// adjust availability and total values
+		removeLocalUnit(unit);
+	}
 
+	// remove unit from constructions at other facilities
+	// cancel all constructions of this unit
 	unit->clearConstructions();
 }
 
 void Units::addLocalUnit(const boost::shared_ptr<Unit> unit) {
 	if(unit->isAvailable()) {
 		addOneLocalAvailable(unit->getLocalKey());
-		addOneLocalNeutralAvailable(unit->getLocalNeutralKey());
 	}
 	addOneLocalTotal(unit->getLocalKey());
-	addOneLocalNeutralTotal(unit->getLocalNeutralKey());
 }
 
 void Units::removeLocalUnit(const boost::shared_ptr<Unit> unit) {
@@ -144,4 +149,10 @@ void Units::process() {
 	for(std::list<boost::shared_ptr<Unit> >::iterator i = unitList.begin(); i != unitList.end(); i++) {
 		(*i)->process();
 	}	
+}
+
+void Units::addUnits(const std::list<boost::shared_ptr<Unit> > unitList) {
+	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = unitList.begin(); i != unitList.end(); i++) {
+		addUnit(*i);
+	}
 }

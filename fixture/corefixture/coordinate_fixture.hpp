@@ -6,17 +6,16 @@
 #pragma warning(pop)
 
 #include <coordinate.hpp>
-#include <random_fixture.hpp>
 
-struct Coordinate_Fixture : public Random_Fixture
+struct Coordinate_Fixture
 {
-	Coordinate_Fixture();
-	~Coordinate_Fixture();
-
-	unsigned int test_x;
-	unsigned int test_y;
+	const unsigned int test_x;
+	const unsigned int test_y;
 
 	const boost::shared_ptr<const Coordinate> test_coordinate;
+
+	Coordinate_Fixture();
+	~Coordinate_Fixture();
 };
 
 #endif // _COREFIXTURE_COORDINATEFIXTURE_HPP

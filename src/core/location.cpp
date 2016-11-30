@@ -14,8 +14,8 @@ Location::Location(const std::string& name, const unsigned int position, const s
 	// the paths are loaded later when all locations are initialized!
 }
 
-Location::Location(const unsigned int id, const std::string& name, const unsigned int position, const signed int x, const signed int y) :
-	ID<Location>(id),
+Location::Location(const boost::uuids::uuid id, const std::string& name, const unsigned int position, const signed int x, const signed int y) :
+	UUID<Location>(id),
 	Coordinate(x, y),
 	name(name),
 	position(position),
@@ -26,7 +26,7 @@ Location::Location(const unsigned int id, const std::string& name, const unsigne
 }
 
 Location::Location(const Location& object):
-	ID<Location>(object),
+	UUID<Location>(object),
 	Coordinate(object),
 	name(object.name),
 	position(object.position),

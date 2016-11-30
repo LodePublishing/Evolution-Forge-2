@@ -11,11 +11,11 @@ Path::Path(const unsigned int sourceLocationPosition, const unsigned int targetL
 {
 }
 
-Path::Path(const unsigned int id,
+Path::Path(const boost::uuids::uuid id,
 	const unsigned int sourceLocationPosition, 
 	const unsigned int targetLocationPosition,
 	const unsigned int locationDistance):
-	ID<Path>(id),
+	UUID<Path>(id),
 	sourceLocationPosition(sourceLocationPosition),
 	targetLocationPosition(targetLocationPosition),
 	locationDistance(locationDistance)

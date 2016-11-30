@@ -11,18 +11,19 @@
 #include <boost/shared_ptr.hpp>
 #pragma warning(pop)
 
+#include <uuid.hpp>
+
 #include "unitresourcetype.hpp"
-#include "id.hpp"
 #include "race.hpp"
 #include "enums/unitmovementtypeenums.hpp"
 
 #include "globalstorage.hpp"
 
-class UnitType : public ID<UnitType>
+class UnitType : public UUID<UnitType>
 {
 public:
 
-	UnitType(const unsigned int id,
+	UnitType(const boost::uuids::uuid id,
 		const std::string& name, 
 		const boost::shared_ptr<const Race> race,
 		const unsigned int buildTime,
@@ -45,7 +46,7 @@ public:
 
 	const std::string& getName() const;
 	unsigned int getBuildTime() const;
-	unsigned int getRaceId() const;	
+	boost::uuids::uuid getRaceId() const;	
 	unsigned int getSpeed() const;
 	eUnitMovementType getMovementType() const;
 	bool isCorporeal() const;
@@ -67,9 +68,9 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const UnitType* unitType, const unsigned int version) { 
 
-		const unsigned int& id = unitType->getId();
+		const boost::uuids::uuid& id = unitType->getId();
 		const std::string& name = unitType->getName();
-		const unsigned int& raceId = unitType->getRaceId();
+		const boost::uuids::uuid& raceId = unitType->getRaceId();
 		const unsigned int& buildTime = unitType->getBuildTime();
 		const unsigned int& maxCount = unitType->getMaxCount();
 		const bool& corporeal = unitType->isCorporeal();
@@ -94,9 +95,9 @@ private:
 	template<class Archive> 
 	inline friend void load_construct_data(Archive& ar, UnitType*& unitType, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
-		unsigned int raceId;
+		boost::uuids::uuid raceId;
 		unsigned int buildTime;
 		unsigned int maxCount;
 		bool corporeal;
@@ -117,13 +118,13 @@ private:
 		if(version > 0) {
 		}
 
-		::new(unitType)UnitType(id, name, GLOBAL_STORAGE.getRace(raceId), buildTime, maxCount, corporeal, movementType, speed, resources);
+		::new(unitType)UnitType(id, name, GlobalStorage::instance().getRace(raceId), buildTime, maxCount, corporeal, movementType, speed, resources);
 	}
 
 	// mandatory fields
 	const std::string name;
 	const boost::shared_ptr<const Race> race;
-	const unsigned int raceId;
+	const boost::uuids::uuid raceId;
 	const unsigned int buildTime;
 	// maximal number of units of this type a player can have
 	const unsigned int maxCount;
@@ -155,7 +156,7 @@ inline const boost::shared_ptr<const Race> UnitType::getRace() const {
 	return race;
 }
 
-inline unsigned int UnitType::getRaceId() const {
+inline boost::uuids::uuid UnitType::getRaceId() const {
 	return raceId;
 }
 

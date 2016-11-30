@@ -11,15 +11,16 @@
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include "id.hpp"
+#include <uuid.hpp>
+
 #include "coordinate.hpp"
 
 class Path;
 
-class Location : public ID<Location>, public Coordinate
+class Location : public UUID<Location>, public Coordinate
 {
 public:
-	Location(const unsigned int id, const std::string& name, const unsigned int position, const signed int x, const signed int y);
+	Location(const boost::uuids::uuid id, const std::string& name, const unsigned int position, const signed int x, const signed int y);
 	Location(const std::string& name, const unsigned int position, const signed int x, const signed int y);
 	~Location();
 
@@ -49,7 +50,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Location* location, const unsigned int version) { 
 
-		const unsigned int& id = location->getId();
+		const boost::uuids::uuid& id = location->getId();
 		const std::string& name = location->getName();
 		const unsigned int& position = location->getPosition();
 		const signed int& x = location->getX();
@@ -68,7 +69,7 @@ private:
 	template<class Archive> 
 	friend inline void load_construct_data(Archive& ar, Location*& location, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
 		unsigned int position;
 		signed int x;

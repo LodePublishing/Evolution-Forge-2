@@ -9,6 +9,8 @@
 #include <boost/shared_ptr.hpp>
 #pragma warning(pop)
 
+#include <uuid.hpp>
+
 #include "player.hpp"
 #include "rules.hpp"
 #include "map.hpp"
@@ -21,7 +23,7 @@ Players are configured so that they include a goal. Usually, in the one-player-t
 
 class Units;
 
-class Game : public LoadSave<Game>
+class Game : public LoadSave<Game>, public UUID<Game>
 {
 public:
 	Game(const boost::shared_ptr<const Rules> rules,
@@ -31,19 +33,19 @@ public:
 	~Game();
 	
 	const boost::shared_ptr<const Map> getMap() const;
-	unsigned int getMapId() const;
+	boost::uuids::uuid getMapId() const;
 
 	const boost::shared_ptr<const Rules> getRules() const;
-	unsigned int getRulesId() const;
+	boost::uuids::uuid getRulesId() const;
 
-	const boost::shared_ptr<const Player> getPlayer(const unsigned int playerId) const;
-	const std::list<unsigned int> getPlayerIdList() const;
+	const boost::shared_ptr<const Player> getPlayer(const boost::uuids::uuid playerId) const;
+	const std::list<boost::uuids::uuid> getPlayerIdList() const;
 
 	unsigned int getStartingTime() const;
-	1. Alle mit ID auch Save/Load
+/*	1. Alle mit UUID auch Save/Load
 	2. Jeweils Reload Tests dazu schreiben
 	3. Global Storage lädt/schreibt alle von Platte	
-	4. Tests dazu schreiben
+	4. Tests dazu schreiben TODO*/
 
 private:
 	friend class boost::serialization::access;
@@ -54,8 +56,8 @@ private:
 
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Game* game, const unsigned int version) { 
-		const unsigned int& rulesId = game->getRulesId();
-		const unsigned int& mapId = game->getMapId();
+		const boost::uuids::uuid& rulesId = game->getRulesId();
+		const boost::uuids::uuid& mapId = game->getMapId();
 		const unsigned int& startingTime = game->getStartingTime();
 		const std::list<unsigned int>& playerIdList = game->getPlayerIdList();
 
@@ -71,10 +73,10 @@ private:
 	template<class Archive> 
 	friend inline void load_construct_data(Archive& ar, Game*& game, const unsigned int version)
 	{
-		unsigned int rulesId;
-		unsigned int mapId;
+		boost::uuids::uuid rulesId;
+		boost::uuids::uuid mapId;
 		unsigned int startingTime;
-		std::list<unsigned int> playerIdList;
+		std::list<boost::uuids::uuid> playerIdList;
 		std::list<boost::shared_ptr<const Player> > playerList;		
 
 		ar & BOOST_SERIALIZATION_NVP(rulesId)
@@ -82,40 +84,40 @@ private:
 		   & BOOST_SERIALIZATION_NVP(startingTime)
 		   & BOOST_SERIALIZATION_NVP(playerIdList);
 
-		for(std::list<unsigned int>::const_iterator i = playerIdList.begin(); i != playerIdList.end(); i++) {
-			playerList.push_back(GLOBAL_STORAGE.getPlayer(*i));
+		for(std::list<boost::uuids::uuid>::const_iterator i = playerIdList.begin(); i != playerIdList.end(); i++) {
+			playerList.push_back(GlobalStorage::instance().getPlayer(*i));
 		}
 
 		if(version > 0) {
 		}
 
-		::new(game)Game(GLOBAL_STORAGE.getRules(rulesId), GLOBAL_STORAGE.getMap(mapId), startingTime, playerList);
+		::new(game)Game(GlobalStorage::instance().getRules(rulesId), GlobalStorage::instance().getMap(mapId), startingTime, playerList);
 	}
 
 	const boost::shared_ptr<const Rules> rules;
-	const unsigned int rulesId;
+	const boost::uuids::uuid rulesId;
 
 	const boost::shared_ptr<const Map> map;
-	const unsigned int mapId;
+	const boost::uuids::uuid mapId;
 	
 	const unsigned int startingTime;
 
 	const std::list<boost::shared_ptr<const Player> > playerList;
-	std::list<unsigned int> playerIdList;
-	std::map<const unsigned int, const boost::shared_ptr<const Player> > playerMap; // playerId -> player	
+	std::list<boost::uuids::uuid> playerIdList;
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<const Player> > playerMap; // playerId -> player	
 
 	Game& operator=(const Game& other);
 };
 
-inline const boost::shared_ptr<const Player> Game::getPlayer(const unsigned int playerId) const {
-	const std::map<const unsigned int, const boost::shared_ptr<const Player> >::const_iterator i = playerMap.find(playerId);
+inline const boost::shared_ptr<const Player> Game::getPlayer(const boost::uuids::uuid playerId) const {
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Player> >::const_iterator i = playerMap.find(playerId);
 	if(i == playerMap.end()) {
-		throw "Could not find player ID";
+		throw "Could not find player UUID";
 	}
 	return i->second;
 }
 
-inline const std::list<unsigned int> Game::getPlayerIdList() const {
+inline const std::list<boost::uuids::uuid> Game::getPlayerIdList() const {
 	return playerIdList;
 }
 
@@ -127,11 +129,11 @@ inline const boost::shared_ptr<const Map> Game::getMap() const {
 	return map;
 }
 
-inline unsigned int Game::getMapId() const {
+inline boost::uuids::uuid Game::getMapId() const {
 	return mapId;
 }
 
-inline unsigned int Game::getRulesId() const {
+inline boost::uuids::uuid Game::getRulesId() const {
 	return rulesId;
 }
 

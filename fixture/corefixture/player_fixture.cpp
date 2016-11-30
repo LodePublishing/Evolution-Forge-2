@@ -6,19 +6,15 @@
 #include <globalstorage.hpp>	
 
 #include "player_fixture.hpp"
+#include "goalentry_fixture.hpp"
+#include "government_fixture.hpp"
+#include <random_fixture.hpp>
 
 Player_Fixture::Player_Fixture():
-	Random_Fixture(),
-	test_player_name("my_player_Name"), 
-	test_governmentFixture(),
-	test_goalEntryFixture(),
+	test_player_name("my_player_Name"),
 	test_startingUnits(), // TODO
-	test_player(boost::shared_ptr<const Player>(new Player(test_player_name, test_governmentFixture.test_government, test_goalEntryFixture.test_goalentry, test_startingUnits)))
-{
-	GLOBAL_STORAGE.addPlayer(test_player);
-}
+	test_player(boost::shared_ptr<const Player>(new Player(test_player_name, GlobalStorage::instance().getGovernment(test_government_id), GlobalStorage::instance().getGoalEntry(test_goalentry_id), test_startingUnits)))
+{ }
 
 Player_Fixture::~Player_Fixture() 
-{ 
-	Player::resetCounter();
-}
+{ }

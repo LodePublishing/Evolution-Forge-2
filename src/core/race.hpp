@@ -7,12 +7,13 @@
 #include <boost/serialization/base_object.hpp>
 #pragma warning(pop)
 
-#include "id.hpp"
+#include <uuid.hpp>
 
-class Race : public ID<Race>
+
+class Race : public UUID<Race>
 {
 public:
-	Race(const unsigned int id, const std::string& name);
+	Race(const boost::uuids::uuid id, const std::string& name);
 	Race(const std::string& name);
 	~Race();
 
@@ -28,7 +29,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Race* race, const unsigned int version) { 
 
-		const unsigned int& id = race->getId();
+		const boost::uuids::uuid& id = race->getId();
 		const std::string& name = race->getName();
 
 		if(version > 0) {
@@ -41,7 +42,7 @@ private:
 	template<class Archive> 
 	inline friend void load_construct_data(Archive& ar, Race*& race, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
 
 		ar & BOOST_SERIALIZATION_NVP(id)

@@ -12,12 +12,12 @@
 #include <boost/serialization/nvp.hpp>
 #pragma warning(pop)
 
-#include "id.hpp"
+#include <uuid.hpp>
 
-class Path : public ID<Path>
+class Path : public UUID<Path>
 {
 public:
-	Path(const unsigned int id,
+	Path(const boost::uuids::uuid id,
 		const unsigned int sourceLocationPosition, 
 		const unsigned int targetLocationPosition,
 		const unsigned int locationDistance);
@@ -45,7 +45,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Path* path, const unsigned int version) { 
 
-		const unsigned int& id = path->getId();
+		const boost::uuids::uuid& id = path->getId();
 		const unsigned int& sourceLocationPosition = path->getSourceLocationPosition();
 		const unsigned int& targetLocationPosition = path->getTargetLocationPosition();
 		const unsigned int& locationDistance = path->getDistance();
@@ -62,7 +62,7 @@ private:
 	template<class Archive> 
 	inline friend void load_construct_data(Archive& ar, Path*& path, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		unsigned int sourceLocationPosition;
 		unsigned int targetLocationPosition;
 		unsigned int locationDistance;

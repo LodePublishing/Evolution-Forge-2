@@ -3,14 +3,15 @@
 #pragma warning(pop)
 
 #include <rules_fixture.hpp>
+#include <unittype_fixture.hpp>
 
 BOOST_FIXTURE_TEST_SUITE( Rules_test, Rules_Fixture )
 
 	BOOST_AUTO_TEST_CASE (Rules_constructor)
 {
 	BOOST_CHECK_EQUAL(test_rules->getName(), test_rules_name);
-	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitType1->getId())->getName(), unitTypeFixture.test_unitName1);
-	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitType2->getId())->getName(), unitTypeFixture.test_unitName2);
+	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitType1->getId())->getName().test_unitName1);
+	BOOST_CHECK_EQUAL(test_rules->getUnitType(unitType2->getId())->getName().test_unitName2);
 }
 
 	BOOST_AUTO_TEST_CASE (Rules_reload)
@@ -29,8 +30,8 @@ BOOST_FIXTURE_TEST_SUITE( Rules_test, Rules_Fixture )
 	std::remove(test_filename_xml.c_str());
 		
 	BOOST_CHECK_EQUAL(new_rules_xml->getName(), test_rules_name);
-	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitType1->getId())->getName(), unitTypeFixture.test_unitName1);
-	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitType2->getId())->getName(), unitTypeFixture.test_unitName2);
+	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitType1->getId())->getName().test_unitName1);
+	BOOST_CHECK_EQUAL(new_rules_xml->getUnitType(unitType2->getId())->getName().test_unitName2);
 }
 
 BOOST_AUTO_TEST_SUITE_END( )

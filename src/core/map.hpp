@@ -14,18 +14,18 @@
 #pragma warning(pop)
 
 #include <loadsave.hpp>
+#include <uuid.hpp>
 
 #include "location.hpp"
 #include "path.hpp"
-#include "id.hpp"
 
 // pointer nur bei mehrfach genutzten Objekten (z.B. Units, locations)
 
 
-class Map : public LoadSave<Map>, public ID<Map>
+class Map : public LoadSave<Map>, public UUID<Map>
 {
 public:		
-	Map(const unsigned int id, const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList);
+	Map(const boost::uuids::uuid id, const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList);
 	Map(const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList);
 	~Map();
 
@@ -55,7 +55,7 @@ private:
 	template<class Archive>
 	friend inline void save_construct_data(Archive &ar, const Map* map, const unsigned int version) { 
 
-		const unsigned int& id = map->getId();
+		const boost::uuids::uuid& id = map->getId();
 		const std::string& name = map->getName();
 		const std::vector<boost::shared_ptr<Location> >& locationVector = map->getLocationVector();
 		const std::list<boost::shared_ptr<const Path> >& pathList = map->getPathList();
@@ -72,7 +72,7 @@ private:
 	template<class Archive>
 	inline friend void load_construct_data(Archive& ar, Map*& map, const unsigned int version)
 	{
-		unsigned int id;
+		boost::uuids::uuid id;
 		std::string name;
 		std::vector<boost::shared_ptr<Location> > locationVector;
 		std::list<boost::shared_ptr<const Path> > pathList;
@@ -92,9 +92,9 @@ private:
 	const std::vector<boost::shared_ptr<Location> > locationVector;
 	const std::list<boost::shared_ptr<const Path> > pathList;
 	
-	std::map<const unsigned int, const boost::shared_ptr<Location> > locationMap;
-	std::map<const unsigned int, const unsigned int> positionIndexMap;
-	std::map<const unsigned int, const unsigned int> indexPositionMap;
+	std::map<const unsigned int, const boost::shared_ptr<Location> > locationMap; // position -> location
+	std::map<const unsigned int, const unsigned int> positionIndexMap; // position -> index
+	std::map<const unsigned int, const unsigned int> indexPositionMap; // index -> position
 
 	//cached entries:
 	std::vector<std::vector<unsigned int> > minDistance;

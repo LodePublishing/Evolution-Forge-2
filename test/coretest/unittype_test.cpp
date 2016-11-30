@@ -3,23 +3,23 @@
 #pragma warning(pop)
 
 #include <unittype_fixture.hpp>
-
+#include <race_fixture.hpp>
 
 // TODO vielleicht hier eine allgemeine Prüffunktion rein
 
 
 BOOST_FIXTURE_TEST_SUITE( UnitType_test, UnitType_Fixture )
 
-	BOOST_AUTO_TEST_CASE (UnitType_constructor)
+	BOOST_AUTO_TEST_CASE (UnitType_constructor )
 {
-	UnitType* test_unittype = new UnitType(test_unitName1, raceFixture.test_race, test_buildtime, test_maxcount, true, test_unitMovementType, test_speed, test_resources);
+	UnitType* test_unittype = new UnitType(test_unitName1.test_race, test_buildtime, test_maxcount, true, test_unitMovementType, test_speed, test_resources);
 
 	BOOST_CHECK_EQUAL(test_unittype->getMovementType(), test_unitMovementType);
 	BOOST_CHECK_EQUAL(test_unittype->getSpeed(), test_speed);
 	BOOST_CHECK_EQUAL(test_unittype->isCorporeal(), true);
 	BOOST_CHECK_EQUAL(test_unittype->getMaxCount(), test_maxcount);
 	BOOST_CHECK_EQUAL(test_unittype->getName(), test_unitName1);
-	BOOST_CHECK_EQUAL(test_unittype->getRace()->getName(), raceFixture.test_race_name);
+	BOOST_CHECK_EQUAL(test_unittype->getRace()->getName().test_race_name);
 
 	BOOST_CHECK_EQUAL(test_unittype->getResources().front().getAmount(), test_amount1);
 	BOOST_CHECK_EQUAL(test_unittype->getResources().back().getAmount(), test_amount3);
@@ -43,13 +43,13 @@ BOOST_FIXTURE_TEST_SUITE( UnitType_test, UnitType_Fixture )
 	delete test_unittype;
 }
 
-	BOOST_AUTO_TEST_CASE (UnitType_notcorporeal_constructor)
+	BOOST_AUTO_TEST_CASE (UnitType_notcorporeal_constructor )
 {
-	UnitType* test_unittype = new UnitType(test_unitName2, raceFixture.test_race, test_buildtime, test_maxcount, false, NO_MOVEMENT_TYPE, 0, test_resources);
+	UnitType* test_unittype = new UnitType(test_unitName2.test_race, test_buildtime, test_maxcount, false, NO_MOVEMENT_TYPE, 0, test_resources);
 
 	BOOST_CHECK_EQUAL(test_unittype->getMaxCount(), test_maxcount);
 	BOOST_CHECK_EQUAL(test_unittype->getName(), test_unitName2);
-	BOOST_CHECK_EQUAL(test_unittype->getRace()->getName(), raceFixture.test_race_name);
+	BOOST_CHECK_EQUAL(test_unittype->getRace()->getName().test_race_name);
 
 	std::list<UnitResourceType> unitResourceType = test_unittype->getResources();
 

@@ -6,14 +6,14 @@
 
 
 BOOST_FIXTURE_TEST_SUITE( UnitResourceType_test, UnitResourceType_Fixture )
-
+	
 BOOST_AUTO_TEST_CASE (UnitResourceType_constructor)
 {
-	BOOST_CHECK_EQUAL(test_unitresourcetype->getResourceType(), test_unitResourceType);
-	BOOST_CHECK_EQUAL(test_unitresourcetype->getAmount(), test_amount);
-	BOOST_CHECK_EQUAL(test_unitresourcetype->getUnitTypeIDList().front().front(), test_unitTypeIdList.front().front());
-	BOOST_CHECK_EQUAL(test_unitresourcetype->getUnitTypeIDList().front().back(), test_unitTypeIdList.front().back());
-	BOOST_CHECK_EQUAL(test_unitresourcetype->getUnitTypeIDList().back().front(), test_unitTypeIdList.back().front());
+	BOOST_CHECK_EQUAL(test_unitResourceType->getResourceType(), test_eUnitResourceType);
+	BOOST_CHECK_EQUAL(test_unitResourceType->getAmount(), test_amount);
+	BOOST_CHECK_EQUAL(test_unitResourceType->getUnitTypeIDList().front().front(), test_unitTypeIdList.front().front());
+	BOOST_CHECK_EQUAL(test_unitResourceType->getUnitTypeIDList().front().back(), test_unitTypeIdList.front().back());
+	BOOST_CHECK_EQUAL(test_unitResourceType->getUnitTypeIDList().back().front(), test_unitTypeIdList.back().front());
 }
 
 

@@ -4,9 +4,7 @@
 
 #include <goalentry_fixture.hpp>
 
-
 BOOST_FIXTURE_TEST_SUITE( GoalEntry_test, GoalEntry_Fixture )
-
 	BOOST_AUTO_TEST_CASE (GoalEntry_constructor)
 {	
 	BOOST_CHECK_EQUAL(test_goalentry->getName(), test_goalentry_name);

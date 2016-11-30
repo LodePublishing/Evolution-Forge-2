@@ -88,4 +88,4 @@ BOOST_FIXTURE_TEST_SUITE( Distance_test, Distance_Fixture )
 	}
 
 
-BOOST_AUTO_TEST_SUITE_END( )
+BOOST_AUTO_TEST_SUITE_END()

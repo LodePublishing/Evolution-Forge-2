@@ -4,8 +4,8 @@ Government::Government(const std::string name):
 	name(name)
 {}
 
-Government::Government(const unsigned int id, const std::string name):
-	ID<Government>(id),
+Government::Government(const boost::uuids::uuid id, const std::string name):
+	UUID<Government>(id),
 	name(name)
 {}
 

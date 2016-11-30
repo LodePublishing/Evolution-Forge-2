@@ -7,18 +7,8 @@
 
 #include <location.hpp>
 
-#include <random_fixture.hpp>
-
-#include "path_fixture.hpp"
-
-
-struct Location_Fixture : public Random_Fixture
+struct Location_Fixture
 {
-	Location_Fixture();
-	~Location_Fixture();
-
-	const Path_Fixture path_fixture;
-
 	const std::string test_name;
 	const unsigned int test_position;	
 	const signed int test_x;
@@ -26,7 +16,8 @@ struct Location_Fixture : public Random_Fixture
 
 	const boost::shared_ptr<Location> test_location;
 
-	
+	Location_Fixture();	
+	~Location_Fixture();	
 };
 
 #endif // _COREFIXTURE_LOCATIONFIXTURE_HPP

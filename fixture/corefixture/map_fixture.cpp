@@ -7,9 +7,9 @@
 #include <globalstorage.hpp>
 
 #include "map_fixture.hpp"
+#include <random_fixture.hpp>
 
 Map_Fixture::Map_Fixture():
-	Random_Fixture(),
 	test_map_name("map"),
 	test_file_name("Map1"),
 	test_filename_xml("demofile.xml"),
@@ -23,11 +23,7 @@ Map_Fixture::Map_Fixture():
 }
 
 Map_Fixture::~Map_Fixture() 
-{
-	Map::resetCounter();
-	Location::resetCounter();
-	Path::resetCounter();
-}
+{ }
 
 const std::vector<unsigned int> Map_Fixture::init_positionvector_helper() {
 	std::vector<unsigned int> positionVector = boost::assign::list_of(1)(2)(33)(5);

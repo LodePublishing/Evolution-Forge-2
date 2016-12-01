@@ -1,8 +1,6 @@
 #ifndef _GUI_GUI_HPP
 #define _GUI_GUI_HPP
 
-
-
 #include <set>
 #include <map>
 #include <math.h>

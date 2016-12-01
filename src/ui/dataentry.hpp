@@ -1,6 +1,8 @@
 #ifndef _UI_DATABASE_ENTRY_HPP
 #define _UI_DATABASE_ENTRY_HPP
 
+#if 0
+
 #include <gui/button.hpp>
 #include "../core/goalentry.hpp"
 
@@ -77,3 +79,4 @@ inline const eDataEntry DataBaseEntry::getEntryType() const {
 
 #endif
 // TODO irgendwie edit mode... oder so ein Augensymbol, mit einem Click auf ein eigenes Game-Tab
+#endif // _UI_DATABASE_ENTRY_HPP

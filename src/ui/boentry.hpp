@@ -1,5 +1,7 @@
-#ifndef _BOENTRY_HPP
-#define _BOENTRY_HPP
+#ifndef _UI_BOENTRY_HPP
+#define _UI_BOENTRY_HPP
+
+#if 0
 
 #include <gui/button.hpp>
 #include "../core/program.hpp"
@@ -56,4 +58,6 @@ inline const unsigned int BoEntry::getCount() const {
 }
 
 #endif
+
+#endif // _UI_BOENTRY_HPP
 

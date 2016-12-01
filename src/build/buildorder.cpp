@@ -1,5 +1,8 @@
 #include "buildorder.hpp"
 
+
+#if 0
+
 /* BUILDORDER.CPP - last changed: 9/24/04			      *
  * Author: Clemens Lode					     *
  * Copyright: Clemens Lode					  *
@@ -593,4 +596,4 @@ void BUILDORDER::prepareForNewGeneration() // resets all data to standard starti
 }
 
 
-
+#endif

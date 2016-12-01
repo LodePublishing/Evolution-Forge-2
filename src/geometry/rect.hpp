@@ -61,11 +61,12 @@ public:
 	bool isBottomRightCornerInside(const Point& point) const;
 	bool isBottomLeftCornerInside(const Point& point) const;
 	bool isRectInside(const Rect& rect) const;
+	
 	eTouchType getTouchType(const Rect& rect) const;
 	bool isTouched(const Rect& rect) const;
 	const Rect commonRect(const Rect& rect) const; // Schnittmenge
-	std::list<Rect> withoutRect(Rect rect) const; // Ohne
-
+	std::list<Rect> withoutRect(const Rect& rect) const; // Ohne
+	std::list<Rect> removeRects(const std::list<Rect>& rects) const;
 	void moveSmooth(Rect& start_rect, Rect& target_rect);
 
 	
@@ -224,7 +225,7 @@ inline void Rect::setTop(const Sint16 top) {
 inline void Rect::setBottom(const Sint16 bottom) {
 	Sint16 top_side = getTop();
 	BOOST_ASSERT(bottom >= top_side);
-	rectSize.setHeight(static_cast<Uint16>(bottom - getTop()));
+	rectSize.setHeight(static_cast<Uint16>(bottom - top_side));
 	bottomRightCorner.setY(bottom);
 }
 

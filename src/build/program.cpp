@@ -1,5 +1,7 @@
 #include "program.hpp"
 
+#if 0
+
 PROGRAM::PROGRAM():
 //	built(false),
 	before(),
@@ -64,3 +66,5 @@ PROGRAM::PROGRAM(const PROGRAM& object) :
 	unit(object.unit),
 	BT(object.BT)
 { }
+
+#endif

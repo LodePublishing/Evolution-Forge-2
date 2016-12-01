@@ -1,5 +1,7 @@
 #include "soup.hpp"
 
+#if 0
+
 SOUP::SOUP() :
 	mapPlayerNum(0),
 	runNumber(0),
@@ -563,3 +565,4 @@ const bool SOUP::getIsNewRun()
 	} else return(false);
 }
 
+#endif

@@ -1,6 +1,7 @@
-#ifndef _CORE_ANABUILDORDER_HPP
-#define _CORE_ANABUILDORDER_HPP
+#ifndef _BUILD_ANABUILDORDER_HPP
+#define _BUILD_ANABUILDORDER_HPP
 
+#if 0
 #include "prebuildorder.hpp"
 #include "program.hpp"
 #include "statistics.hpp"
@@ -274,5 +275,7 @@ inline void ANABUILDORDER::setMaxtFitness(const unsigned int max_tfitness)
         maxtFitness = max_tfitness;
 }
 
-#endif //_CORE_ANABUILDORDER_HPP
+#endif
+
+#endif //_BUILD_ANABUILDORDER_HPP
 

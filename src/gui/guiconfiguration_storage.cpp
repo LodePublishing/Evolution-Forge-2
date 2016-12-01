@@ -8,7 +8,7 @@
 template<> const std::string SingleStorage<GuiConfiguration>::DATA_FILE_NAME_BASE = IO::getDirectory(boost::assign::list_of("data")("storage")("gui")) + "guiconfiguration.xml";
 template<> const std::string SingleStorage<GuiConfiguration>::DATA_FILE_IDENTIFIER = "GuiConfigurationStorage";
 
-template<> boost::shared_ptr<GuiConfiguration> NodeCreator<GuiConfiguration>::createObjectFromNode(const std::vector<Node>& node) {
+template<> boost::shared_ptr<GuiConfiguration> NodeCreator<GuiConfiguration>::createObjectFromNode(const std::vector<XmlNode>& node) {
 	return boost::shared_ptr<GuiConfiguration>(new GuiConfiguration(
 		Misc::uuid(node[0]), 
 		*NodeCreator<Size>::createObjectFromNode(node[1].getChildren()),
@@ -25,19 +25,19 @@ template<> boost::shared_ptr<GuiConfiguration> NodeCreator<GuiConfiguration>::cr
 		));
 }
 
-template<> Node NodeCreator<GuiConfiguration>::createNodeFromObject(const GuiConfiguration& t) {
-	Node n("guiconfiguration");
-	n.addChild(Node("id", boost::lexical_cast<std::string>(t.getId())));
+template<> XmlNode NodeCreator<GuiConfiguration>::createNodeFromObject(const GuiConfiguration& t) {
+	XmlNode n("guiconfiguration");
+	n.addChild(XmlNode("id", boost::lexical_cast<std::string>(t.getId())));
 	n.addChild(NodeCreator<Size>::createNodeFromObject(t.getResolutionSize()));
-	n.addChild(Node("BitDepth", boost::lexical_cast<std::string>(t.getBitDepth())));	
-	n.addChild(Node("FullScreen", boost::lexical_cast<std::string>(t.isFullScreen())));	
-	n.addChild(Node("DesiredFramerate", boost::lexical_cast<std::string>(t.getDesiredFramerate())));	
-	n.addChild(Node("DesiredCPU", boost::lexical_cast<std::string>(t.getDesiredCPU())));	
-	n.addChild(Node("UnloadGraphics", boost::lexical_cast<std::string>(t.isUnloadGraphics())));	
-	n.addChild(Node("SmoothMovements", boost::lexical_cast<std::string>(t.isSmoothMovements())));	
-	n.addChild(Node("Transparency", boost::lexical_cast<std::string>(t.isTransparency())));
-	n.addChild(Node("SoftwareMouse", boost::lexical_cast<std::string>(t.isSoftwareMouse())));	
-	n.addChild(Node("GlowingButtons", boost::lexical_cast<std::string>(t.isGlowingButtons())));	
-	n.addChild(Node("ToolTips", boost::lexical_cast<std::string>(t.isToolTips())));
+	n.addChild(XmlNode("BitDepth", boost::lexical_cast<std::string>(t.getBitDepth())));	
+	n.addChild(XmlNode("FullScreen", boost::lexical_cast<std::string>(t.isFullScreen())));	
+	n.addChild(XmlNode("DesiredFramerate", boost::lexical_cast<std::string>(t.getDesiredFramerate())));	
+	n.addChild(XmlNode("DesiredCPU", boost::lexical_cast<std::string>(t.getDesiredCPU())));	
+	n.addChild(XmlNode("UnloadGraphics", boost::lexical_cast<std::string>(t.isUnloadGraphics())));	
+	n.addChild(XmlNode("SmoothMovements", boost::lexical_cast<std::string>(t.isSmoothMovements())));	
+	n.addChild(XmlNode("Transparency", boost::lexical_cast<std::string>(t.isTransparency())));
+	n.addChild(XmlNode("SoftwareMouse", boost::lexical_cast<std::string>(t.isSoftwareMouse())));	
+	n.addChild(XmlNode("GlowingButtons", boost::lexical_cast<std::string>(t.isGlowingButtons())));	
+	n.addChild(XmlNode("ToolTips", boost::lexical_cast<std::string>(t.isToolTips())));
 	return n;
 }

@@ -1,6 +1,8 @@
 #ifndef _UI_SCORE_HPP
 #define _UI_SCORE_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include "mapmenu.hpp"
 #include "playerentry.hpp"
@@ -184,3 +186,4 @@ inline const signed int ScoreWindow::getAssignedRace(const unsigned int player_n
 
 #endif
 
+#endif // _UI_SCORE_HPP

@@ -1,6 +1,8 @@
 #ifndef _UI_STATISTICS_HPP
 #define _UI_STATISTICS_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include "../core/anabuildorder.hpp"
 
@@ -49,5 +51,7 @@ class StatisticsWindow : public Window
 		unsigned int graph_ani;
 		bool wasResetted;
 };
-#endif
 
+#endif 
+
+#endif // _UI_STATISTICS_HPP

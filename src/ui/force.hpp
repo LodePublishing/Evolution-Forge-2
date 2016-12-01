@@ -1,6 +1,9 @@
 #ifndef _UI_FORCE_HPP
 #define _UI_FORCE_HPP
 
+
+#if 0
+
 #include "unitmenu.hpp"
 #include "goalmenu.hpp"
 //#include "racemenu.hpp"
@@ -50,6 +53,7 @@ class ForceWindow : public Window
 		const bool openGoalMenu();
 		const bool openUnitMenu();
 		const signed int getAssignedGoal() const;
+
 	private:
 		unsigned int currentGoalUnit; // which goal is currently highlighted?
 		unsigned int startLine;
@@ -118,4 +122,6 @@ inline const unsigned int ForceWindow::getMarkedUnit() const
 }
 
 #endif
+
+#endif // _UI_FORCE_HPP
 

@@ -2,7 +2,7 @@
 #define _MISC_INPUTARCHIVE_HPP
 
 
-#include "node.hpp"
+#include "xmlnode.hpp"
 #include <fstream>
 
 class InputArchive
@@ -11,7 +11,7 @@ public:
 	InputArchive(std::ifstream& inputFile);
 	~InputArchive();
 
-	InputArchive& operator>>(Node& node);
+	InputArchive& operator>>(XmlNode& node);
 
 private:
 	std::ifstream& inputFile;	

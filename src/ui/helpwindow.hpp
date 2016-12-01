@@ -1,6 +1,8 @@
 #ifndef _UI_HELP_WINDOW_HPP
 #define _UI_HELP_WINDOW_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include <gui/longtext.hpp>
 
@@ -24,4 +26,6 @@ class HelpWindow : public Window
 };
 
 #endif
+
+#endif // _UI_HELP_WINDOW_HPP
 

@@ -1,6 +1,8 @@
 #ifndef _UI_BOMENU_HPP
 #define _UI_BOMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 #include "../core/database.hpp"
 
@@ -26,6 +28,8 @@ class BoMenu : public Menu
 inline const unsigned int BoMenu::getNumber() const {
 	return(number);
 }
+
+#endif
 
 #endif // _UI_BOMENU_HPP
 

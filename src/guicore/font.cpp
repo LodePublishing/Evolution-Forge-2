@@ -39,7 +39,7 @@ Font::Font(const boost::uuids::uuid id, const std::string& fileName, const Uint1
 
 Font::~Font()
 {
-	TTF_CloseFont(font);
+//	TTF_CloseFont(font);
 }
 
 const Size Font::getTextExtent(const std::string& font_text) const
@@ -66,8 +66,8 @@ const Size Font::getTextExtent(const std::string& font_text) const
 void Font::DrawText(SDL_Surface* surface, const SDL_Color& color, const std::string& font_text, const Sint16 x, const Sint16 y) const
 {
 	BOOST_ASSERT(surface);
-	BOOST_ASSERT(Point(x, y) == Point(x, y));
 	SDL_Surface *sText = TTF_RenderUTF8_Blended( font, font_text.c_str(), color);
+
 #if _SCC_DEBUG
 	if(sText == NULL) {
 		throw SDLException("ERROR (Font::DrawText()): Could not render blended text [TTF ERROR: \"" + std::string(TTF_GetError()) + "\"].");
@@ -76,6 +76,7 @@ void Font::DrawText(SDL_Surface* surface, const SDL_Color& color, const std::str
 	if(sText) {
 		SDL_Rect rcDest = {x, y-4, 0, 0};
 		SDL_BlitSurface( sText, NULL, surface, &rcDest );
+		// TODO Reuse?
 		SDL_FreeSurface( sText );
 	}
 }

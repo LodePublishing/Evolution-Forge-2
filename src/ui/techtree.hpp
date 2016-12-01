@@ -1,6 +1,8 @@
 #ifndef _UI_TECHTREE_HPP
 #define _UI_TECHTREE_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include "../core/anabuildorder.hpp"
 
@@ -33,4 +35,7 @@ inline void TechTreeWindow::setCurrentGoalUnit(unsigned int current_goal_unit)
 	currentGoalUnit = current_goal_unit;
 	unitChanged = true;
 }
+
 #endif
+
+#endif // _UI_TECHTREE_HPP

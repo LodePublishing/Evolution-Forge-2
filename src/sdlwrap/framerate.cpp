@@ -37,7 +37,7 @@ FrameRate::FrameRate(const unsigned int desired_framerate, const unsigned int de
 		}
 	}
 	for(unsigned int j = TICK_INTERVALL;j--;) {
-		frames_count[j]=0;
+		frames_count[j] = 0.0;
 	}
 	for(unsigned int i = MAX_TICK_TYPES; i--;) {
 		percent[i] = 0;
@@ -141,21 +141,21 @@ void FrameRate::calculateFramerate()
 	if(totalTicks == 0) {
 		totalTicks = 1;
 	}
-	unsigned int total_frames = 0;
+	double total_frames = 0;
 	for(unsigned int j = TICK_INTERVALL;j--;) {
 		total_frames += frames_count[j];
 	}
-	total_frames /= TICK_INTERVALL;
+	total_frames /= (double)TICK_INTERVALL;
 
 	if(framesPerSecond > total_frames) {
-		framesPerSecond -= (framesPerSecond - total_frames)/5 + 1;
+		framesPerSecond -= (framesPerSecond - total_frames)/5.0 + 1.0;
 	} else {
 		if(framesPerSecond < total_frames) {
-			framesPerSecond += (total_frames - framesPerSecond)/5 + 1;
+			framesPerSecond += (total_frames - framesPerSecond)/5.0 + 1.0;
 		}
 	}
 		
-	for(unsigned int i = MAX_TICK_TYPES;i--;)
+	for(unsigned int i = MAX_TICK_TYPES; i--;)
 	{
 		if(percent[i] > total_this_ticks[i] * 100 / totalTicks) {
 			percent[i] -= (percent[i] - total_this_ticks[i] * 100 / totalTicks)/5 + 1;
@@ -170,11 +170,11 @@ void FrameRate::calculateFramerate()
 		}
 	}
 	
-	framesPerSecond = 0;
+	framesPerSecond = 0.0;
 	for(unsigned int j = TICK_INTERVALL;j--;) {
 		framesPerSecond += frames_count[j];
 	}
-	framesPerSecond /= TICK_INTERVALL;
+	framesPerSecond /= (double)TICK_INTERVALL;
 }
 
 void FrameRate::delay()
@@ -184,31 +184,35 @@ void FrameRate::delay()
 	totalTicks = 1+totalTicks/TICK_INTERVALL;
 
 // Increase/Reduce the frames per generation
-	Uint32 ticks = SDL_GetTicks();
-	BOOST_ASSERT(ticks >= startTicks);
-	long int difference = ticks - startTicks;
+	Uint32 currentTicks = SDL_GetTicks();
+	long int difference = currentTicks - startTicks;
 	if(difference < 0) {
 		startTicks = SDL_GetTicks();
 		difference = 1;
-	} else if(difference == 0) {
+	} else /*if(difference == 0) {
 		difference = 1;
-		startTicks ++;
-	} else {
+		startTicks++;
+	} else */ {
    		startTicks += difference;
 	}
 
-	if(averagecounter < 2) {
+	if(averagecounter < 100) {
    		++averagecounter;
 	}
 	for(unsigned int i = averagecounter; i--;) {
    		average[i+1] = average[i];
 	}
 	average[0] = difference;
-	long int av = 1;
+	long int av = 0;
 	for(unsigned int i = averagecounter; i--;) {
    		av += average[i];
 	}
-	currentFramerate = 1000 * averagecounter / av;
+	double value = 0.0001;
+	if(av != 0) {
+		value = av;
+	}
+	
+	currentFramerate = 1000.0 * ((double)averagecounter) / value;
 	long unsigned int cpu_delay = (totalTicks - desiredCPU * totalTicks / 100);
 
 	if(adaptFramesPerGeneration)
@@ -237,13 +241,15 @@ void FrameRate::delay()
 		}
 	}
 	if((delayTicks < cpu_delay) && (delayTicks < 1000)) {
-		delayTicks+=(cpu_delay - delayTicks)/5 + 1;
+		delayTicks += (cpu_delay - delayTicks)/5 + 1;
 	}
-	else if((delayTicks > cpu_delay)) {
+	else if(delayTicks > cpu_delay) {
 		delayTicks -= (delayTicks - cpu_delay)/2 + 1; // reduce delayTicks very fast because smooth drawing has priority over processor usage!
 	}
-	SDL_Delay(delayTicks);
-
+	if(delayTicks > 1) {
+		SDL_Delay(delayTicks);	
+		std::cout << "Delay: " << delayTicks << std::endl;
+	}
 	refresh += 100;
 }
 
@@ -274,10 +280,10 @@ const std::list<unsigned int> FrameRate::getPercentList() const
 
 
 
-const unsigned int FrameRate::FPS_UPPER_LIMIT = 200;
+const unsigned int FrameRate::FPS_UPPER_LIMIT = 1000;
 const unsigned int FrameRate::FPS_LOWER_LIMIT = 2;
 const unsigned int FrameRate::FPS_DEFAULT = 30;
-const unsigned int FrameRate::FPS_MAX_TOTAL_TICKS = 10000;
+const unsigned int FrameRate::FPS_MAX_TOTAL_TICKS = 100000;
 const unsigned int FrameRate::FPS_MIN_TOTAL_TICKS = 1;
 
 

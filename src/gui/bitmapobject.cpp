@@ -3,14 +3,14 @@
 BitmapObject::BitmapObject(SDL_Object* const bitmap_parent, 
 				const Rect& bitmap_rect,
 				const Size distance_bottom_right, 
-				const boost::shared_ptr<const Bitmap>& bitmap, 
+				const boost::shared_ptr<const Bitmap>& bitmap,
 				const ePositionMode bitmap_position_mode) :
 	Object(bitmap_parent, Rect(bitmap_rect.getTopLeft(), Size((*bitmap)->w, (*bitmap)->h)),  distance_bottom_right, bitmap_position_mode, NO_AUTO_SIZE),
 	bitmap(bitmap),
 	checked(false)
 {
 	setClipped();
-	setDrawType(TRANSPARENT_OBJECT);
+	setDrawType(bitmap->isTransparent()?TRANSPARENT_OBJECT:SOLID_OBJECT);
 }
 
 BitmapObject::~BitmapObject()
@@ -20,7 +20,7 @@ void BitmapObject::reloadOriginalSize()
 {
 	setOriginalSize(getBitmapSize());
 	Object::reloadOriginalSize();
-	adjustSize(CHILD_WAS_CHANGED);
+	adjustSize((SDL_Object*)getParent(), CHILD_WAS_CHANGED, getSize());
 }
 
 // Render button.  How it draws exactly depends on it's current state.
@@ -54,6 +54,15 @@ SDL_Object* BitmapObject::checkHighlight(const Point& mouse)
 	return Object::checkHighlight(mouse);
 //	return (Object*)this; lol nein!
 	
+}
+
+
+void BitmapObject::setBitmap(const boost::shared_ptr<const Bitmap> bitmap) {
+	if(this->bitmap->getId() != bitmap->getId()) {
+		this->bitmap = bitmap;
+		reloadOriginalSize();
+		redrawWholeObject();
+	}
 }
 
 void BitmapObject::process()

@@ -30,6 +30,7 @@ public:
 	bool operator>=(const Size& size) const;
 	bool operator!=(const Size& size) const;
 	const Size operator+(const Size& size) const;
+	Size& operator+=(const Size& size);
 	const Size operator-(const Size& size) const;
 	const Size operator/(const Uint16 d) const;
 
@@ -105,6 +106,12 @@ inline const Size Size::operator+(const Size& size) const {
 	
 	BOOST_ASSERT(width + size.getWidth() <= 65536 && height + size.getHeight() <= 65536);
 	return Size(static_cast<Uint16>(width + size.getWidth()), static_cast<Uint16>(height + size.getHeight()));
+}
+
+inline Size& Size::operator+=(const Size& size) 
+{
+	*this = *this + size;
+	return *this;
 }
 
 inline const Size Size::operator/(const Uint16 d) const {

@@ -1,6 +1,8 @@
 #ifndef _UI_INTRO_HPP
 #define _UI_INTRO_HPP
 
+#if 0
+
 #include <gui/animation.hpp>
 #include <gui/statictext.hpp>
 #include <gui/group.hpp>
@@ -43,4 +45,6 @@ class Intro : public Object
 };
 
 #endif
+
+#endif // _UI_INTRO_HPP
 

@@ -1,13 +1,16 @@
 #ifndef _UI_SETTINGS_HPP
 #define _UI_SETTINGS_HPP
 
+
+
 #include <gui/window.hpp>
 #include <gui/radio.hpp>
 #include <gui/numberfield.hpp>
-
 #include <gui/menu.hpp>
 
-class SettingsWindow:public Window
+#if 0
+
+class SettingsWindow : public Window
 {
 	public:
 		SettingsWindow(Object* setwindow_parent);
@@ -172,3 +175,4 @@ inline void SettingsWindow::forceLanguageChange() {
 
 #endif
 
+#endif // _UI_SETTINGS_HPP

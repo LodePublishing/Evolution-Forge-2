@@ -1,6 +1,8 @@
 #ifndef _UI_PLAYERENTRY_HPP
 #define _UI_PLAYERENTRY_HPP
 
+#if 0
+
 #include <gui/radio.hpp>
 #include "racemenu.hpp"
 
@@ -92,7 +94,6 @@ inline const eInitMode PlayerEntry::getInitMode() const {
 	return(initMode);
 }
 
-
-
-
 #endif
+
+#endif // _UI_PLAYERENTRY_HPP

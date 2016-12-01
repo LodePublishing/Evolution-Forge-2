@@ -1,71 +1,174 @@
-
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
 #define MUSIC_TRANSITION_DURATION 2000
-#endif 
 
 #ifdef _FMOD_SOUND
 #include <fmod.hpp>
 #include <fmod_errors.h>
 #endif
 
+#include "soundprocessor.hpp"
+#include <misc/exceptions.hpp>
+#include <misc/log.hpp>
+#include <misc/ids.hpp>
+
+#include <lang/text_storage.hpp>
+
+#define MUSIC_TRANSITION_DURATION 2000
+
+SoundProcessor::SoundProcessor(const boost::shared_ptr<const SoundConfiguration> soundConfiguration):
+	soundConfiguration(soundConfiguration),
+	soundInitialized(false)
 #ifdef _FMOD_SOUND
 	,soundEngine(NULL),
 	musicChannel(NULL)
 #endif
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-	,soundInitialized(false)
-#endif
-
-TODO separate sound processor
+{
 	// ------ INIT SOUND ENGINE -------
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-	if(isSound() || isMusic())
-	{
-		soundInitialized = true;
+	if(soundConfiguration->isSound() || soundConfiguration->isMusic())
+	{		
 		try {
 			initSoundEngine();
+			soundInitialized = true;
 		} catch(SDLException e) {
-			setSound(false);
-			setMusic(false);
+			toDebugLog("Could not initialize sound engine.");
 			soundInitialized = false;
 		}
 	} else {
 		toInfoLog(TextStorage::instance().get(IDS::START_INIT_NOSOUND_TEXT_ID)->getText());
 	}
-#endif
 	// ------ END INIT SOUND ENGINE -------
-
+	printSoundInformation();
+}
 
 
 SoundProcessor::~SoundProcessor() {
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
 	releaseSoundEngine();
-#endif
 }
 
-void SoundProcessor::process() {
+
+
+#ifdef _SDL_MIXER_SOUND
+
+void transitionMusic(void)
+{
+	SoundProcessor::transitionMusic();
+}
+
+void soundChannelDone(int channel)
+{
+	SoundProcessor::soundChannelDone(channel);
+}
+
+// callback function
+void SoundProcessor::transitionMusic(void)
+{
+	if(currentMusic != NULL)
+	{
+		Mix_HaltMusic(); // Just in case there was a misunderstanding, halt the music
+		Mix_FreeMusic(currentMusic);
+		currentMusic = nextMusic;
+		nextMusic = NULL;
+		if(currentMusic != NULL)
+		{
+			int success = Mix_FadeInMusic(currentMusic, -1, MUSIC_TRANSITION_DURATION/2);
+			if(success != 0) {
+				std::ostringstream os;
+				os << "ERROR (SoundProcessor::playMusic()): " << Mix_GetError();
+				throw SDLException(os.str());
+			}
+		}
+	}
+}
+
+void SoundProcessor::soundChannelDone(int channel)
+{
+	for(std::list<int>::iterator i = soundChannel.begin(); i != soundChannel.end();)
+	{
+		if(*i == channel) {
+			i = soundChannel.erase(i);
+		}
+		else ++i;
+	}
+}
+
+#endif
+
+
+void SoundProcessor::initSoundEngine()
+{
+	// TODO start a 'watchdog' thread (FMOD waits indefinitely if the sound is currently used!)
+	toInfoLog(TextStorage::instance().get(IDS::START_INIT_SOUND_TEXT_ID)->getText());
+
+#ifdef _FMOD_SOUND
+	unsigned int version;
+
+	if(!ERRCHECK(FMOD::System_Create(&soundEngine))) { 
+		throw SDLException(TextStorage::instance().get(IDS::START_INIT_FMOD_SYSTEM_CREATE_ERROR_TEXT_ID)->getText());
+	}
+
+	BOOST_ASSERT(soundEngine);
+	if(!ERRCHECK(soundEngine->getVersion(&version))) {
+		throw SDLException(TextStorage::instance().get(IDS::START_INIT_FMOD_GET_VERSION_ERROR_TEXT_ID)->getText());
+	}
+
+	if (version < FMOD_VERSION)
+	{
+		std::ostringstream os;
+		os << TextStorage::instance().get(IDS::START_INIT_FMOD_VERSION_ERROR_TEXT_ID)->getText() << "[" << version << " < " << FMOD_VERSION << "]";
+		throw SDLException(os.str());
+	}
+
+	printSoundInformation();
+
+	if(!ERRCHECK(soundEngine->init(32, FMOD_INIT_NORMAL, 0))) {
+		throw SDLException(TextStorage::instance().get(IDS::START_INIT_FMOD_SYSTEM_INIT_ERROR_TEXT_ID)->getText());
+	}
+#elif _SDL_MIXER_SOUND
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048)==-1) 
+	{
+		std::ostringstream os;
+		os << "ERROR (SoundProcessor::initSoundEngine()): " << Mix_GetError();
+		throw SDLException(os.str());
+	}		
+	Mix_ChannelFinished(::soundChannelDone);
+	
+	/*
+	int flags = MIX_INIT_MP3; // TODO MOD!
+	int initted = Mix_Init(flags);
+	if(initted&flags != flags) {
+		std::ostringstream os;
+		os << "ERROR (SoundProcessor::initSoundEngine()): " << Mix_GetError();
+		throw SDLException(os.str());
+	}*/
+
+#endif
+	soundInitialized = true;
+}
+
+void SoundProcessor::setSoundConfiguration(const boost::shared_ptr<const SoundConfiguration> soundConfiguration)
+{
+	this->soundConfiguration = soundConfiguration;
+
 	// ------ SOUND ENGINE -------
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-	if((isSound() || isMusic()) && (!soundInitialized))
+	if((soundConfiguration->isSound() || soundConfiguration->isMusic()) && (!soundInitialized))
 	{
 		try {
 			initSoundEngine();
-		} catch(MyException e) {
-			setSound(false);
-			setMusic(false);
+		} catch(SDLException e) {
 			soundInitialized = false;
 			toInfoLog(TextStorage::instance().get(IDS::START_INIT_NOSOUND_TEXT_ID)->getText());
 		}
-	} else if(!isSound() && !isMusic() && soundInitialized) {
+	} else if(!soundConfiguration->isSound() && !soundConfiguration->isMusic() && soundInitialized) {
+		// sound was deactivated
 		releaseSoundEngine();
 	} else 
 		if(!soundInitialized) {
-			if(!isMusic()) {
+			if(!soundConfiguration->isMusic()) {
 				stopMusic();
 			}
 
-			if(isSound()) {
-				processSoundChannels();
+			if(soundConfiguration->isSound()) {
+				process();
 			} else {
 				clearSoundChannels();
 			}
@@ -74,15 +177,53 @@ void SoundProcessor::process() {
 #endif
 		}
 		clearSoundsToPlay();
-#endif		
-		//		m.poll(SOUND_TICKS); TODO
+}
+
+void SoundProcessor::process() {
+#ifdef _FMOD_SOUND
+	for(std::list<FMOD::Channel*>::iterator i = soundChannel.begin(); i!=soundChannel.end();)
+	{
+		bool is_playing = false;
+		(*i)->isPlaying(&is_playing);
+		if(!is_playing) {
+			i = soundChannel.erase(i);
+		}
+		else ++i;
+	}
+	for(std::list<std::pair<Sound*, float> >::iterator i = soundsToPlay.begin(); i != soundsToPlay.end(); ++i)
+		if((soundChannel.size() < getSoundChannels()))
+		{
+			FMOD::Channel* mychannel = NULL;
+			soundEngine->playSound(FMOD_CHANNEL_FREE, i->first->getData(), 0, &mychannel);
+			mychannel->setPan(i->second);
+			mychannel->setVolume((float)(getSoundVolume()/100.0));
+			soundChannel.push_back(mychannel);
+		}
+#elif _SDL_MIXER_SOUND
+	for(std::list<std::pair<boost::shared_ptr<const Sound>, float> >::iterator i = soundsToPlay.begin(); i != soundsToPlay.end(); ++i)
+		if((soundChannel.size() < soundConfiguration->getSoundChannels()))
+		{
+			int mychannel = -1;
+			mychannel = Mix_PlayChannel(-1, i->first->getData(), 0);
+			if(mychannel == -1) {
+				std::ostringstream os;
+				os << "ERROR (SoundProcessor::process()): " << Mix_GetError();
+				throw SDLException(os.str());
+			} else
+			soundChannel.push_back(mychannel);
+			int rightVolume = 254.0 * i->second;
+			Mix_SetPanning(mychannel, 254 - rightVolume, rightVolume);
+			// Mix_SetDistance TODO
+			// int Mix_SetPosition(int channel, Sint16 angle, Uint8 distance)  TODO
+		}
+#endif
+		soundsToPlay.clear();
 		// ------ END SOUND ENGINE -------
 }
 
 
 
 // ------------------ SOUND AND MUSIC BEGIN -----------------------
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
 
 #ifdef _FMOD_SOUND
 bool ERRCHECK(FMOD_RESULT result)
@@ -100,61 +241,7 @@ bool ERRCHECK(FMOD_RESULT result)
 
 
 
-
-
-
-
-Music* Gui::loadMusic(const std::string file_name) const
-{
-#ifdef _FMOD_SOUND
-	BOOST_ASSERT(soundEngine);
-	FMOD::Sound* music_data;
-	FMOD_RESULT result = soundEngine->createSound(file_name.c_str(), FMOD_LOOP_NORMAL | FMOD_SOFTWARE, 0, &music_data);
-	if(!ERRCHECK(result)) {
-		return NULL;
-	}
-	//		throw SDLException("ERROR (Gui::loadMusic()): Could not load " + file_name + ".");
-	//	}
-#elif _SDL_MIXER_SOUND
-	Mix_Music* music_data = Mix_LoadMUS(file_name.c_str());
-	if(!music_data) 
-	{
-		return NULL;
-		//		std::ostringstream os;
-		//		os << "ERROR (Gui::loadMusic()): Could not load " << file_name << " : " << Mix_GetError();
-		//		throw SDLException(os.str());
-	}
-#endif
-	return new Music(music_data);
-}
-
-Sound* Gui::loadSound(const std::string file_name) const
-{
-#ifdef _FMOD_SOUND
-	BOOST_ASSERT(soundEngine);
-	FMOD::Sound* sound_data;
-	FMOD_RESULT result = soundEngine->createSound(file_name.c_str(), FMOD_SOFTWARE, 0, &sound_data);
-	if(!ERRCHECK(result)) {
-		return NULL;
-		//throw SDLException("ERROR (Gui::loadSound()): Could not load " + file_name + ".");
-	}
-#elif _SDL_MIXER_SOUND
-	Mix_Chunk* sound_data = Mix_LoadWAV(file_name.c_str());
-	if(!sound_data) 
-	{
-		return NULL;
-		//		std::ostringstream os;
-		//		os << "ERROR (Gui::loadSound()): Could not load " << file_name << " : " << Mix_GetError();
-		//		throw SDLException(os.str());
-	}
-#endif
-	return new Sound(sound_data);
-}
-
-
-
-
-void Gui::releaseSoundEngine()
+void SoundProcessor::releaseSoundEngine()
 {
 #ifdef _FMOD_SOUND
 	if(musicChannel) {
@@ -179,7 +266,101 @@ void Gui::releaseSoundEngine()
 
 
 
-void Gui::printSoundInformation() const
+
+
+void SoundProcessor::stopMusic()
+{
+	playMusic(boost::shared_ptr<const Music>(), false);
+}
+
+void SoundProcessor::clearSoundChannels() {
+	soundChannel.clear();
+}
+
+void SoundProcessor::clearSoundsToPlay() {
+	soundsToPlay.clear();
+}
+
+
+float SoundProcessor::calculatePosition(const signed x, const unsigned int resolutionX) {
+	return ((float)x)/((float)resolutionX);
+}
+
+void SoundProcessor::playSound(boost::shared_ptr<const Sound> playSound, float position)
+{
+#ifdef _FMOD_SOUND
+	BOOST_ASSERT(soundEngine);
+#endif
+	soundsToPlay.push_back(std::pair<boost::shared_ptr<const Sound>, float>(playSound, position));
+}
+// TODO volume! (z)
+
+
+
+void SoundProcessor::playMusic(boost::shared_ptr<const Music> play_music, const bool loop)
+{
+
+#ifdef _FMOD_SOUND
+	BOOST_ASSERT(soundEngine);
+
+	if(musicChannel) {
+		musicChannel->stop();
+	}
+	soundEngine->playSound(FMOD_CHANNEL_FREE, play_music->getData(), 0, &musicChannel);
+
+#elif _SDL_MIXER_SOUND
+
+	bool success = false;
+
+	// music currently playing?
+	if(currentMusic != NULL)
+	{
+		// new music?
+		if(play_music != NULL) {
+			if(loop) {
+				nextMusic = currentMusic;
+			} else {
+				nextMusic = NULL;
+			}
+			// transition between both music plays
+			Mix_HookMusicFinished(::transitionMusic);
+			success = (Mix_FadeOutMusic(MUSIC_TRANSITION_DURATION/2) == 1);
+		} else 
+			// empty music => Stop music, just fade out
+		{
+			success = (Mix_FadeOutMusic(MUSIC_TRANSITION_DURATION) == 1);
+		}
+	} else 
+		// no music was playing
+	{
+		if(play_music != NULL)
+		{
+			currentMusic = play_music->getData();
+			if(loop) {
+				nextMusic = currentMusic;
+			} else {
+				nextMusic = NULL;
+			}
+
+			Mix_HookMusicFinished(::transitionMusic);
+			success = (Mix_FadeInMusic(currentMusic, -1, MUSIC_TRANSITION_DURATION) == 0);
+		} else {
+			// no music played, no music to play
+			success = true;
+		}
+	}
+
+	if(!success) {
+		std::ostringstream os;
+		os << "ERROR (SoundProcessor::playMusic()): " << Mix_GetError() << "[" << play_music->getFileName() << "]";
+		toErrorLog(os.str());
+	}
+#endif
+}
+
+
+
+void SoundProcessor::printSoundInformation() const
 {
 #ifdef _FMOD_SOUND
 	FMOD_RESULT result;
@@ -225,14 +406,12 @@ void Gui::printSoundInformation() const
 	int audio_rate, audio_channels;
 	Uint16 audio_format;
 	int success = Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-	BOOST_ASSERT(success);
-	/*#ifdef _SCC_DEBUG
+	
 	if(!success) {
-	std::ostringstream os;
-	os << "ERROR (Gui::printSoundInformation()): " << Mix_GetError();
-	throw SDLException(os.str());
+		std::ostringstream os;
+		os << "ERROR (SoundProcessor::printSoundInformation()): " << Mix_GetError();
+		throw SDLException(os.str());
 	}
-	#endif*/
 	int bits = audio_format & 0xFF;
 	std::ostringstream os; 
 	os << "* Opened audio at " << audio_rate << "Hz " << bits << "bit " << ((audio_channels>1)?"stereo":"mono");// << ", " << audio_buffers << " bytes audio buffer";
@@ -240,234 +419,21 @@ void Gui::printSoundInformation() const
 #endif
 }
 
-#ifdef _SDL_MIXER_SOUND
-void transitionMusic(void)
-{
-	Gui::transitionMusic();
-}
-
-void soundChannelDone(int channel)
-{
-	Gui::soundChannelDone(channel);
-}
-
-// callback function
-void Gui::transitionMusic(void)
-{
-	if(currentMusic != NULL)
-	{
-		Mix_HaltMusic(); // Just in case there was a misunderstanding, halt the music
-		Mix_FreeMusic(currentMusic);
-		currentMusic = nextMusic;
-		nextMusic = NULL;
-		if(currentMusic != NULL)
-		{
-			int success = Mix_FadeInMusic(currentMusic, -1, MUSIC_TRANSITION_DURATION/2);
-			BOOST_ASSERT(success == 0);
-			/*#ifdef _SCC_DEBUG
-			if(success != 0) {
-			std::ostringstream os;
-			os << "ERROR (Gui::playMusic()): " << Mix_GetError();
-			throw SDLException(os.str());
-			}
-			#endif*/
-		}
-	}
-}
-
-void Gui::soundChannelDone(int channel)
-{
-	for(std::list<int>::iterator i = soundChannel.begin(); i != soundChannel.end();)
-	{
-		if(*i == channel) {
-			i = soundChannel.erase(i);
-		}
-		else ++i;
-	}
-}
-#endif
-
-
-void Gui::initSoundEngine()
-{
-	// TODO start a 'watchdog' thread (FMOD waits indefinitely if the sound is currently used!)
-	toInfoLog(TextStorage::instance().get(IDS::START_INIT_SOUND_TEXT_ID)->getText());
 
 #ifdef _FMOD_SOUND
-	unsigned int version;
-
-	if(!ERRCHECK(FMOD::System_Create(&soundEngine))) { 
-		throw SDLException(TextStorage::instance().get(IDS::START_INIT_FMOD_SYSTEM_CREATE_ERROR_TEXT_ID)->getText());
-	}
-
-	BOOST_ASSERT(soundEngine);
-	if(!ERRCHECK(soundEngine->getVersion(&version))) {
-		throw SDLException(TextStorage::instance().get(IDS::START_INIT_FMOD_GET_VERSION_ERROR_TEXT_ID)->getText());
-	}
-
-	if (version < FMOD_VERSION)
-	{
-		std::ostringstream os;
-		os << TextStorage::instance().get(IDS::START_INIT_FMOD_VERSION_ERROR_TEXT_ID)->getText() << "[" << version << " < " << FMOD_VERSION << "]";
-		throw SDLException(os.str());
-	}
-
-	printSoundInformation();
-
-	if(!ERRCHECK(soundEngine->init(32, FMOD_INIT_NORMAL, 0))) {
-		throw SDLException(TextStorage::instance().get(IDS::START_INIT_FMOD_SYSTEM_INIT_ERROR_TEXT_ID)->getText());
-	}
+		FMOD::Channel* SoundProcessor::musicChannel;
+		FMOD::System* SoundProcessor::soundEngine;
+		std::list<FMOD::Channel*> SoundProcessor::soundChannel;
 #elif _SDL_MIXER_SOUND
-	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048)==-1) 
-	{
-		std::ostringstream os;
-		os << "ERROR (Gui::initSoundEngine()): " << Mix_GetError();
-		throw SDLException(os.str());
-	}		
-	Mix_ChannelFinished(::soundChannelDone);
+		// need to be static because of callback functions!
+		Mix_Music* SoundProcessor::currentMusic;
+		Mix_Music* SoundProcessor::nextMusic;
+		std::list<int> SoundProcessor::soundChannel;
 #endif
-	soundInitialized = true;
-}
 
-
-
-
-void Gui::processSoundChannels()
-{
-#ifdef _FMOD_SOUND
-	for(std::list<FMOD::Channel*>::iterator i = soundChannel.begin(); i!=soundChannel.end();)
-	{
-		bool is_playing = false;
-		(*i)->isPlaying(&is_playing);
-		if(!is_playing) {
-			i = soundChannel.erase(i);
-		}
-		else ++i;
-	}
-	for(std::list<std::pair<Sound*, float> >::iterator i = soundsToPlay.begin(); i != soundsToPlay.end(); ++i)
-		if((soundChannel.size() < getSoundChannels()))
-		{
-			FMOD::Channel* mychannel = NULL;
-			soundEngine->playSound(FMOD_CHANNEL_FREE, (FMOD::Sound*)(i->first), 0, &mychannel);
-			mychannel->setPan(i->second);
-			mychannel->setVolume((float)(getSoundVolume()/100.0));
-			soundChannel.push_back(mychannel);
-		}
-#elif _SDL_MIXER_SOUND
-	for(std::list<std::pair<Sound*, float> >::iterator i = soundsToPlay.begin(); i != soundsToPlay.end(); ++i)
-		if((soundChannel.size() < getSoundChannels()))
-		{
-			int mychannel = -1;
-			mychannel = Mix_PlayChannel(-1, (Mix_Chunk*)(i->first), 0);
-			if(mychannel == -1) {
-				std::ostringstream os;
-				os << "ERROR (Gui::processSoundChannels()): " << Mix_GetError();
-				throw SDLException(os.str());
-			} else
-			{
-				//				mychannel->setPan(i->second);
-				//				mychannel->setVolume((float)(getSoundVolume())/100.0);
-				soundChannel.push_back(mychannel);
-			}
-		}
 #endif
-}
 
 
-
-void Gui::stopMusic()
-{
-	playMusic(NULL);
-}
-
-
-
-void Gui::clearSoundChannels()
-{
-	soundChannel.clear();
-}
-
-void Gui::clearSoundsToPlay()
-{
-	soundsToPlay.clear();
-}
-
-
-void Gui::playSound(Sound* play_sound, const unsigned int x)
-{
-#ifdef _FMOD_SOUND
-	BOOST_ASSERT(soundEngine);
-#endif
-	soundsToPlay.push_back(std::pair<Sound*, float>(play_sound, 2*((float)(2*x) - (float)getMaxX())/(float)(3*getMaxX())));
-}
-
-
-
-void Gui::playMusic(Music* play_music, const bool loop)
-{
-
-#ifdef _FMOD_SOUND
-	BOOST_ASSERT(soundEngine);
-
-	if(musicChannel) {
-		musicChannel->stop();
-	}
-	soundEngine->playSound(FMOD_CHANNEL_FREE, (FMOD::Sound*)play_music, 0, &musicChannel);
-
-#elif _SDL_MIXER_SOUND
-
-	int success = -1;
-
-	// music currently playing?
-	if(currentMusic != NULL)
-	{
-		// new music?
-		if(play_music != NULL) {
-			if(loop) {
-				nextMusic = currentMusic;
-			} else {
-				nextMusic = NULL;
-			}
-			// transition between both music plays
-			Mix_HookMusicFinished(::transitionMusic);
-			success = Mix_FadeOutMusic(MUSIC_TRANSITION_DURATION/2);
-		} else 
-			// empty music => Stop music, just fade out
-		{
-			success = Mix_FadeOutMusic(MUSIC_TRANSITION_DURATION);
-		}
-	} else 
-		// no music was playing
-	{
-		if(play_music != NULL)
-		{
-			currentMusic = (Mix_Music*)play_music;
-			if(loop) {
-				nextMusic = currentMusic;
-			} else {
-				nextMusic = NULL;
-			}
-
-			Mix_HookMusicFinished(::transitionMusic);
-			success = Mix_FadeInMusic(currentMusic, -1, MUSIC_TRANSITION_DURATION);
-		} else {
-			// no music played, no music to play
-			success = 0;
-		}
-	}
-	if(success != 0) {
-		std::ostringstream os;
-		os << "ERROR (Gui::playMusic()): " << Mix_GetError();
-		toErrorLog(os.str());
-		//throw MyException(os.str());
-	}
-#endif
-}
-
-std::list<int> Gui::soundChannel;
-Mix_Music* Gui::currentMusic;
-Mix_Music* Gui::nextMusic;
-#endif
 
 // ------------------ SOUND AND MUSIC END -----------------------
 

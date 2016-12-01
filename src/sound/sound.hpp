@@ -16,50 +16,44 @@
 #include <misc/uuid.hpp>
 
 
-class SOUND_API Sound : public UUID<Sound>
+class Sound : public UUID<Sound>
 {
 	public:
+		Sound(const boost::uuids::uuid id, const std::string& fileName);
+		Sound(const std::string& fileName);
+		~Sound();
+
+		const std::string& getFileName() const; 
+
 #ifdef _FMOD_SOUND
 	    Sound(FMOD::Sound* t);
-		operator FMOD::Sound*();
-		(FMOD::Sound*) operator->();		
+		FMOD::Sound* getData() const;	
 #elif _SDL_MIXER_SOUND
 		Sound(Mix_Chunk* t);
-		operator Mix_Chunk*();
-		Mix_Chunk* operator->();		
+		Mix_Chunk* getData() const;	
 #endif
 	private:
-//		std::string name;
+		const std::string fileName;
 #ifdef _FMOD_SOUND
 		(FMOD::Sound)* sound;
 #elif _SDL_MIXER_SOUND
 		Mix_Chunk* sound;
 #endif
+		void loadSound(const std::string& fileName); 
+		static const std::string SOUND_DIRECTORY;
 };
 
+
+inline const std::string& Sound::getFileName() const {
+	return fileName;
+}
+
 #ifdef _FMOD_SOUND
-	inline Sound::Sound(FMOD::Sound* t) {
-		sound = t;
-	}
-
-	inline Sound::operator FMOD::Sound*() {
+	inline FMOD::Sound* Sound::getData() const {
 		return sound;
 	}
-
-	inline FMOD::Sound* Sound::operator->() {
-		return sound;
-	}
-
 #elif _SDL_MIXER_SOUND
-	inline Sound::Sound(Mix_Chunk* t) {
-		sound = t;
-	}
-
-	inline Sound::operator Mix_Chunk*() {
-		return sound;
-	}
-
-	inline Mix_Chunk* Sound::operator->() {
+	inline Mix_Chunk* Sound::getData() const {
 		return sound;
 	}
 #endif

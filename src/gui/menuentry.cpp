@@ -4,7 +4,7 @@ MenuEntry::MenuEntry(SDL_Object* const menuentry_parent,
 						   const Rect& rect, 
 						   const boost::shared_ptr<const ButtonColors>& button_colors, 
 						   const boost::shared_ptr<const Text>& menuText) :
-	Button(menuentry_parent, rect, Size(4, 2), button_colors, menuText, boost::shared_ptr<const Text>(), std::list<std::string>(), boost::shared_ptr<const Bitmap>(), PRESS_BUTTON_MODE, DO_NOT_ADJUST, AUTO_HEIGHT_CONST_WIDTH)
+	Button(menuentry_parent, rect, Size(4, 2), button_colors, menuText, std::list<std::string>(), boost::shared_ptr<const Text>(), PRESS_BUTTON_MODE, DO_NOT_ADJUST, AUTO_HEIGHT_CONST_WIDTH)
 { }
 
 

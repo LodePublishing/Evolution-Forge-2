@@ -1,6 +1,9 @@
 #ifndef _FORCEENTRY_HPP
 #define _FORCEENTRY_HPP
 
+
+#if 0
+
 #include <gui/numberfield.hpp>
 #include "../core/goal.hpp"
 
@@ -109,6 +112,8 @@ inline const eUnitType ForceEntry::getType() const {
 inline void ForceEntry::setType(const eUnitType unit_type) {
 	type = unit_type; // TODO
 }
+
+#endif
 
 #endif // _FORCEENTRY_HPP
 

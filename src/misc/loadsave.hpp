@@ -2,13 +2,13 @@
 #define _MISC_LOADSAVE_HPP
 
 #include <string>
-#include "node.hpp"
+#include "xmlnode.hpp"
 
 class LoadSave
 {
 public:
-	static void saveToXML(const Node& node, const std::string& dataFileName, const std::string& dataFileIdentifier);
-	static Node loadFromXML(const std::string& dataFileName, const std::string& dataFileIdentifier);
+	static void saveToXML(const XmlNode& node, const std::string& dataFileName, const std::string& dataFileIdentifier);
+	static XmlNode loadFromXML(const std::string& dataFileName, const std::string& dataFileIdentifier);
 
 protected:
 	virtual ~LoadSave() {}

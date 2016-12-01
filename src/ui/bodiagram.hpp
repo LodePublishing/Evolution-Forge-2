@@ -1,6 +1,8 @@
 #ifndef _UI_BODIAGRAM_HPP
 #define _UI_BODIAGRAM_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include <gui/diagram.hpp>
 #include "../core/database.hpp"
@@ -54,5 +56,7 @@ class BoDiagramWindow : public Window
 inline const std::list<unsigned int>& BoDiagramWindow::getSelectedItems() const {
 	return(selectedItems);
 }
+
+#endif
 
 #endif // _UI_BODIAGRAM_HPP

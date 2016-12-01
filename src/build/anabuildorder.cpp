@@ -1,5 +1,7 @@
 #include "anabuildorder.hpp"
 
+#if 0
+
 /* ANABUILDORDER.CPP - last changed: 6/23/04							  *
  * Author: Clemens Lode											 *
  * Copyright: Clemens Lode										  *
@@ -911,3 +913,4 @@ const unsigned int ANABUILDORDER::getGoalPercentage() const
 unsigned int ANABUILDORDER::successType;
 unsigned int ANABUILDORDER::successUnit;
 
+#endif

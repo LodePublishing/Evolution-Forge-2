@@ -12,44 +12,53 @@ class GuiProcessor
 public:
 	GuiProcessor();
 	~GuiProcessor();
-		void process(DC* dc);
-		bool isMouseInside(const Rect& rect) const;
-		void setMouse(const Point& p, SDL_Object* root_object, const bool showTooltip, const Size& windowSize);
-		const Point& getMouse() const;
+	void process(DC* dc);
+	bool isMouseInside(const Rect& rect) const;
+	void setMouse(const Point& p, Object& root_object, const bool showTooltip, const Size& windowSize);
+	const Point& getMouse() const;
 
-		void leftDown(const Point& mouse, SDL_Object* root_object);
-		void leftUp(const Point& mouse, SDL_Object* root_object);
-		void rightDown(const Point& mouse, SDL_Object* root_object);
-		void rightUp(const Point& mouse, SDL_Object* root_object);
+	void leftDown(const Point& mouse, Object& root_object);
+	void leftUp(const Point& mouse, Object& root_object);
+	void rightDown(const Point& mouse, Object& root_object);
+	void rightUp(const Point& mouse, Object& root_object);
 
-		void wheelUp();
-		void wheelDown();
-		void wheelToTop();
-		void wheelToBottom();
+	void wheelUp();
+	void wheelDown();
+	void wheelToTop();
+	void wheelToBottom();
 
-		bool isWindowSelected() const;
-		Window* getCurrentWindow() const; 
-		void setWindowSelected(const bool selected = true);
-		void setCurrentWindow(Window* window);
-		void resetWindow();
 
-		void setToolTip(ToolTip* tooltip);
-		ToolTip* getToolTip() const;
-		void setToolTipParent(const Object* parent);
-		const Object* getToolTipParent() const;
-		
-		void resetCursor();
-		void setCursor(Cursor* cursor);
+
+	bool isWindowSelected() const;
+	Window* getCurrentWindow() const; 
+	void setWindowSelected(const bool selected = true);
+	void setCurrentWindow(Window* window);
+	void resetWindow();
+	
+	void printFPS(DC* dc);
+	void screenshot();
+	void screenCapture(DC* dc);
+
+	void setToolTip(ToolTip* tooltip);
+	ToolTip* getToolTip() const;
+	void setToolTipParent(const Object* parent);
+	const Object* getToolTipParent() const;
+
+	void resetCursor();
+	void setCursor(Cursor* cursor);
 
 private:
-		ToolTip* tooltip;
-		const Object* toolTipParent;
-		Window* currentWindow;
-		bool windowSelected;
-		// TODO currentButton
-		unsigned int mouseType;
-		Point mouse;
-		SDL_Cursor* defaultCursor;
+	ToolTip* tooltip;
+	const Object* toolTipParent;
+	Window* currentWindow;
+	bool windowSelected;
+	// TODO currentButton
+	unsigned int mouseType;
+	Point mouse;
+	SDL_Cursor* defaultCursor;
+	
+	unsigned int screenCapturing;
+	unsigned int screenshotNumber;
 };
 
 

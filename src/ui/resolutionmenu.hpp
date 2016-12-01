@@ -1,6 +1,8 @@
 #ifndef _UI_RESOLUTIONMENU_HPP
 #define _UI_RESOLUTIONMENU_HPP
 
+#if 0
+
 #include "menu.hpp"
 
 class ResolutionMenu : public Menu
@@ -12,6 +14,8 @@ class ResolutionMenu : public Menu
 		void process();
 		void draw(DC* const dc) const;
 };
+
+#endif
 
 #endif // _UI_RESOLUTIONMENU_HPP
 

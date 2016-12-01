@@ -1,4 +1,7 @@
 #include "force.hpp"
+
+#if 0
+
 #include "savebox.hpp"
 #include <sstream>
 
@@ -902,3 +905,4 @@ void ForceWindow::draw() const
 
 TechTreeWindow* ForceWindow::techTreeWindow = NULL;
 
+#endif

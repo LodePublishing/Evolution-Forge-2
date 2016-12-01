@@ -1,4 +1,7 @@
 #include "debug.hpp"
+
+#if 0
+
 #include <sstream>
 
 DebugWindow::DebugWindow( Object* parent_window ) :
@@ -80,3 +83,4 @@ void DebugWindow::draw() const
 	Object::draw();
 }
 
+#endif

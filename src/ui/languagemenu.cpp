@@ -1,5 +1,7 @@
 #include "languagemenu.hpp"
 
+#if 0
+
 LanguageMenu::LanguageMenu(Object* language_parent, const Rect language_rect, const Size distance_bottom_right, const ePositionMode position_mode) :
 	Menu(language_parent, language_rect, distance_bottom_right, position_mode, false)
 {
@@ -37,3 +39,4 @@ void LanguageMenu::draw(DC* const dc) const
 	Menu::draw(dc);
 }	
 
+#endif

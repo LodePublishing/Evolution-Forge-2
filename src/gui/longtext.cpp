@@ -37,7 +37,7 @@ LongText::LongText(SDL_Object* const lt_parent,
 	visitedButton(lt_visited_button),
 	useHelpChapters(use_help_chapters)
 {
-	setDrawType(TRANSPARENT_OBJECT);
+	setDrawType(ANTI_ALIASED_OBJECT);
 }
 
 LongText::~LongText()

@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_SUITE_END( )
 {
 	GuiDirectories::init();
 	BitmapStorage::reset();
-	BitmapObject* object = new BitmapObject(NULL, Rect(), Size(), BitmapStorage::instance().get(IDS::BACKGROUND_SC_BITMAP));
+	BitmapObject* object = new BitmapObject(NULL, Rect(), Size(), BitmapStorage::instance().get(IDS::BACKGROUND_SC_BITMAP_ID));
 
 	GuiProcessor t;
 
@@ -82,12 +82,16 @@ BOOST_AUTO_TEST_SUITE_END( )
 		test_dc->saveBMP(test_screenshotFileName);
 	}
 	SDL_Surface* surface = test_dc->loadBMP(test_screenshotFileName);
-	BOOST_CHECK(BitmapStorage::instance().get(IDS::BACKGROUND_SC_BITMAP)->equals(surface));
+	BOOST_CHECK(BitmapStorage::instance().get(IDS::BACKGROUND_SC_BITMAP_ID)->equals(surface));
 	SDL_FreeSurface(surface);
 	delete object;
 
 
 }
+
+
+
+
 
 BOOST_AUTO_TEST_SUITE_END( )
 

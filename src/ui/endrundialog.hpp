@@ -1,6 +1,8 @@
 #ifndef _UI_ENDRUNDIALOG_HPP
 #define _UI_ENDRUNDIALOG_HPP
 
+#if 0
+
 #include <string>
 
 #include <ui/editfield.hpp>
@@ -22,6 +24,8 @@ class EndRunDialog : public EditField
 		CheckButton* autoSaveRuns;
 		static std::string lastString;
 };
+
+#endif
 
 #endif // _UI_ENDRUNDIALOG_HPP
 

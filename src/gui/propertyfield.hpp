@@ -1,7 +1,6 @@
 #ifndef _GUI_PROPERTYFIELD_HPP
 #define _GUI_PROPERTYFIELD_HPP
 
-#include <sdlwrap/enums/positionmode.hpp>
 #include "object.hpp"
 #include "statictext.hpp"
 

@@ -1,3 +1,5 @@
+#if 0
+
 #include "init.hpp"
 
 int main(int argc, char *argv[])
@@ -359,3 +361,4 @@ int main(int argc, char *argv[])
 	return(EXIT_SUCCESS);
 }				
 
+#endif

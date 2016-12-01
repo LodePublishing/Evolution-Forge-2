@@ -1,5 +1,7 @@
 #include "bgline.hpp"
 
+#if 0
+
 BoGraphLine::BoGraphLine(Object* bg_parent, const Rect& initial_rect, const unsigned int bg_race, const unsigned int bg_facility, const unsigned int bg_line_height, const unsigned int bg_lines) :
 	Object(bg_parent, initial_rect),
 	boGraphList(),
@@ -81,3 +83,5 @@ void BoGraphLine::checkSelected(const unsigned int selected)
 			j = boGraphList.erase(j);
 		}
 */
+
+#endif

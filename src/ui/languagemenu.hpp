@@ -1,6 +1,8 @@
 #ifndef _UI_LANGUAGEMENU_HPP
 #define _UI_LANGUAGEMENU_HPP
 
+#if 0
+
 #include "menu.hpp"
 
 class LanguageMenu : public Menu
@@ -12,6 +14,8 @@ class LanguageMenu : public Menu
 		void process();
 		void draw(DC* const dc) const;
 };
+
+#endif
 
 #endif // _UI_LANGUAGEMENU_HPP
 

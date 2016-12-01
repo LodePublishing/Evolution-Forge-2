@@ -1,6 +1,8 @@
 #ifndef _UI_MENUENTRY_HPP
 #define _UI_MENUENTRY_HPP
 
+#if 0
+
 #include <gui/button.hpp>
 
 class MenuEntry : public Button
@@ -17,6 +19,8 @@ class MenuEntry : public Button
 	private:
 		eColor color;
 };
+
+#endif
 
 #endif // _UI_MENUENTRY_HPP
 

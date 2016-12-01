@@ -28,8 +28,8 @@
 		unsigned int number, 
 		bool shift_right) :
 	PropertyField(numberfield_parent, rect, distance_bottom_right, position_mode, 110, text, numberFormatText, boost::assign::list_of(boost::lexical_cast<std::string>(number)), tool_tip, text_color, font),
-	addButton(new Button(this, Rect(Point(140, 1), Size(8, 8)), Size(0, 0), add_button_colors, boost::shared_ptr<const Text>(), boost::shared_ptr<const Text>(), std::list<std::string>(), boost::shared_ptr<const Bitmap>(), PRESS_BUTTON_MODE)),
-	subButton(new Button(this, Rect(Point(150, 1), Size(8, 8)), Size(0, 0), sub_button_colors, boost::shared_ptr<const Text>(), boost::shared_ptr<const Text>(), std::list<std::string>(), boost::shared_ptr<const Bitmap>(), PRESS_BUTTON_MODE)),
+	addButton(new Button(this, Rect(Point(140, 1), Size(8, 8)), Size(0, 0), add_button_colors)),
+	subButton(new Button(this, Rect(Point(150, 1), Size(8, 8)), Size(0, 0), sub_button_colors)),
 	number(number),
 	min(number_min),
 	max(number_max),

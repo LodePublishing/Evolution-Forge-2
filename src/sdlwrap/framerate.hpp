@@ -21,7 +21,7 @@ class SDL_API FrameRate
 		bool allowCalculation();
 
 		const std::list<unsigned int> getPercentList() const;
-		unsigned int getFramesPerSecond() const;
+		double getFramesPerSecond() const;
 		unsigned int getGenerationsPerSecond() const;		
 
 
@@ -33,7 +33,7 @@ class SDL_API FrameRate
 		void setTotalTicks(const long unsigned int total_ticks);
 		void setAdaptFramesPerGeneration(const bool adapt);
 		unsigned int getFramesPerGeneration() const;
-		unsigned int getCurrentFramerate() const;
+		double getCurrentFramerate() const;
     	void delay();
 		void poll(const eFrameTicks eframetick);
 
@@ -48,8 +48,8 @@ class SDL_API FrameRate
 
 		long unsigned int currentTicks;
 		long unsigned int ticks[MAX_TICK_TYPES][TICK_INTERVALL];
-		unsigned int frames_count[TICK_INTERVALL];
-		unsigned int framesPerSecond;
+		double frames_count[TICK_INTERVALL];
+		double framesPerSecond;
 		unsigned int generationsPerSecond;
 		unsigned int percent[MAX_TICK_TYPES];
 
@@ -61,7 +61,7 @@ class SDL_API FrameRate
 
 
 		unsigned int desiredFramerate;
-		unsigned int currentFramerate;
+		double currentFramerate;
 		unsigned int desiredCPU;
 		unsigned int framesPerGeneration; // output
 
@@ -91,11 +91,11 @@ inline unsigned int FrameRate::getFramesPerGeneration() const {
 	return framesPerGeneration;
 }
 
-inline unsigned int FrameRate::getCurrentFramerate() const {
+inline double FrameRate::getCurrentFramerate() const {
 	return currentFramerate;
 }
 
-inline unsigned int FrameRate::getFramesPerSecond() const {
+inline double FrameRate::getFramesPerSecond() const {
 	return framesPerSecond;
 }
 

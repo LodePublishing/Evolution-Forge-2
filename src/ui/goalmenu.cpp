@@ -1,4 +1,7 @@
 #include "goalmenu.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include <sstream>
 
@@ -87,5 +90,4 @@ void GoalMenu::resetData()
 	reloadOriginalSize();
 }
 
-
-
+#endif

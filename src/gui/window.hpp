@@ -8,6 +8,8 @@
 #include "enums/scrolled.hpp"
 
 #include <guicore/windowcolors.hpp>
+#include "layoutmanager.hpp"
+#include <geometry/windowlayout.hpp>
 
 struct SaveBoxParameter
 {
@@ -33,8 +35,22 @@ class Window : public Object
 				const boost::shared_ptr<const ButtonColors>& scroll_up_button_colors = boost::shared_ptr<const ButtonColors>(),
 				const boost::shared_ptr<const ButtonColors>& scroll_down_button_colors = boost::shared_ptr<const ButtonColors>(),
 				const eIsAutoAdjust win_is_auto_adjust = NO_AUTO_SIZE_ADJUST, 
-				const Rect win_client_area = Rect(0, 0, 1280, 1024) // TOO
+				const Rect win_client_area = Rect(0, 0, 1280, 1024) // TODO
 				);
+
+		Window(SDL_Object* const window_parent, const boost::shared_ptr<LayoutManager> layoutManager,
+			const boost::shared_ptr<const WindowLayout> windowLayout, 
+				const boost::shared_ptr<const Text>& window_title_string, 
+				const std::list<std::string>& parameterList,
+				const boost::shared_ptr<const WindowColors>& windowColors,
+				const eIsScrolled window_is_scrolled = NOT_SCROLLED, 
+				const boost::shared_ptr<const ButtonColors>& scroll_up_button_colors = boost::shared_ptr<const ButtonColors>(),
+				const boost::shared_ptr<const ButtonColors>& scroll_down_button_colors = boost::shared_ptr<const ButtonColors>(),
+				const eIsAutoAdjust win_is_auto_adjust = NO_AUTO_SIZE_ADJUST, 
+				const Rect win_client_area = Rect(0, 0, 1280, 1024) // TODO
+				);
+
+
 		~Window();
 		// TODO protected machen (->datawindow)
 
@@ -105,11 +121,15 @@ class Window : public Object
 		static std::string saveBoxString;
 		static SaveBoxParameter saveBoxParameter;
 
+		boost::shared_ptr<const WindowLayout> getWindowLayout() const;
+
 	protected:
 		Window& operator=(const Window& object);
 		Window(const Window& object);
 
 	private:
+		boost::shared_ptr<LayoutManager> layoutManager;
+		boost::shared_ptr<const WindowLayout> windowLayout;
 	// do windows size changes smoothly		
 		void adjustClientRect();
 		Uint16 filledHeight;
@@ -118,6 +138,8 @@ class Window : public Object
 
 // no set/get for title as this is unique and does not change
 		Title* const title;
+
+		
 		
 // client area
 		Rect clientRect;
@@ -146,6 +168,10 @@ class Window : public Object
 //		eHelpChapter helpChapter;
 	
 };
+
+inline boost::shared_ptr<const WindowLayout> Window::getWindowLayout() const {
+	return windowLayout;
+}
 		
 inline void Window::setScrollBarPosition(const Point p) {
 	scrollBar->setPosition(p);

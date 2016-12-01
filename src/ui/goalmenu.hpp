@@ -1,6 +1,8 @@
 #ifndef _UI_GOALMENU_HPP
 #define _UI_GOALMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 #include "../core/database.hpp"
 
@@ -23,6 +25,8 @@ class GoalMenu : public Menu
 		GoalMenu(const GoalMenu& object);
 		GoalMenu& operator=(const GoalMenu& object);
 };
+
+#endif
 
 #endif // _UI_GOALMENU_HPP
 

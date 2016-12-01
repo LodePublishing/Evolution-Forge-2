@@ -1,5 +1,7 @@
-#ifndef _CORE_BUILDING_HPP
-#define _CORE_BUILDING_HPP
+#ifndef _BUILD_BUILDING_HPP
+#define _BUILD_BUILDING_HPP
+
+#if 0
 
 #include "starcraft.hpp"
 #include "../stl/miscellaneous.hpp"
@@ -220,6 +222,8 @@ inline void Building::setOnTheRun(const bool building_on_the_run)
 {
 	onTheRun = building_on_the_run;
 }
+
+#endif
 
 #endif
 

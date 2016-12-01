@@ -24,11 +24,8 @@ ScrollBar::ScrollBar(SDL_Object* const scroll_parent,
 	totalHeight(0),
 	maxHeight(max_height),
 	windowColors(window_colors),
-	add(new Button(this, Rect(getParent()->getWidth()-10, 0, 8, 8), Size(0,0), down_button_colors, 
-					boost::shared_ptr<const Text>(), boost::shared_ptr<const Text>(), std::list<std::string>(), boost::shared_ptr<const Bitmap>(), PRESS_BUTTON_MODE)),// SMALL_ARROW_DOWN_BITMAP, PRESS_BUTTON_MODE, NULL);
-	sub(new Button(this, Rect(getParent()->getWidth()-10, 0, 8, 8), Size(0,0), up_button_colors, 
-		boost::shared_ptr<const Text>(), boost::shared_ptr<const Text>(), std::list<std::string>(), boost::shared_ptr<const Bitmap>(), 
-			PRESS_BUTTON_MODE))//ARROW_BUTTON, SMALL_ARROW_UP_BITMAP, PRESS_BUTTON_MODE, NULL);
+	add(new Button(this, Rect(((SDL_Object*)getParent())->getWidth()-10, 0, 8, 8), Size(0,0), down_button_colors)),// SMALL_ARROW_DOWN_BITMAP, PRESS_BUTTON_MODE, NULL);
+	sub(new Button(this, Rect(((SDL_Object*)getParent())->getWidth()-10, 0, 8, 8), Size(0,0), up_button_colors))//ARROW_BUTTON, SMALL_ARROW_UP_BITMAP, PRESS_BUTTON_MODE, NULL);
 { }
 
 ScrollBar::~ScrollBar()
@@ -71,7 +68,7 @@ void ScrollBar::checkBoundsOfChildren(const Sint16 upper_bound, const Sint16 low
 }
 
 SDL_Object* ScrollBar::checkHighlight(const Point& mouse) {
-	if(Rect(getParent()->getAbsolutePosition(), getParent()->getSize() + Size(8, 0)).isTopLeftCornerInside(mouse)) {
+	if(Rect(((SDL_Object*)getParent())->getAbsolutePosition(), ((SDL_Object*)getParent())->getSize() + Size(8, 0)).isTopLeftCornerInside(mouse)) {
 		add->Show();
 		sub->Show();
 	} else {
@@ -123,8 +120,8 @@ void ScrollBar::process() // process messages, continue animation etc.
 		position = currentScrollY * (signed int)(totalHeight / clientHeight);
 	}
 	setPosition(Point(0, startY-position));
-	add->setPosition(Point(getParent()->getWidth() -12, clientHeight + position + 6));
-	sub->setPosition(Point(getParent()->getWidth() -12, position - 4));
+	add->setPosition(Point(((SDL_Object*)getParent())->getWidth() -12, clientHeight + position + 6));
+	sub->setPosition(Point(((SDL_Object*)getParent())->getWidth() -12, position - 4));
 
 
 	targetScrollY = currentScrollY;
@@ -158,9 +155,9 @@ void ScrollBar::draw(DC* const dc) const
 		dc->setPen(windowColors->getBorderPen());
 //	}
 		
-	dc->DrawRectangle(Rect(getParent()->getAbsolutePosition() + Size(getParent()->getWidth()-13, startY+5) - Size(getAbsolutePosition().getX(), getAbsolutePosition().getY()), Size(10, clientHeight)));
+	dc->DrawRectangle(Rect(((SDL_Object*)getParent())->getAbsolutePosition() + Size(((SDL_Object*)getParent())->getWidth()-13, startY+5) - Size(getAbsolutePosition().getX(), getAbsolutePosition().getY()), Size(10, clientHeight)));
 	//dc->setBrush(*gui.lookUpBrush(CONTINUE_BUTTON_BRUSH)); TODO
-	dc->DrawRectangle(Rect(getParent()->getAbsolutePosition() + Point(getParent()->getWidth()-12, startY+currentScrollY+5) - Size(getAbsolutePosition().getX(), getAbsolutePosition().getY()), Size(8, barHeight)));
+	dc->DrawRectangle(Rect(((SDL_Object*)getParent())->getAbsolutePosition() + Point(((SDL_Object*)getParent())->getWidth()-12, startY+currentScrollY+5) - Size(getAbsolutePosition().getX(), getAbsolutePosition().getY()), Size(8, barHeight)));
 	Object::draw(dc);
 		
 	/*Point p = Point(100, 300);

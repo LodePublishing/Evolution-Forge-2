@@ -1,5 +1,7 @@
 #include "building.hpp"
 
+#if 0
+
 Building::Building():
 	totalBuildTime(0),
 	buildFinishedTime(-1),
@@ -51,3 +53,4 @@ const unsigned int Building::getBuildFinishedTime() const
 	return(buildFinishedTime);
 }
 
+#endif

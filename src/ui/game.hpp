@@ -1,6 +1,8 @@
 #ifndef _UI_GAME_HPP
 #define _UI_GAME_HPP
 
+#if 0
+
 #include "../core/soup.hpp"
 
 #include "player.hpp"
@@ -133,4 +135,6 @@ inline const bool Game::getResetFlag() {
 }
 
 #endif
+
+#endif // _UI_GAME_HPP
 

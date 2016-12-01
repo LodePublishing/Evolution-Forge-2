@@ -1,6 +1,8 @@
 #ifndef _UI_UNITMENU_HPP
 #define _UI_UNITMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 #include "../core/anabuildorder.hpp"
 
@@ -30,5 +32,6 @@ class UnitMenu : public Menu
 		UnitMenu& operator=(const UnitMenu& object);
 };
 
-#endif // _UI_UNITMENU_HPP
+#endif
 
+#endif // _UI_UNITMENU_HPP

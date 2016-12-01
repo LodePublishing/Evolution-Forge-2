@@ -1,6 +1,8 @@
 #ifndef _UI_BITDEPTHMENU_HPP
 #define _UI_BITDEPTHMENU_HPP
 
+#if 0
+
 #include "menu.hpp"
 
 class BitDepthMenu : public Menu
@@ -12,6 +14,8 @@ class BitDepthMenu : public Menu
 		void process();
 		void draw(DC* const dc) const;
 };
+
+#endif
 
 #endif // _UI_BITDEPTHMENU_HPP
 

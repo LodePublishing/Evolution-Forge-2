@@ -2,6 +2,7 @@
 #include <guicore/guicore_directories.hpp>
 #include <lang/language_directories.hpp>
 #include <gui/gui_directories.hpp>
+#include <sound/sound_directories.hpp>
 #include <misc/singlestorage.hpp>
 #include <misc/io.hpp>
 
@@ -12,6 +13,7 @@ void MainDirectories::init() {
 
 	GuiDirectories::init();
 	GuiCoreDirectories::init();
+	SoundDirectories::init();
 	LanguageDirectories::init();
 }
 
@@ -20,5 +22,6 @@ void MainDirectories::initTemp(const std::string prefixDirectory) {
 
 	GuiDirectories::init();
 	GuiCoreDirectories::init();
+	SoundDirectories::init();
 	LanguageDirectories::init();
 }

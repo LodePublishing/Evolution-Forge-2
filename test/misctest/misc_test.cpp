@@ -35,7 +35,7 @@ BOOST_FIXTURE_TEST_SUITE( MessageHandler_test, MessageHandler_Fixture )
 	test_messageHandler->addMessage(test_message3);
 	BOOST_CHECK_EQUAL(test_messageHandler->getRemainingMessages().size(), 3);
 	std::vector<std::string> test_messageVector;
-	for(std::list<const std::string>::const_iterator i = test_messageHandler->getRemainingMessages().begin(); i != test_messageHandler->getRemainingMessages().end(); i++) {
+	for(std::list<std::string>::const_iterator i = test_messageHandler->getRemainingMessages().begin(); i != test_messageHandler->getRemainingMessages().end(); i++) {
 		test_messageVector.push_back(*i);
 	}
 	BOOST_CHECK_EQUAL(test_messageVector[0], test_message1);
@@ -133,11 +133,11 @@ BOOST_AUTO_TEST_SUITE_END( )
 
 BOOST_AUTO_TEST_CASE (LoadSave_simpleNode)
 {
-	Node n(test_nodeName, test_nodeValue);
+	XmlNode n(test_nodeName, test_nodeValue);
 
 	LoadSave::saveToXML(n, test_fileName, test_fileIdentifier);
 	
-	Node new2 = LoadSave::loadFromXML(test_fileName, test_fileIdentifier);
+	XmlNode new2 = LoadSave::loadFromXML(test_fileName, test_fileIdentifier);
 
 	BOOST_CHECK_EQUAL(new2.getName(), test_nodeName);
 	BOOST_CHECK_EQUAL(new2.getValue(), test_nodeValue);
@@ -149,12 +149,12 @@ BOOST_AUTO_TEST_CASE (LoadSave_simpleNode)
 
 BOOST_AUTO_TEST_CASE (LoadSave_complexNode)
 {
-	Node n(test_nodeName);
-	Node n1(test_node1Name);
-	Node n2(test_node2Name, test_node2Value);
-	Node n11(test_node11Name, test_node11Value);
-	Node n12(test_node12Name, test_node12Value);
-	Node n13(test_node13Name, test_node13Value);
+	XmlNode n(test_nodeName);
+	XmlNode n1(test_node1Name);
+	XmlNode n2(test_node2Name, test_node2Value);
+	XmlNode n11(test_node11Name, test_node11Value);
+	XmlNode n12(test_node12Name, test_node12Value);
+	XmlNode n13(test_node13Name, test_node13Value);
 	n1.addChild(n11);
 	n1.addChild(n12);
 	n1.addChild(n13);
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE (LoadSave_complexNode)
 	n.addChild(n2);
 	LoadSave::saveToXML(n, test_fileName, test_fileIdentifier);
 	
-	Node new2 = LoadSave::loadFromXML(test_fileName, test_fileIdentifier);
+	XmlNode new2 = LoadSave::loadFromXML(test_fileName, test_fileIdentifier);
 
 	BOOST_CHECK_EQUAL(new2.getName(), test_nodeName);
 	BOOST_CHECK_EQUAL(new2.getValue(), "");

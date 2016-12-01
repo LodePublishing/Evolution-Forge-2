@@ -8,8 +8,9 @@
 MainConfiguration_Fixture::MainConfiguration_Fixture():
 	guiFixture(),
 	bitmapFixture(),
+	test_firstStart(RandomGenerator::instance().rndBool()),
     test_dnaSpiral(RandomGenerator::instance().rndBool()),
-	test_mainConfiguration(new MainConfiguration(IDS::ENGLISH_LANGUAGE_ID, guiFixture.test_gui->getId(), bitmapFixture.test_bitmap1, test_dnaSpiral)),
+	test_mainConfiguration(new MainConfiguration(IDS::ENGLISH_LANGUAGE_ID, guiFixture.test_gui->getId(), test_firstStart, bitmapFixture.test_bitmap1, test_dnaSpiral)),
 	test_mainConfigurationMap(init_mainconfigurationmap_helper())
 {
 	MainDirectories::initTemp("temp");

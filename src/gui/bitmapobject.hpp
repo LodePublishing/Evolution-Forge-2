@@ -4,8 +4,6 @@
 #include "object.hpp"
 #include <guicore/bitmap.hpp>
 
-#include <sdlwrap/enums/positionmode.hpp>
-
 class BitmapObject : public Object
 {
 	public:
@@ -28,14 +26,15 @@ class BitmapObject : public Object
 
 		void setChecked(const bool bitmap_checked = true);  // for buttons... 
 		void setBitmap(const boost::shared_ptr<const Bitmap> bitmap);
+		const boost::uuids::uuid getBitmapId() const;
 	private:
 		boost::shared_ptr<const Bitmap> bitmap;
 		// TODO weiteres Bitmap* Feld für checked-Bitmaps!
 		bool checked;
 };
 
-inline void BitmapObject::setBitmap(const boost::shared_ptr<const Bitmap> bitmap) {
-	this->bitmap = bitmap;
+inline const boost::uuids::uuid BitmapObject::getBitmapId() const {
+	return bitmap->getId();
 }
 
 inline void BitmapObject::setChecked(const bool bitmap_checked) {

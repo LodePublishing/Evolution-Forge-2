@@ -4,7 +4,6 @@
 #include "group.hpp"
 #include "button.hpp"
 
-#include <sdlwrap/enums/positionmode.hpp>
 #include <map>
 
 #include <boost/uuid/uuid.hpp>

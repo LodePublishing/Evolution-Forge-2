@@ -17,14 +17,14 @@
 #include "outputarchive.hpp"
 #include "log.hpp"
 
-void LoadSave::saveToXML(const Node& node, const std::string& dataFileName, const std::string& dataFileIdentifier) {
+void LoadSave::saveToXML(const XmlNode& node, const std::string& dataFileName, const std::string& dataFileIdentifier) {
 	//Misc::makeBackup(dataFileName); debug crashes...
-	
+	toDebugLog("Saving node " + dataFileIdentifier + " to " + dataFileName);
 	// TODO: Create directory if it is missing!
 	try {
 		std::ofstream ofs(dataFileName.c_str());
 		OutputArchive outputArchive(ofs);
-		Node fileNode(dataFileIdentifier);
+		XmlNode fileNode(dataFileIdentifier);
 		fileNode.addChild(node);
 		outputArchive << fileNode;
 		ofs.close();
@@ -33,9 +33,10 @@ void LoadSave::saveToXML(const Node& node, const std::string& dataFileName, cons
 	}
 }
 
-Node LoadSave::loadFromXML(const std::string& dataFileName, const std::string& dataFileIdentifier) {
-	Node node;
+XmlNode LoadSave::loadFromXML(const std::string& dataFileName, const std::string& dataFileIdentifier) {
+	XmlNode node;
 	if(boost::filesystem::exists(dataFileName)) {
+		toDebugLog("Loading node " + dataFileIdentifier + " from " + dataFileName);
 		std::ifstream ifs(dataFileName.c_str());
 		InputArchive inputArchive(ifs);		
 		inputArchive >> node;

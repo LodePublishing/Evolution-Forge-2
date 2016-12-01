@@ -1,6 +1,8 @@
 #ifndef _GAMEMENU_HPP
 #define _GAMEMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 
 class GameMenu : public Menu
@@ -13,4 +15,6 @@ class GameMenu : public Menu
 };
 
 #endif
+
+#endif // _GAMEMENU_HPP
 

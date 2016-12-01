@@ -1,5 +1,7 @@
 #include "bograph.hpp"
 
+#if 0
+
 BoGraphEntry::BoGraphEntry(const BoGraphEntry& object) :
 	Button((Button)object),
 	program(object.program)
@@ -30,4 +32,4 @@ void BoGraphEntry::draw(DC* const dc) const
 	Button::draw(dc);
 }
 
-
+#endif

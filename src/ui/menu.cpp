@@ -1,5 +1,8 @@
 #include "menu.hpp"
 
+#if 0
+
+
 const unsigned int Menu::getHeight() const
 {
 	if(!isOpen()) {
@@ -248,4 +251,4 @@ const bool Menu::menuHasChanged() const
 	return menuChanged;
 }
 
-
+#endif

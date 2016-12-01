@@ -1,5 +1,7 @@
-#ifndef _DEBUG_WINDOW_HPP
-#define _DEBUG_WINDOW_HPP
+#ifndef _UI_DEBUGWINDOW_HPP
+#define _UI_DEBUGWINDOW_HPP
+
+#if 0
 
 #include <gui/window.hpp>
 #include <gui/group.hpp>
@@ -27,3 +29,5 @@ class DebugWindow : public Window
 };
 
 #endif
+
+#endif // _UI_DEBUGWINDOW_HPP

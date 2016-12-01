@@ -2,7 +2,7 @@
 #define _MISC_OUTPUTARCHIVE_HPP
 
 #include <fstream>
-#include "node.hpp"
+#include "xmlnode.hpp"
 
 class OutputArchive
 {
@@ -10,7 +10,7 @@ public:
 	OutputArchive(std::ofstream& outputFile);
 	~OutputArchive();
 
-	OutputArchive& operator<<(const Node& node);
+	OutputArchive& operator<<(const XmlNode& node);
 
 private:
 	std::ofstream& outputFile;

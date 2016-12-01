@@ -1,4 +1,7 @@
 #include "bowindow.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include "savebox.hpp"
 #include <sstream>
@@ -138,9 +141,11 @@ void BoWindow::closeMenus()
 
 const bool BoWindow::areBosStillMoving() const 
 {
-	for(std::list<BoEntry*>::const_iterator entry = boList.begin(); entry != boList.end(); ++entry)
-		if((*entry)->isMoving())
+	for(std::list<BoEntry*>::const_iterator entry = boList.begin(); entry != boList.end(); ++entry) {
+		if((*entry)->isShown() && (*entry)->isMoving()) {
 			return(true);
+		}
+	}
 	return(false);
 }
 
@@ -1244,5 +1249,4 @@ void BoWindow::saveBoxIsDone(std::string input_string)
 	makePufferInvalid(); // ?
 }
 
-
-
+#endif

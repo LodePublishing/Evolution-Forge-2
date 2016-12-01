@@ -1,4 +1,7 @@
 #include "bodiagram.hpp"
+
+#if 0
+
 #include "../core/configuration.hpp"
 #include <sstream>
 
@@ -294,3 +297,4 @@ void BoDiagramWindow::draw() const
 unsigned int BoDiagramWindow::HAVE_SUPPLY = 0;
 unsigned int BoDiagramWindow::NEED_SUPPLY = 0;
 
+#endif

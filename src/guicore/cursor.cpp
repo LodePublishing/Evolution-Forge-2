@@ -9,15 +9,15 @@
 
 
 Cursor::Cursor(const std::string& fileName):
-fileName(fileName),
-	bitmap(new Bitmap(fileName)),
+	fileName(fileName),
+	bitmap(new Bitmap(fileName, true)),
 	cursor(createCursor((SDL_Surface*) (*bitmap)))
 { }
 
 Cursor::Cursor(const boost::uuids::uuid id, const std::string& fileName):
 UUID<Cursor>(id),
 	fileName(fileName),
-	bitmap(new Bitmap(fileName)),
+	bitmap(new Bitmap(fileName, true)),
 	cursor(createCursor((SDL_Surface*) (*bitmap)))
 { }
 

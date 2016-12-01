@@ -4,6 +4,7 @@
 #include <misc/log.hpp>
 #include <lang/text_storage.hpp>
 #include <misc/ids.hpp>
+#include <guicore/color_storage.hpp>
 
 // TODO SDL_NOFRAME for intro picture!
 
@@ -81,7 +82,8 @@ DC* Gui::createScreen() const {
 	atexit(TTF_Quit); 
 	// ------ END INIT SDL_TTF ------
 
-
+	ColorStorage::instance();
+	ColorStorage::init(dc->getSurface());
 
 	return dc;
 }

@@ -1,5 +1,7 @@
 #include "prebuildorder.hpp"
-#include <string.h>
+
+#if 0
+
 /* PREBUILDORDER.CPP - last changed: 6/23/04								*
  * Author: Clemens Lode												*
  * Copyright: Clemens Lode											*
@@ -1246,3 +1248,4 @@ void PREBUILDORDER::copyCode(unsigned int* dst) const
 //map<CODE, SITUATION*> PREBUILDORDER::situationHashMap;
 
 
+#endif

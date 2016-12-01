@@ -1,5 +1,7 @@
-#ifndef _CORE_GOALENTRY_HPP
-#define _CORE_GOALENTRY_HPP
+#ifndef _BUILD_GOALENTRY_HPP
+#define _BUILD_GOALENTRY_HPP
+
+#if 0
 
 #include "location.hpp"
 #include "unit.hpp"
@@ -276,5 +278,7 @@ void GOAL_ENTRY::setMode(const unsigned int mode)
 {
 	this->mode=mode;
 }*/
-#endif // _CORE_GOALENTRY_HPP
+#endif
+
+#endif // _BUILD_GOALENTRY_HPP
 

@@ -1,4 +1,7 @@
 #include "info.hpp"
+
+#if 0
+
 #include <sstream>
 
 InfoWindow& InfoWindow::operator=(const InfoWindow& object)
@@ -124,3 +127,4 @@ void InfoWindow::draw(DC* dc) const
 	Window::draw(dc);
 }
 
+#endif

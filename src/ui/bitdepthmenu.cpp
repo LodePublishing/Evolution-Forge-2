@@ -1,5 +1,7 @@
 #include "bitdepthmenu.hpp"
 
+#if 0
+
 BitDepthMenu::BitDepthMenu(Object* bit_depth_menu_parent, const Rect rect, const Size distance_bottom_right, const ePositionMode position_mode) :
 	Menu(bit_depth_menu_parent, rect, distance_bottom_right, position_mode, true)
 {
@@ -35,3 +37,4 @@ void BitDepthMenu::draw(DC* const dc) const
 	Menu::draw(dc);
 }	
 
+#endif

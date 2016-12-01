@@ -1,5 +1,7 @@
 #include "forceentry.hpp"
 
+#if 0
+
 #include <gui/window.hpp>
 #include "../core/configuration.hpp"
 #include "configuration.hpp"
@@ -392,3 +394,5 @@ Button* ForceEntry::buildMuchButton = NULL;
 Button* ForceEntry::makeTimeGoalButton = NULL;
 NumberField* ForceEntry::timeEntryBox = NULL;
 ForceEntry* ForceEntry::currentForceEntry = NULL;
+
+#endif

@@ -2136,7 +2136,7 @@ const std::list<boost::shared_ptr<const UnitType> > StarCraft2::init_unittypelis
 			false, 1, 2500)));
 
 
-		unitTypeList.push_back(boost::shared_ptr<const UnitType>(new UnitType(unit_id_map[METASYNAPTIC_NODE], "Metasynaptic Node", zergRace, 
+		unitTypeList.push_back(boost::shared_ptr<const UnitType>(new UnitType(unit_id_map[METASYNAPTIC_NODE], "Metasynaptic XmlNode", zergRace, 
 		boost::assign::list_of
 		(UnitResourceType(FACILITY_IS_NEEDED_UNTIL_COMPLETE_RESOURCE, 1, boost::assign::list_of(boost::assign::list_of(unit_id_map[DEFILER_MOUND]))))
 		(UnitResourceType(NORMAL_GLOBAL_RESOURCE, 150, boost::assign::list_of(boost::assign::list_of(unit_id_map[MINERAL]))))

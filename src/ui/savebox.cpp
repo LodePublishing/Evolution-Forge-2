@@ -1,4 +1,7 @@
 #include "savebox.hpp"
+
+#if 0
+
 #include <sstream>
 
 
@@ -82,3 +85,5 @@ const bool SaveBox::isCanceled() const {
 const bool SaveBox::isDone() const {
 	return((OK_Button->isLeftClicked()||editField->done())&&(getString().size()>0));
 }
+
+#endif

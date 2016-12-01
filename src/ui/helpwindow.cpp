@@ -1,5 +1,7 @@
 #include "helpwindow.hpp"
 
+#if 0
+
 HelpWindow::HelpWindow(Object* parent_window) :
 	Window(parent_window, HELP_WINDOW_TITLE_STRING, theme.lookUpGlobalRect(HELP_WINDOW), theme.lookUpGlobalMaxHeight(HELP_WINDOW), SCROLLED),
 	helpChapter(INDEX_CHAPTER),
@@ -92,3 +94,4 @@ void HelpWindow::gotoChapter(unsigned int chapter)
 	else indexButton->Show();
 }
 
+#endif

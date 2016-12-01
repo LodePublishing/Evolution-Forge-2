@@ -1,6 +1,8 @@
 #ifndef _UI_THEMEMENU_HPP
 #define _UI_THEMEMENU_HPP
 
+#if 0
+
 #include "menu.hpp"
 
 class ThemeMenu : public Menu
@@ -12,4 +14,7 @@ class ThemeMenu : public Menu
         void draw(DC* const dc) const;
 };
 
+#endif
+
 #endif // _UI_THEMEMENU_HPP
+

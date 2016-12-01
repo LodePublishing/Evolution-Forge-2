@@ -1,6 +1,8 @@
 #ifndef _UI_MESSAGE_HPP
 #define _UI_MESSAGE_HPP
 
+#if 0
+
 #include <gui/statictext.hpp>
 
 class Message : public StaticText
@@ -15,4 +17,6 @@ class Message : public StaticText
 };
 
 #endif
+
+#endif // _UI_MESSAGE_HPP
 

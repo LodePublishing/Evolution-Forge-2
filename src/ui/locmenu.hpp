@@ -1,6 +1,8 @@
 #ifndef _UI_LOCATIONMENU_HPP
 #define _UI_LOCATIONMENU_HPP
 
+#if 0
+
 #include "menu.hpp"
 #include "../core/anabuildorder.hpp"
 
@@ -18,6 +20,8 @@ class LocationMenu : public Menu
 	private:
 		ANABUILDORDER* anarace;
 };
+
+#endif
 
 #endif // _UI_LOCATIONMENU_HPP
 

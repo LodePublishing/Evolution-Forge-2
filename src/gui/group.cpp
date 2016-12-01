@@ -10,8 +10,8 @@ Group::Group(SDL_Object* const group_parent,
 		const ePositionMode position_mode
 
 	) :
-	SDL_Object(group_parent, initial_rect, bottom_right_distance, position_mode, NOTHING),
-	title(new Title(this, titleText, std::list<std::string>(), windowColors)), // no variable parameters here
+	Object(group_parent, initial_rect, bottom_right_distance, position_mode, NOTHING),
+	title(titleText==NULL?NULL:new Title(this, titleText, std::list<std::string>(), windowColors)), // no variable parameters here
 	highlighted(false),
 	groupType(group_type),
 	drawBackground(draw_background)
@@ -109,7 +109,7 @@ void Group::alignWidth(const Uint16 width)
 
 void Group::reloadOriginalSize()
 {
-	SDL_Object::reloadOriginalSize();
+	Object::reloadOriginalSize();
 	calculateBoxSize();
 }
 
@@ -132,14 +132,14 @@ void Group::draw(DC* const dc) const
 		//*gui.lookUpBrush(WINDOW_FOREGROUND_BRUSH));
 		dc->DrawEdgedRoundedRectangle(Point(0,0), getSize()+Size(6,0), 4);
 	}
-	SDL_Object::draw(dc);
+	Object::draw(dc);
 }
 
 void Group::process()
 {
 //	if(!isShown())
 //		return; //?
-	SDL_Object::process();
+	Object::process();
 //	calculateBoxSize(); ?
 //	nur aufrufen wenn: child added/removed, child size changed
 

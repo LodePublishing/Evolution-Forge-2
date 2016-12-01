@@ -1,5 +1,7 @@
 #include "introwindow.hpp"
 
+#if 0
+
 std::string intro_string = "`$Welcome to Evolution Forge " + CORE_VERSION + " :)`$##\
 ~CLAWSOFTWARE_BITMAP~\
 * $What's it all about?$:#\
@@ -107,3 +109,4 @@ void IntroWindow::process()
 	}
 }
 
+#endif

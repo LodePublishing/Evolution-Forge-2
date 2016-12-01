@@ -1,4 +1,8 @@
 #include "playerentry.hpp"
+
+#if 0
+
+
 #include "configuration.hpp"
 #include <sstream>
 
@@ -325,3 +329,4 @@ void PlayerEntry::process()
 	}
 }
 
+#endif

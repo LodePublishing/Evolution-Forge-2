@@ -1,5 +1,8 @@
 #include "thememenu.hpp"
 
+#if 0
+
+
 ThemeMenu::ThemeMenu(Object* thememenu_parent, Rect rect, const Size distance_bottom_right, const ePositionMode position_mode) :
 	Menu(thememenu_parent, rect, distance_bottom_right, position_mode, true)
 {
@@ -29,3 +32,4 @@ void ThemeMenu::draw(DC* const dc) const
 	Menu::draw(dc);
 }	
 
+#endif

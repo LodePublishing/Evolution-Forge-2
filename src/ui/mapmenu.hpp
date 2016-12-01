@@ -1,6 +1,8 @@
 #ifndef _UI_MAPMENU_HPP
 #define _UI_MAPMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 #include "../core/database.hpp"
 
@@ -17,6 +19,8 @@ class MapMenu : public Menu
 		MapMenu(const MapMenu& object);
 		MapMenu& operator=(const MapMenu& object);
 };
+
+#endif
 
 #endif // _UI_MAPMENU_HPP
 

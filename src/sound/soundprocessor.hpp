@@ -2,23 +2,29 @@
 #define _SOUND_SOUNDPROCESSOR_HPP
 
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-#include <sound/sound.hpp>
-#include <sound/music.hpp>
-#endif 
+#include "sound.hpp"
+#include "music.hpp"
+
+#include <list>
+
+#include "soundconfiguration.hpp"
 
 class SoundProcessor
 {
 public:
-	
-// ------------------ SOUND AND MUSIC START -----------------------
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-//		bool setMusicVolume(const unsigned int music_volume);
-//		bool setSoundVolume(const unsigned int sound_volume);
+		SoundProcessor(const boost::shared_ptr<const SoundConfiguration> soundConfiguration);
+		~SoundProcessor();
 
-		void playSound(Sound* play_sound, const unsigned int x);
-		void playMusic(Music* play_music, const bool loop = true);
-		Sound* loadSound(const std::string file_name) const;
-		Music* loadMusic(const std::string file_name) const;
+		void setSoundConfiguration(const boost::shared_ptr<const SoundConfiguration> soundConfiguration);
+
+		static float calculatePosition(const signed x, const unsigned int resolutionX);
+
+// ------------------ SOUND AND MUSIC START -----------------------
+		void setMusicVolume(const unsigned int musicVolume);
+		void setSoundVolume(const unsigned int soundVolume);
+
+		void playSound(boost::shared_ptr<const Sound> playSound, float position);
+		void playMusic(boost::shared_ptr<const Music> playMusic, const bool loop = true);
 
 		void stopMusic();
 		void releaseSoundEngine();
@@ -28,36 +34,38 @@ public:
 		static void soundChannelDone(int channel);
 #endif
 
-#endif
+		void process();
+
 // ------------------ SOUND AND MUSIC END -----------------------
 private:
-		const boost::shared_ptr<const SoundConfiguration> soundConfiguration;
+		boost::shared_ptr<const SoundConfiguration> soundConfiguration;
 
 	
 // ------------------ SOUND AND MUSIC BEGIN -----------------------
-#if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
 
 		void initSoundEngine();
 
 		void printSoundInformation() const;
 		void clearSoundsToPlay();
 		void clearSoundChannels();
-		void processSoundChannels();
 	
 		bool soundInitialized;
-		std::list<std::pair<Sound*, float> > soundsToPlay;
+		std::list<std::pair<boost::shared_ptr<const Sound>, float> > soundsToPlay;
+
 
 #ifdef _FMOD_SOUND
-		FMOD::Channel* musicChannel;
-		FMOD::System* soundEngine;
-		std::list<FMOD::Channel*> soundChannel;
+		static FMOD::Channel* musicChannel;
+		static FMOD::System* soundEngine;
+		static std::list<FMOD::Channel*> soundChannel;
 #elif _SDL_MIXER_SOUND
 		// need to be static because of callback functions!
 		static Mix_Music* currentMusic;
 		static Mix_Music* nextMusic;
 		static std::list<int> soundChannel;
 #endif
-#endif
 };
 
+
 #endif
+
+#endif // _SOUND_SOUNDPROCESSOR_HPP

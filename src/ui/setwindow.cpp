@@ -21,13 +21,15 @@
 
 #include "setwindow.hpp"
 
-#include "../core/configuration.hpp"
-#include "../core/database.hpp"
-#include <gui/configuration.hpp>
-#include "configuration.hpp"
+//#include <build/buildconfiguration.hpp>
+#include <gui/guiconfiguration.hpp>
+#include <main/mainconfiguration.hpp>
 
+#include <misc/ids.hpp>
+
+#if 0
 SettingsWindow::SettingsWindow(Object* setwindow_parent):
-	Window(setwindow_parent, SETTINGS_WINDOW_TITLE_STRING, theme.lookUpGlobalRect(SETTINGS_WINDOW), theme.lookUpGlobalMaxHeight(SETTINGS_WINDOW), NOT_SCROLLED),
+	Window(setwindow_parent, IDS::SETTINGS_WINDOW_TITLE_TEXT_ID, theme.lookUpGlobalRect(SETTINGS_WINDOW), theme.lookUpGlobalMaxHeight(SETTINGS_WINDOW), NOT_SCROLLED),
 
 // core:
 
@@ -557,3 +559,4 @@ void SettingsWindow::forceFullScreenChange()
 
 
 
+#endif

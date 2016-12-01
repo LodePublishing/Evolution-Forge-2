@@ -1,5 +1,7 @@
 #include "msgwindow.hpp"
 
+#if 0
+
 MessageWindow::MessageWindow( Window* parent_window ) :
 	Window( parent_window, MESSAGE_WINDOW_TITLE_STRING, theme.lookUpGlobalRect(MESSAGE_WINDOW), theme.lookUpGlobalMaxHeight(MESSAGE_WINDOW), SCROLLED, NO_AUTO_SIZE_ADJUST, Rect(0, 10, 1280, 1024) ),
 	message()
@@ -66,4 +68,4 @@ void MessageWindow::reloadOriginalSize()
 	resetData();
 }
 
-
+#endif

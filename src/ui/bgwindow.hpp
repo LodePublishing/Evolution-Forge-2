@@ -1,6 +1,8 @@
 #ifndef _UI_BOGRAPH_WINDOW_HPP
 #define _UI_BOGRAPH_WINDOW_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include "bgline.hpp"
 #include "../core/anabuildorder.hpp"
@@ -51,3 +53,4 @@ inline const std::list<unsigned int>& BoGraphWindow::getSelectedItems() const {
 
 #endif
 
+#endif // _UI_BOGRAPH_WINDOW_HPP

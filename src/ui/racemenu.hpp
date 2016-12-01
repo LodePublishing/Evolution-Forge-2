@@ -1,6 +1,8 @@
 #ifndef _UI_RACEMENU_HPP
 #define _UI_RACEMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 
 class RaceMenu : public Menu
@@ -13,6 +15,8 @@ class RaceMenu : public Menu
 		void draw() const;
 	private:
 };
+
+#endif
 
 #endif // _UI_RACEMENU_HPP
 

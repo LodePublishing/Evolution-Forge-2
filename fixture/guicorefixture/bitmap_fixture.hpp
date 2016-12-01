@@ -13,6 +13,9 @@ struct Bitmap_Fixture
 	const std::string test_fileName1;
 	const std::string test_fileName2;
 
+	const bool test_transparent1;
+	const bool test_transparent2;
+
 	const boost::shared_ptr<const Bitmap> test_bitmap1;
 	const boost::shared_ptr<const Bitmap> test_bitmap2;
 

@@ -1,5 +1,8 @@
 #include "resolutionmenu.hpp"
 
+#if 0
+
+
 ResolutionMenu::ResolutionMenu(Object* resolution_menu_parent, const Rect rect, const Size distance_bottom_right, const ePositionMode position_mode) :
 	Menu(resolution_menu_parent, rect, distance_bottom_right, position_mode, true)
 {
@@ -36,3 +39,4 @@ void ResolutionMenu::draw(DC* const dc) const
 	Menu::draw(dc);
 }	
 
+#endif

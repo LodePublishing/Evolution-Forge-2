@@ -1,5 +1,8 @@
 #include "diagram.hpp"
 
+#if 0
+
+
 #pragma warning(push, 0)
 #include <boost/assert.hpp>
 #include <boost/assign/list_of.hpp>
@@ -314,3 +317,4 @@ void Diagram::draw(DC* const dc) const
 	Object::draw(dc);
 }
 
+#endif

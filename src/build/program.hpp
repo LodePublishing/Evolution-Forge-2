@@ -1,5 +1,7 @@
-#ifndef _CORE_PROGRAM_HPP
-#define _CORE_PROGRAM_HPP
+#ifndef _BUILD_PROGRAM_HPP
+#define _BUILD_PROGRAM_HPP
+
+#if 0
 
 #include "statistics.hpp"
 #include "configuration.hpp"
@@ -43,10 +45,12 @@ class PROGRAM
 //		void setAvailibleCount(const unsigned int unit_type, const unsigned int unit_count);
 		void setUnit(const unsigned int unit_type);
 
-		const STATISTICS& getStatisticsAfter() const;
-		const STATISTICS& getStatisticsBefore() const;
-		STATISTICS before;
-		STATISTICS after;
+		const unsigned int getFitness() const;
+		void setFitness(const unsigned int fitness);
+
+		const Units& getUnitsAfter() const;
+		const Units& getUnitsBefore() const;
+
 //		const bool wasBuilt();
 //		void setBuild(const bool was_built = true);
 	private:
@@ -64,6 +68,9 @@ class PROGRAM
 		unsigned int BT;		//real buildtime, incl. moving scv etc.
 //		int isConstant; //this build order may not be moved. In addition no order may be inserted before the order, if the previous order is also constant.
 // TODO: Zeitfenster machen!
+
+		const Units before;
+		const Units after;
 };
 
 /*inline const bool PROGRAM::wasBuilt() {
@@ -311,7 +318,7 @@ inline const unsigned int PROGRAM::getLocation() const
 
 
 
-
+#endif
 
 
 #endif

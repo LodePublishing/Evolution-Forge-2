@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><WindowLayoutStorage><itemMap><windowlayout><id>749fe9d0-6549-11e0-ae3e-0800200c9a66</id><width>1900</width><height>1000</height><maxwidth>1900</maxwidth>
+<maxheight>1000</maxheight>
+<dockTypeHorizontal>ABSOLUTE_COORDINATE_DOCKTYPE</dockTypeHorizontal>
+<dockTypeVertical>ABSOLUTE_COORDINATE_DOCKTYPE</dockTypeVertical>
+<x>0</x><y>0</y><windowLayoutHorizontalID></windowLayoutHorizontalID>     <windowLayoutVerticalID></windowLayoutVerticalID>
+</windowlayout>
+<windowlayout>
+  <id>76f376c0-6549-11e0-ae3e-0800200c9a66</id>
+  <width>300</width>
+  <height>75</height>
+  <maxwidth>300</maxwidth>
+  <maxheight>150</maxheight>
+  <dockTypeHorizontal>DOCK_WITH_ENDING_INSIDE_OF_DOCKTYPE</dockTypeHorizontal>
+  <dockTypeVertical>DOCK_WITH_BEGINNING_INSIDE_OF_DOCKTYPE</dockTypeVertical>
+  <x></x>
+  <y></y>
+  <windowLayoutHorizontalID>749fe9d0-6549-11e0-ae3e-0800200c9a66</windowLayoutHorizontalID>
+  <windowLayoutVerticalID>749fe9d0-6549-11e0-ae3e-0800200c9a66</windowLayoutVerticalID>
+</windowlayout>
+<windowlayout>
+  <id>78d703d0-6549-11e0-ae3e-0800200c9a66</id>
+  <width>1800</width>
+  <height>1000</height>
+  <maxwidth>1800</maxwidth>
+  <maxheight>1000</maxheight>
+  <dockTypeHorizontal>ABSOLUTE_COORDINATE_DOCKTYPE</dockTypeHorizontal>
+  <dockTypeVertical>ABSOLUTE_COORDINATE_DOCKTYPE</dockTypeVertical>
+  <x>0</x>
+  <y>10</y>
+  <windowLayoutHorizontalID></windowLayoutHorizontalID>
+  <windowLayoutVerticalID></windowLayoutVerticalID>
+</windowlayout>
+<windowlayout>
+  <id>7b66af60-6549-11e0-ae3e-0800200c9a66</id>
+  <width>500</width>
+  <height>250</height>
+  <maxwidth>500</maxwidth>
+  <maxheight>900</maxheight>
+  <dockTypeHorizontal>DOCK_WITH_BEGINNING_INSIDE_OF_DOCKTYPE</dockTypeHorizontal>
+  <dockTypeVertical>DOCK_WITH_BEGINNING_INSIDE_OF_DOCKTYPE</dockTypeVertical>
+  <x></x>
+  <y></y>
+  <windowLayoutHorizontalID>78d703d0-6549-11e0-ae3e-0800200c9a66</windowLayoutHorizontalID>
+  <windowLayoutVerticalID>78d703d0-6549-11e0-ae3e-0800200c9a66</windowLayoutVerticalID>
+</windowlayout>
+<windowlayout>
+  <id>7e7e4fa0-6549-11e0-ae3e-0800200c9a66</id>
+  <width>300</width>
+  <height>200</height>
+  <maxwidth>300</maxwidth>
+  <maxheight>800</maxheight>
+  <dockTypeHorizontal>DOCK_WITH_ENDING_INSIDE_OF_DOCKTYPE</dockTypeHorizontal>
+  <dockTypeVertical>ABSOLUTE_COORDINATE_DOCKTYPE</dockTypeVertical>
+  <x></x>
+  <y>100</y>
+  <windowLayoutHorizontalID>78d703d0-6549-11e0-ae3e-0800200c9a66</windowLayoutHorizontalID>
+  <windowLayoutVerticalID></windowLayoutVerticalID>
+</windowlayout>
+<windowlayout>
+  <id>807fec00-6549-11e0-ae3e-0800200c9a66</id>
+  <width>700</width>
+  <height>350</height>
+  <maxwidth>700</maxwidth>
+  <maxheight>350</maxheight>
+  <dockTypeHorizontal>DOCK_WITH_ENDING_BORDER_OF_DOCKTYPE</dockTypeHorizontal>
+  <dockTypeVertical>DOCK_WITH_BEGINNING_INSIDE_OF_DOCKTYPE</dockTypeVertical>
+  <x></x>
+  <y></y>
+  <windowLayoutHorizontalID>7b66af60-6549-11e0-ae3e-0800200c9a66</windowLayoutHorizontalID>
+  <windowLayoutVerticalID>78d703d0-6549-11e0-ae3e-0800200c9a66</windowLayoutVerticalID>
+</windowlayout>
+<windowlayout>
+  <id>83d77b70-6549-11e0-ae3e-0800200c9a66</id>
+  <width>700</width>
+  <height>100</height>
+  <maxwidth>700</maxwidth>
+  <maxheight>500</maxheight>
+  <dockTypeHorizontal>DOCK_WITH_ENDING_BORDER_OF_DOCKTYPE</dockTypeHorizontal>
+  <dockTypeVertical>DOCK_WITH_ENDING_BORDER_OF_DOCKTYPE</dockTypeVertical>
+  <x></x>
+  <y></y>
+  <windowLayoutHorizontalID>7b66af60-6549-11e0-ae3e-0800200c9a66</windowLayoutHorizontalID>
+  <windowLayoutVerticalID>7e7e4fa0-6549-11e0-ae3e-0800200c9a66</windowLayoutVerticalID>
+</windowlayout>
+
+
+
+
+</itemMap></WindowLayoutStorage>
+
+
+

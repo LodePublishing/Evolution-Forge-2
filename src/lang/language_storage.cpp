@@ -3,18 +3,18 @@
 
 #include <misc/miscellaneous.hpp>
 #include <misc/io.hpp>
-#include <misc/node.hpp>
+#include <misc/xmlnode.hpp>
 
 template<> const std::string SingleStorage<Language>::DATA_FILE_NAME_BASE = IO::getDirectory(boost::assign::list_of("data")("storage")("lang")) + "lang.xml";
 template<> const std::string SingleStorage<Language>::DATA_FILE_IDENTIFIER = "LanguageStorage";
 
-template<> boost::shared_ptr<Language> NodeCreator<Language>::createObjectFromNode(const std::vector<Node>& node) {
+template<> boost::shared_ptr<Language> NodeCreator<Language>::createObjectFromNode(const std::vector<XmlNode>& node) {
 	return boost::shared_ptr<Language>(new Language(Misc::uuid(node[0]), TextStorage::instance().get(Misc::uuid(node[1]))));
 }
 
-template<> Node NodeCreator<Language>::createNodeFromObject(const Language& t) {
-	Node n("language");
-	n.addChild(Node("id", boost::lexical_cast<std::string>(t.getId())));
-	n.addChild(Node("nameID", boost::lexical_cast<std::string>(t.getNameId())));
+template<> XmlNode NodeCreator<Language>::createNodeFromObject(const Language& t) {
+	XmlNode n("language");
+	n.addChild(XmlNode("id", boost::lexical_cast<std::string>(t.getId())));
+	n.addChild(XmlNode("nameID", boost::lexical_cast<std::string>(t.getNameId())));
 	return n;
 }

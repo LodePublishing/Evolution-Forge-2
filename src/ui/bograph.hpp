@@ -1,6 +1,8 @@
 #ifndef _UI_BOGRAPHENTRY_HPP
 #define _UI_BOGRAPHENTRY_HPP
 
+#if 0
+
 #include <sdl/dc.hpp>
 #include <ui/button.hpp>
 
@@ -20,6 +22,8 @@ class BoGraphEntry : public Button
 		PROGRAM program;
 	private:
 };
+
+#endif
 
 #endif // _UI_BOGRAPHENTRY_HPP
 

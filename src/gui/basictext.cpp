@@ -17,8 +17,7 @@ BasicText::BasicText(SDL_Object* const bt_parent,
 	Object(bt_parent, bt_pos, distance_bottom_right, position_mode, auto_size),
 	text(bt_text)
 { 
-	setDrawType(TRANSPARENT_OBJECT);
-	//	setDrawType(ANTI_ALIASED_OBJECT);    
+	setDrawType(ANTI_ALIASED_OBJECT);   
 	text->updateParameters(parameterList);
 }
 

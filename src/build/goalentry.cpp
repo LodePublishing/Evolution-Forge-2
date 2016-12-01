@@ -1,5 +1,7 @@
 #include "goalentry.hpp"
 
+#if 0
+
 GOAL_ENTRY::GOAL_ENTRY():
 	number(0),
 	name("ERROR"),
@@ -797,3 +799,4 @@ void GOAL_ENTRY::addGoal(const unsigned int unit, const signed int count, const 
 	changed=true;
 }
 
+#endif

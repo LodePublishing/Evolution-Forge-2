@@ -1,6 +1,8 @@
 #ifndef _UI_PLAYER_HPP
 #define _UI_PLAYER_HPP
 
+#if 0
+
 #include "bgwindow.hpp"
 #include "force.hpp"
 #include "bodiagram.hpp"
@@ -63,4 +65,6 @@ inline const signed int Player::getAssignedGoal() const {
 }
 
 #endif
+
+#endif // _UI_PLAYER_HPP
 

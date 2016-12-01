@@ -1,5 +1,7 @@
 #include "menuentry.hpp"
 
+#if 0
+
 MenuEntry::MenuEntry(Object* menuentry_parent, const Rect rect, const eString unit) :
 	Button(menuentry_parent, rect, Size(4, 2), unit, ADD_GOAL_BUTTON, PRESS_BUTTON_MODE, DO_NOT_ADJUST, SMALL_BOLD_FONT, AUTO_HEIGHT_CONST_WIDTH),
 	color(NULL_COLOR)
@@ -46,3 +48,4 @@ void MenuEntry::setColor(const eColor entry_color)
 	color = entry_color;
 }
 
+#endif

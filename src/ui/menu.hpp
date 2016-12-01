@@ -1,6 +1,8 @@
 #ifndef _UI_MENU_HPP
 #define _UI_MENU_HPP
 
+#if 0
+
 #include "menuentry.hpp"
 #include <list>
 
@@ -46,6 +48,8 @@ class Menu : public Object
 		Point p1, p2;
 		bool menuChanged;
 };
+
+#endif
 
 #endif // _UI_MENU_HPP
 

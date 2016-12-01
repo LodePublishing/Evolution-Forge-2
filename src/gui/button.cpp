@@ -13,10 +13,9 @@ Button::Button(SDL_Object* const button_parent,
 		const Rect& button_rect, 
 		const Size& distance_bottom_right, 
 		const boost::shared_ptr<const ButtonColors>& button_colors, 
-		const boost::shared_ptr<const Text>& button_text, 
+		const boost::shared_ptr<const Text>& button_text, 		
+		const std::list<std::string> parameterList,
 		const boost::shared_ptr<const Text>& button_tooltip, 
-		const std::list<std::string>& parameterList,
-		const boost::shared_ptr<const Bitmap>& button_bitmap,
 		const eButtonMode button_mode, 
 		const ePositionMode button_position_mode, 
 		const eAutoSize button_auto_size) :
@@ -47,10 +46,9 @@ Button::Button(
 		const Rect& button_rect, 
 		const Size& distance_bottom_right, 
 		const boost::shared_ptr<const ButtonColors>& button_colors, 
-		const boost::shared_ptr<const Text>& button_text, 
+		const boost::shared_ptr<const Text>& button_text, 		
+		const std::list<std::string> parameterList,
 		const boost::shared_ptr<const Text>& button_tooltip, 
-		const std::list<std::string>& parameterList,
-		const boost::shared_ptr<const Bitmap>& button_bitmap,
 		const eButtonMode button_mode, 
 		const ePositionMode button_position_mode, 
 		const eAutoSize button_auto_size) :
@@ -111,7 +109,9 @@ void Button::init(const boost::shared_ptr<const Text>& button_text, const boost:
 		setOriginalSize(bitmap_size);
 	}
 
-	text->connect(boost::bind(&Button::updateText, this, _1, _2));
+	if(text != NULL) {
+		text->connect(boost::bind(&Button::updateText, this, _1, _2));
+	}
 }
 	
 Button::~Button()
@@ -128,7 +128,7 @@ void Button::updateParameters(const std::list<std::string>& parameterList) {
 }
 
 void Button::updateText(const std::string& text, const Size& size) {
-	adjustSize(CHILD_WAS_CHANGED, size);
+	adjustSize((SDL_Object*)getParent(), CHILD_WAS_CHANGED, size);
 
 	// reloadOriginalSize() TODO?
 }
@@ -253,7 +253,7 @@ void Button::mouseHasEnteredArea()
 	{
 		statusFlags |= BF_JUST_HIGHLIGHTED;
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-		gui.getSound()->playSound(MOUSEOVER_SOUND, /*(getAbsolutePosition() + getSize()/2)*/gui.getMouse().getX());
+//		gui.getSound()->playSound(MOUSEOVER_SOUND, /*(getAbsolutePosition() + getSize()/2)*/gui.getMouse().getX()); TODO
 #endif
 	}
 	statusFlags |= BF_HIGHLIGHTED;
@@ -323,7 +323,7 @@ void Button::mouseLeftButtonReleased(const Point& mouse)
 		if(statusFlags & BF_STATIC)
 		{
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-			gui.getSound()->playSound(CLICKED_SOUND, gui.getMouse().getX());
+//			gui.getSound()->playSound(CLICKED_SOUND, gui.getMouse().getX()); TODO
 #endif
 			if((isOriginalPosition)&&(!(statusFlags & BF_IS_TAB))) {
 				isOriginalPosition = false;
@@ -337,7 +337,7 @@ void Button::mouseLeftButtonReleased(const Point& mouse)
 		else
 		{
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-			gui.getSound()->playSound(CLICK_SOUND, gui.getMouse().getX());
+//			gui.getSound()->playSound(CLICK_SOUND, gui.getMouse().getX()); TODO
 #endif
 			setPressDepth(0);
 		}
@@ -388,7 +388,7 @@ void Button::mouseRightButtonReleased(const Point& mouse)
 		if(statusFlags & BF_STATIC)
 		{
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-			gui.getSound()->playSound(CLICK_SOUND, gui.getMouse().getX());
+//			gui.getSound()->playSound(CLICK_SOUND, gui.getMouse().getX()); TODO
 //			gui.getSound()->playSound(CLICKED_SOUND, (getAbsolutePosition() + getSize()/2).x);
 #endif
 	/*		if((isOriginalPosition)&&(!(statusFlags & BF_IS_TAB)))
@@ -399,7 +399,7 @@ void Button::mouseRightButtonReleased(const Point& mouse)
 		else
 		{
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-			gui.getSound()->playSound(CLICK_SOUND, gui.getMouse().getX());
+//			gui.getSound()->playSound(CLICK_SOUND, gui.getMouse().getX()); TODO
 #endif
 			setPressDepth(0);
 		}
@@ -645,7 +645,7 @@ void Button::forcePress(const bool click_message)
 			{
 				statusFlags |= BF_LEFT_CLICKED;
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
-				gui.getSound()->playSound(CLICK_SOUND, (getAbsolutePosition() + getSize()/2).getX());
+//				gui.getSound()->playSound(CLICK_SOUND, (getAbsolutePosition() + getSize()/2).getX()); TODO
 #endif
 			}
 			statusFlags |= BF_DOWN;                        //~?

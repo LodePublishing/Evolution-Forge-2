@@ -1,6 +1,10 @@
 #include "bgwindow.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include <sstream>
+
 
 const unsigned int MIN_HEIGHT = 2;
 
@@ -501,3 +505,4 @@ if(race_has_changed)
 	}
 }
 
+#endif

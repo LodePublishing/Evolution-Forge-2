@@ -1,4 +1,7 @@
 #include "unitmenu.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 
 UnitMenu::UnitMenu(Object* unit_parent, const Rect unit_rect, const Size distance_bottom_right, const ePositionMode position_mode) :
@@ -354,3 +357,5 @@ const bool UnitMenu::secondLevel() const
 
 //Problem: Einerseits absolute Nummerierung aller Units $UNIT_TYPE_COUNT Eintraege, andererseits Darstellung nur eines Teils...
 //evtl bei Menu nur die soundsovielten SICHTBAREN Eintrag aktivieren...
+
+#endif

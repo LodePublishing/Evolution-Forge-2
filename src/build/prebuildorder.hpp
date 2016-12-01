@@ -1,5 +1,7 @@
-#ifndef _CORE_PREBUILDORDER_HPP
-#define _CORE_PREBUILDORDER_HPP
+#ifndef _BUILD_PREBUILDORDER_HPP
+#define _BUILD_PREBUILDORDER_HPP
+
+#if 0
 
 #include "building.hpp"
 #include "configuration.hpp"
@@ -957,6 +959,8 @@ inline void PREBUILDORDER::addLarvaToQueue(const unsigned int location_number)
 #endif
 	++larvaInProduction[location_number];
 }
+
+#endif
 
 #endif // __PREBUILDORDER_H
 

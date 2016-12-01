@@ -1,5 +1,7 @@
 #include "locationmenu.hpp"
 
+#if 0
+
 LocationMenu::LocationMenu(Object* location_parent, const BASIC_MAP* location_map, const Rect& location_rect):
 	Menu(location_parent, location_rect, Size(0,0), DO_NOT_ADJUST, true, TWO_COLOUMNS_MENU, SMALL_BUTTON_WIDTH),
 	locationList()
@@ -72,3 +74,4 @@ void LocationMenu::draw() const
 	Menu::draw();
 }
 
+#endif

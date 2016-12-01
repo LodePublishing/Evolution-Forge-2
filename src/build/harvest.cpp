@@ -1,5 +1,7 @@
 #include "harvest.hpp"
 
+#if 0
+
 HARVEST_SPEED::HARVEST_SPEED()
 {
 	for(unsigned int i=45;i--;)
@@ -12,3 +14,4 @@ HARVEST_SPEED::~HARVEST_SPEED()
 { }
 
 
+#endif

@@ -14,49 +14,48 @@
 #include <misc/uuid.hpp>
 #include "export.hpp"
 
-class SOUND_API Music : public UUID<Music>
+class Music : public UUID<Music>
+{
 
 	public:
+		Music(const boost::uuids::uuid id, const std::string& fileName);
+		Music(const std::string& fileName);
+
+		~Music();
+
 #ifdef _FMOD_SOUND
-		Music(FMOD::Sound* t);
-		operator FMOD::Sound*();
-		(FMOD::Sound*) operator->();	
+		FMOD::Sound* getData() const;
 #elif _SDL_MIXER_SOUND
-		Music(Mix_Music* t);
-		operator Mix_Music*();
-		(Mix_Music*) operator->();
+		Mix_Music* getData() const;
 #endif
+		const std::string& getFileName() const;
 	private:
+		const std::string fileName;
 #ifdef _FMOD_SOUND
 		FMOD::Sound* music;
+		static TODO
 #elif _SDL_MIXER_SOUND
 		Mix_Music* music;
 #endif
+
+		void loadMusicFile(const std::string& fileName); 
+
+		static const std::string MUSIC_DIRECTORY;
 };
 
+
+
+
+inline const std::string& Music::getFileName() const {
+	return fileName;
+}
+
 #ifdef _FMOD_SOUND
-
-	inline Music::Music(FMOD::Sound* t) {
-		music = t;
-	}
-
-	inline Music::operator FMOD::Sound*() {
-		return music;
-	}
-
-	inline FMOD::Sound* Music::operator->() {
+	inline FMOD::Sound* Music::getData() const {
 		return music;
 	}
 #elif _SDL_MIXER_SOUND
-	inline Music::Music(Mix_Music* t) {
-		music = t;
-	}
-
-	inline Music::operator Mix_Music*() {
-		return music;
-	}
-
-	inline Mix_Music* Music::operator->() {
+	inline Mix_Music* Music::getData() const {
 		return music;
 	}
 #endif

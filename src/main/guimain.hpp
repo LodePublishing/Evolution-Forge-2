@@ -29,7 +29,6 @@ class Main
 		Main(DC* const dc);
 		~Main();
 
-		void draw(DC* const dc) const;
 		void process();
 		void OnIdle();
 		void resetData();
@@ -41,23 +40,12 @@ class Main
 
 		void noticeFullscreen();
 
-		void leftDown();
-		void leftUp(const Point p);
-		void rightDown();
-		void rightUp(const Point p);
-
-		void wheelUp();
-		void wheelDown();
-	
-		void setMouse(const Point p);
-
 		const bool newRun();
 		const bool hasBitDepthChanged() const;
 		const bool hasResolutionChanged() const;
 		const bool hasFullScreenChanged() const;
 
 		void reloadOriginalSize();
-		void reloadStrings();
 	
 	private:
 		void initializeGame(const unsigned int game_number);

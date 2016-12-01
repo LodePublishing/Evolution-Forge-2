@@ -1,5 +1,7 @@
 #include "locmenu.hpp"
 
+#if 0
+
 LocationMenu::LocationMenu(const LocationMenu& object) :
     Menu((Menu)object),
 	anarace(object.anarace)
@@ -74,3 +76,4 @@ void LocationMenu::draw(DC* const dc) const
 	Menu::draw(dc);
 }
 
+#endif

@@ -1,5 +1,7 @@
-#ifndef _CORE_HARVEST_HPP
-#define _CORE_HARVEST_HPP
+#ifndef _BUILD_HARVEST_HPP
+#define _BUILD_HARVEST_HPP
+
+#if 0
 
 #include "starcraft.hpp"
 #include "../stl/miscellaneous.hpp"
@@ -61,5 +63,7 @@ inline void HARVEST_SPEED::setHarvestGasSpeed(const unsigned int num, const unsi
 	gas[num]=speed;
 }
 
-#endif // _CORE_HARVEST_HPP
+#endif
+
+#endif // _BUILD_HARVEST_HPP
 

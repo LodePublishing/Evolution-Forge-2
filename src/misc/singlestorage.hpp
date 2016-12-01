@@ -67,7 +67,7 @@ public:
 	}
 	
 	static void saveToXML() {
-		Node node("itemMap");
+		XmlNode node("itemMap");
 		for(typename std::map<const boost::uuids::uuid, const boost::shared_ptr<const T> >::const_iterator i = t->itemMap.begin(); i != t->itemMap.end(); i++) {
 			node.addChild(NodeCreator<T>::createNodeFromObject(*(i->second)));
 		}
@@ -88,9 +88,9 @@ private:
 	
 	
 	static void loadFromXML(SingleStorage<T>*& tis) {
-		Node node = LoadSave::loadFromXML(DATA_FILE_NAME, DATA_FILE_IDENTIFIER);
+		XmlNode node = LoadSave::loadFromXML(DATA_FILE_NAME, DATA_FILE_IDENTIFIER);
 		std::map<const boost::uuids::uuid, const boost::shared_ptr<const T> > newmap;
-		for(std::vector<Node>::const_iterator i = node.getChildren().begin(); i != node.getChildren().end(); i++) {
+		for(std::vector<XmlNode>::const_iterator i = node.getChildren().begin(); i != node.getChildren().end(); i++) {
 			std::string id = i->getChildren().front().getValue();
 			newmap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<const T> >(Misc::uuid(id), NodeCreator<T>::createObjectFromNode(i->getChildren())));
 		}

@@ -1,5 +1,7 @@
-#ifndef _CORE_SOUP_HPP
-#define _CORE_SOUP_HPP
+#ifndef _BUILD_SOUP_HPP
+#define _BUILD_SOUP_HPP
+
+#if 0
 
 #include "buildorder.hpp"
 #include "anabuildorder.hpp"
@@ -39,5 +41,7 @@ class SOUP
 		ANABUILDORDER* getAnalyzedBuildOrder(const unsigned int player_num);
 };
 
-#endif // _CORE_SOUP_HPP
+#endif
+
+#endif // _BUILD_SOUP_HPP
 

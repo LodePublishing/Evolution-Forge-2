@@ -2,8 +2,8 @@
 #define _GUI_OBJECT_HPP
 
 #include <sdlwrap/sdl_object.hpp>
-#include <sdlwrap/enums/positionmode.hpp>
-#include <sdlwrap/enums/autosize.hpp>
+#include <geometry/enums/positionmode.hpp>
+#include <geometry/enums/autosize.hpp>
 #include <sdlwrap/dc.hpp>
 
 #include <lang/text.hpp>

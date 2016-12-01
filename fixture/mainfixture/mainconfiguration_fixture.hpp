@@ -14,6 +14,7 @@ struct MainConfiguration_Fixture
 	const Gui_Fixture guiFixture;
 	const Bitmap_Fixture bitmapFixture;
 	
+	const bool test_firstStart;
     const bool test_dnaSpiral;
 
 	const boost::shared_ptr<const MainConfiguration> test_mainConfiguration;

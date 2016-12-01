@@ -5,6 +5,10 @@
 #include <lang/text_storage.hpp>
 #include <misc/ids.hpp>
 
+#include <guicore/color_storage.hpp>
+#include <guicore/font_storage.hpp>
+#include <guicore/brush_storage.hpp>
+
 // TODO SDL_NOFRAME for intro picture!
 
 #if defined(_FMOD_SOUND) || defined(_SDL_MIXER_SOUND)
@@ -17,14 +21,18 @@
 #endif
 
 GuiProcessor::GuiProcessor():
-	tooltip(NULL),
+tooltip(NULL),
 	toolTipParent(NULL),
 	currentWindow(NULL),
 	windowSelected(false),
 	mouseType(0), //?
 	mouse(),
-	defaultCursor(SDL_GetCursor())
-{ }
+	defaultCursor(SDL_GetCursor()),
+	screenCapturing(0),
+	screenshotNumber(1)
+{ 
+
+}
 
 
 GuiProcessor::~GuiProcessor()
@@ -47,10 +55,16 @@ void GuiProcessor::process(DC* dc) {
 
 	BOOST_ASSERT(dc);
 	SDL_Object::processAll();
-	SDL_Object::redrawnObjects = 0;
-	SDL_Object::updateAreasToUpdate();
+	Rect screenRect(Point(0,0), dc->getSize());
+	//SDL_Object::cutBorders(screenRect);
+	//SDL_Object::updateAreasToUpdate();
+	SDL_Object::processRects();
 	SDL_Object::drawAll(dc);
 	dc->updateScreen();
+	screenCapture(dc);
+	
+
+
 	// frameRateControl.updateConfiguration(); TODO
 	//inline void Gui::poll(const eTicks etick) {
 	//	frameRateControl.poll(etick);
@@ -63,10 +77,34 @@ void GuiProcessor::process(DC* dc) {
 // ------ DC INTERFACE END ------
 
 
+// ------ SCREENCAPTURE ------ 
+void GuiProcessor::screenshot() {
+	screenCapturing = 100;
+}
+
+void GuiProcessor::screenCapture(DC* dc) {
+	if(screenCapturing==100) {
+		std::ostringstream os;
+		os.str("");
+		os << "shot" << screenshotNumber << ".bmp";
+		dc->saveBMP(os.str());
+		++screenshotNumber;
+	}
+	// show message for 100 timesteps
+	if(screenCapturing>0) {
+		--screenCapturing;
+		std::ostringstream os;
+		os.str("");
+		os << "shot" << (screenshotNumber-1) << ".bmp" << " saved (" << (dc->getScreenDataSize()/1024) << "kb)";
+		dc->DrawText(os.str(), Point(-300, -30) + dc->getSize());
+
+	}
+}
+// ------ END SCREENCAPTURE -----
 
 // ------ EVENTS ------
 
-void GuiProcessor::setMouse(const Point& p, SDL_Object* root_object, const bool showTooltip, const Size& windowSize)
+void GuiProcessor::setMouse(const Point& p, Object& root_object, const bool showTooltip, const Size& windowSize)
 {
 	if((p == mouse) && (!Button::isWasResetted())) {
 		return;
@@ -112,7 +150,7 @@ void GuiProcessor::setMouse(const Point& p, SDL_Object* root_object, const bool 
 	{
 		//		if(SDL_Object::focus==NULL) // TODO
 		//		{
-		SDL_Object::setHighlighted(root_object->checkHighlight(mouse)); // TODO
+		SDL_Object::setHighlighted(root_object.checkHighlight(mouse)); // TODO
 		//		} //else
 		//		if((!temp_button)&&(Object::editFieldActive()))
 		//			temp_button = Object::getEditField()->checkHighlight());
@@ -132,7 +170,7 @@ void GuiProcessor::setMouse(const Point& p, SDL_Object* root_object, const bool 
 			const Object* temp = toolTipParent;
 			toolTipParent = NULL;
 
-			const Object* temp2 = ((Object*)root_object)->checkToolTip(mouse);
+			const Object* temp2 = root_object.checkToolTip(mouse);
 			if(temp2 != NULL) {
 				toolTipParent = temp2;
 			}
@@ -172,7 +210,7 @@ void GuiProcessor::setMouse(const Point& p, SDL_Object* root_object, const bool 
 }
 
 
-void GuiProcessor::leftDown(const Point& mouse, SDL_Object* root_object)
+void GuiProcessor::leftDown(const Point& mouse, Object& root_object)
 {
 	if(Button::isWasResetted()) {
 		return;
@@ -186,7 +224,7 @@ void GuiProcessor::leftDown(const Point& mouse, SDL_Object* root_object)
 	}
 }
 
-void GuiProcessor::leftUp(const Point& mouse, SDL_Object* root_object)
+void GuiProcessor::leftUp(const Point& mouse, Object& root_object)
 {
 	if((Button::getCurrentButton()!=NULL)&&(Button::isCurrentButtonPressed())) {
 		Button::getCurrentButton()->mouseLeftButtonReleased(mouse);
@@ -206,7 +244,7 @@ void GuiProcessor::leftUp(const Point& mouse, SDL_Object* root_object)
 
 }
 
-void GuiProcessor::rightDown(const Point& mouse, SDL_Object* root_object)
+void GuiProcessor::rightDown(const Point& mouse, Object& root_object)
 {
 	if(Button::isWasResetted()) {
 		return;
@@ -218,7 +256,7 @@ void GuiProcessor::rightDown(const Point& mouse, SDL_Object* root_object)
 	}
 }
 
-void GuiProcessor::rightUp(const Point& mouse, SDL_Object* root_object)
+void GuiProcessor::rightUp(const Point& mouse, Object& root_object)
 {
 	if((Button::getCurrentButton()!=NULL)&&(Button::isCurrentButtonPressed())) {
 		Button::getCurrentButton()->mouseRightButtonReleased(mouse);
@@ -270,3 +308,36 @@ void GuiProcessor::resetWindow()
 	windowSelected = false;
 	currentWindow = NULL;
 }
+
+
+// TODO
+
+// ------ FRAMERATE AND CALCULATION ------	
+/*unsigned int frames_per_generation = fps->getFramesPerGeneration();
+unsigned int frames_per_second = fps->getCurrentFramerate();
+
+if((!endrun)&&(((Object::editTextField==NULL)&&(m.isAnyOptimizing()))||(efConfiguration.isAllowStaticFramerate()))) // TODO
+{
+if(efConfiguration.isAllowStaticFramerate())
+fps->setDesiredFramerate(efConfiguration.getStaticFramerate());
+else
+fps->setDesiredFramerate(efConfiguration.getDynamicFramerate());
+fps->setAllowStaticFramerate(efConfiguration.isAllowStaticFramerate());
+fps->delay();
+
+refresh+=100;
+while((refresh > frames_per_generation))// && (!(endrun = database.getIsNewRun()))) // TODO
+{
+m.OnIdle();
+if(frames_per_generation > refresh)
+refresh = 0;
+else
+refresh -= frames_per_generation;
+}
+}
+if(endrun)
+endrun = m.newRun();
+endrun=false; // TODO*/
+// ------ END FRAMERATE AND CALCULATION 
+
+// TODO

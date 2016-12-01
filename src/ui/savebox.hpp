@@ -1,6 +1,8 @@
 #ifndef _UI_SAVEBOX_HPP
 #define _UI_SAVEBOX_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include <gui/editfield.hpp>
 
@@ -50,3 +52,4 @@ inline const std::string& SaveBox::getString() const {
 
 #endif
 
+#endif // _UI_SAVEBOX_HPP

@@ -3,8 +3,9 @@
 #include <misc/exceptions.hpp>
 #include <misc/io.hpp>
 
-Bitmap::Bitmap(const std::string& fileName):
+Bitmap::Bitmap(const std::string& fileName, const bool transparent):
 	fileName(fileName),
+	transparent(transparent),
 	bitmap(IMG_Load((BITMAP_DIRECTORY + fileName).c_str()))
 {
 	if(!bitmap) {
@@ -12,9 +13,10 @@ Bitmap::Bitmap(const std::string& fileName):
 	}
 }
 
-Bitmap::Bitmap(const boost::uuids::uuid id, const std::string& fileName):
+Bitmap::Bitmap(const boost::uuids::uuid id, const std::string& fileName, const bool transparent):
 	UUID<Bitmap>(id),
 	fileName(fileName),
+	transparent(transparent),
 	bitmap(IMG_Load((BITMAP_DIRECTORY + fileName).c_str()))
 {
 	if(!bitmap) {

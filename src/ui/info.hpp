@@ -1,6 +1,8 @@
 #ifndef _UI_INFO_HPP
 #define _UI_INFO_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include "../core/anabuildorder.hpp"
 #include "boentry.hpp"
@@ -31,6 +33,8 @@ class InfoWindow : public Window
 		PROGRAM program;
 		ANABUILDORDER* anarace;
 };
+
+#endif
 
 #endif // _UI_INFO_HPP
 

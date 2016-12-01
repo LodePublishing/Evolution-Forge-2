@@ -1,4 +1,7 @@
 #include "guimain.hpp"
+
+#if 0
+
 #include "files.hpp"
 //#include <gui/editfield.hpp>
 #include <gui/tooltip.hpp>
@@ -593,16 +596,6 @@ const bool Main::isAnyOptimizing() const
 			return(true);
 	return(false);
 }
-
-void Main::draw() const
-{
-	Object::redrawnObjects = 0;
-
-	Object::updateScreen();	
-
-	Object::theme.setColorTheme(Object::theme.getMainColorTheme());
-}
-
 										
 //settings: log level (none, debug only, +final result, +result of each run, +snapshot every X generations, +snapshot every generation, EVERYTHING (~2MB/generation!)
 
@@ -746,178 +739,6 @@ const bool Main::loadBuildOrders()
 }
 
 
-// ------ EVENTS ------
-
-void Main::setMouse(const Point p)
-{
-	if((p == Object::mouse) && (!Button::wasResetted))
-		return;
-	Button::wasResetted = false;
-	maus = p;
-	Object::mouse = p;
-	
-	if(Button::isCurrentButtonHasAlreadyLeft())
-	{
-		if((Button::getCurrentButton()!=NULL)&&(Button::getCurrentButton()->getAbsoluteRect().isTopLeftCornerInside(p)))
-		{
-			Button::getCurrentButton()->mouseHasEnteredArea();
-			Button::setCurrentButtonHasAlreadyLeft(false);
-		}
-		else return;
-	}
-	
-	if((Button::getCurrentButton())&&(!Button::getCurrentButton()->getAbsoluteRect().isTopLeftCornerInside(p)))
-	{
-		Button::getCurrentButton()->mouseHasLeftArea();
-		if(!Button::isCurrentButtonPressed())
-			Button::resetButton();
-		else
-			Button::setCurrentButtonHasAlreadyLeft();
-	}
-	
-// ignore mousemove if button is still pressed		
-	if(Button::getCurrentButton())
-	{
-		if(Button::isCurrentButtonPressed())
-		{
-			Button::getCurrentButton()->doHighlight();
-//			Button::getCurrentButton()->mouseHasMoved();
-		}
-		return;
-	}
-	if(Button::isMoveByMouse()==false)
-	{
-		Object* temp_button = NULL;
-//		if(Object::focus==NULL) // TODO
-		{
-			temp_button = backGround->checkHighlight();
-		} //else
-//		if((!temp_button)&&(Object::editFieldActive()))
-//			temp_button = Object::getEditField()->checkHighlight());
-		if((temp_button) && (temp_button!=Button::getCurrentButton()))
-		{
-			Button::resetButton();
-			Button::setCurrentButton( (Button*)temp_button);
-			if(temp_button!=NULL)
-			{
-				Button::getCurrentButton()->mouseHasEnteredArea();
-				Button::setCurrentButtonHasAlreadyLeft(false);
-			}
-		}
-
-		if(efConfiguration.isToolTips())
-		{
-// first we have to check the object with checkToolTip.
-// The result is either the object itself or one of its children that owns a tooltip
-			
-			Object* temp=Object::toolTipParent;
-			Object* temp2 = NULL;
-			Object::toolTipParent = NULL;
-
-			temp2=backGround->checkToolTip();
-			if(temp2 != NULL)
-				Object::toolTipParent = temp2;
-// toolTipParent changed or tooltip has to be deleted?
-			if(((Object::toolTipParent != temp) || (Object::tooltip == NULL)))
-			{
-				delete Object::tooltip;
-				if(Object::toolTipParent==NULL)
-					Object::tooltip=NULL;
-				else 
-				{
-					if(Object::toolTipParent->getToolTipEString()!=NULL_STRING)
-						Object::tooltip = new ToolTip(backGround, Object::toolTipParent->getToolTipEString());
-					else
-						Object::tooltip = new ToolTip(backGround, Object::toolTipParent->getToolTipString());
-				}
-			}
-
-		}
-	}
-
-	if((!efConfiguration.isToolTips()) && (Object::tooltip))
-	{
-		delete Object::tooltip;
-		Object::tooltip=NULL;
-	}
-}
-
-
-void Main::leftDown()
-{
-	if(Button::wasResetted)
-		return;
-	if(Button::getCurrentButton()!=NULL)
-	{
-		Button::getCurrentButton()->mouseLeftButtonPressed();
-		Button::setCurrentButtonPressed();
-	} else
-	if(Object::focus!=NULL)
-		Object::focus=NULL;
-}
-
-void Main::leftUp(const Point p)
-{
-	if((Button::getCurrentButton()!=NULL)&&(Button::isCurrentButtonPressed()))
-		Button::getCurrentButton()->mouseLeftButtonReleased();
-	Button::setCurrentButtonPressed(false);
-	Button::setCurrentButtonHasAlreadyLeft(false);
-	setMouse(p);
-
-	if(Button::isMoveByMouse()==true)
-	{
-		Button::setMoveByMouse(false);
-		Button::setMouseMovePoint(Point(0, 0));
-	}
-	if((Button::getCurrentButton()==NULL)&&(Object::focus!=NULL))
-		Object::focus=NULL;
-
-}
-
-void Main::rightDown()
-{
-	if(Button::wasResetted)
-		return;
-	if(Button::getCurrentButton()!=NULL)
-	{
-		Button::getCurrentButton()->mouseRightButtonPressed();
-		Button::setCurrentButtonPressed();
-	}
-}
-
-void Main::rightUp(const Point p)
-{
-	if((Button::getCurrentButton()!=NULL)&&(Button::isCurrentButtonPressed()))
-		Button::getCurrentButton()->mouseRightButtonReleased();
-	Button::setCurrentButtonPressed(false);
-	Button::setCurrentButtonHasAlreadyLeft(false);
-	setMouse(p);
-}
-
-void Main::wheelToTop()
-{
-	if(Object::currentWindow)
-		Object::currentWindow->moveScrollBarToTop();
-}
-
-void Main::wheelToBottom()
-{
-	if(Object::currentWindow)
-		Object::currentWindow->moveScrollBarToBottom();
-}
-
-void Main::wheelUp()
-{
-	if(Object::currentWindow)
-		Object::currentWindow->wheelUp();
-}
-
-void Main::wheelDown()
-{
-	if(Object::currentWindow)
-		Object::currentWindow->wheelDown();
-}
-
 const bool Main::openMenu(const ePlayerOrder order)
 {
 #if 0
@@ -955,3 +776,5 @@ const bool Main::openMenu(const ePlayerOrder order)
 
 //InfoWindow* Main::infoWindow = NULL;
 //MessageWindow* Main::msgWindow = NULL;
+
+#endif

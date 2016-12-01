@@ -488,18 +488,16 @@ void DC::DrawFilledEdgedBorderRound_24bit(const Sint16 x, const Sint16 y, const 
 	}
 // ------- END OF Rechteck oben und unten ------
 
-	Uint32 dark_pen_col, bright_pen_col, pen_col;
+	Uint32 dark_pen_col, pen_col;
 	
 	if(pressedRectangle)
 	{
 		dark_pen_col = static_cast<Uint32>(getDarkPressedPenColor());
-		bright_pen_col = static_cast<Uint32>(getBrightPressedPenColor());
 		pen_col = static_cast<Uint32>(getPressedPenColor());
 	
 	} else
 	{
 		dark_pen_col = static_cast<Uint32>(getDarkPenColor());
-		bright_pen_col = static_cast<Uint32>(getBrightPenColor());
 		pen_col = static_cast<Uint32>(getPenColor());
 	}
 
@@ -513,9 +511,9 @@ void DC::DrawFilledEdgedBorderRound_24bit(const Sint16 x, const Sint16 y, const 
 	Uint8 dark_colorbyte1 = static_cast<Uint8> ((dark_pen_col >> 8) & 0xff);
 	Uint8 dark_colorbyte2 = static_cast<Uint8> ((dark_pen_col >> 16) & 0xff);
 	
-	Uint8 bright_colorbyte0 = static_cast<Uint8> (bright_pen_col & 0xff);
-	Uint8 bright_colorbyte1 = static_cast<Uint8> ((bright_pen_col >> 8) & 0xff);
-	Uint8 bright_colorbyte2 = static_cast<Uint8> ((bright_pen_col >> 16) & 0xff);
+	Uint8 bright_colorbyte0 = static_cast<Uint8> (pen_col & 0xff);
+	Uint8 bright_colorbyte1 = static_cast<Uint8> ((pen_col >> 8) & 0xff);
+	Uint8 bright_colorbyte2 = static_cast<Uint8> ((pen_col >> 16) & 0xff);
 
 // ------ TOP AND LOWER HORIZONTAL LINE ------
 	Lock();
@@ -659,18 +657,16 @@ void DC::DrawTab_24bit(const Sint16 x, const Sint16 y, const Uint16 width, const
 	}
 // ------- END OF Rechteck oben und unten ------
 
-	Uint32 dark_pen_col, bright_pen_col, pen_col;
+	Uint32 dark_pen_col, pen_col;
 	
 	if(pressedRectangle)
 	{
 		dark_pen_col = static_cast<Uint32>(getDarkPressedPenColor());
-		bright_pen_col = static_cast<Uint32>(getBrightPressedPenColor());
 		pen_col = static_cast<Uint32>(getPressedPenColor());
 	
 	} else
 	{
 		dark_pen_col = static_cast<Uint32>(getDarkPenColor());
-		bright_pen_col = static_cast<Uint32>(getBrightPenColor());
 		pen_col = static_cast<Uint32>(getPenColor());
 	}
 
@@ -684,9 +680,9 @@ void DC::DrawTab_24bit(const Sint16 x, const Sint16 y, const Uint16 width, const
 	Uint8 dark_colorbyte1 = static_cast<Uint8> ((dark_pen_col >> 8) & 0xff);
 	Uint8 dark_colorbyte2 = static_cast<Uint8> ((dark_pen_col >> 16) & 0xff);
 	
-	Uint8 bright_colorbyte0 = static_cast<Uint8> (bright_pen_col & 0xff);
-	Uint8 bright_colorbyte1 = static_cast<Uint8> ((bright_pen_col >> 8) & 0xff);
-	Uint8 bright_colorbyte2 = static_cast<Uint8> ((bright_pen_col >> 16) & 0xff);
+	Uint8 bright_colorbyte0 = static_cast<Uint8> (pen_col & 0xff);
+	Uint8 bright_colorbyte1 = static_cast<Uint8> ((pen_col >> 8) & 0xff);
+	Uint8 bright_colorbyte2 = static_cast<Uint8> ((pen_col >> 16) & 0xff);
 
 // ------ TOP AND LOWER HORIZONTAL LINE ------
 	Lock();

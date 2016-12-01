@@ -1,15 +1,10 @@
 #ifndef _MISC_UUID_HPP
 #define _MISC_UUID_HPP
 
-#pragma warning(push, 0)  
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/nvp.hpp>
-
+#pragma warning(push, 0)
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
-
-#include <boost/uuid/uuid_serialize.hpp>
 #pragma warning(pop)
 
 
@@ -26,16 +21,6 @@ public:
 	const UUID& operator=(const UUID& other) { this->uuid = other.uuid; return *this; }	
 
 protected:
-	friend class boost::serialization::access;
-	
-	template<class Archive> 
-	void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & BOOST_SERIALIZATION_NVP(uuid);
-		if(version > 0) {
-		}
-	}
-
 	const boost::uuids::uuid uuid;
 };
 

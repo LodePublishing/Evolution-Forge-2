@@ -1,5 +1,8 @@
 #include "mapmenu.hpp"
 
+#if 0
+
+
 MapMenu::MapMenu(Object* map_parent, const Rect map_rect, const Size distance_bottom_right, const ePositionMode position_mode):
 	Menu(map_parent, map_rect, distance_bottom_right, position_mode, true, ONE_COLOUMN_MENU, STANDARD_BUTTON_WIDTH)
 { 
@@ -52,3 +55,4 @@ void MapMenu::draw() const
 	Menu::draw();
 }
 
+#endif

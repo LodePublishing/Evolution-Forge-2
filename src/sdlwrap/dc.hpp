@@ -30,6 +30,8 @@
 
 #include <SDL_image.h>
 
+#include <vector>
+
 #pragma warning(push, 0)
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
@@ -112,37 +114,28 @@ class DC
 	
 		void setBrush(const boost::shared_ptr<const Brush>& brush);
 		void setDarkBrush(const boost::shared_ptr<const Brush>& darkBrush);
-		void setBrightBrush(const boost::shared_ptr<const Brush>& brightBrush);
 		void setPen(const boost::shared_ptr<const Pen>& pen);
 		void setDarkPen(const boost::shared_ptr<const Pen>& darkPen);
-		void setBrightPen(const boost::shared_ptr<const Pen>& brightPen);
 		void setPressedPen(const boost::shared_ptr<const Pen>& pressedPen);
 		void setDarkPressedPen(const boost::shared_ptr<const Pen>& darkPressedPen);
-		void setBrightPressedPen(const boost::shared_ptr<const Pen>& brightPressedPen);
 		void setTextColor(const boost::shared_ptr<const Color>& textColor);
 
 		void setEndBrush(const boost::shared_ptr<const Brush>& endBrush);
 		void setEndDarkBrush(const boost::shared_ptr<const Brush>& endDarkBrush);
-		void setEndBrightBrush(const boost::shared_ptr<const Brush>& endBrightBrush);
 		void setEndPen(const boost::shared_ptr<const Pen>& endPen);
 		void setEndDarkPen(const boost::shared_ptr<const Pen>& endDarkPen);
-		void setEndBrightPen(const boost::shared_ptr<const Pen>& endBrightPen);
 		void setEndPressedPen(const boost::shared_ptr<const Pen>& endPressedPen);
 		void setEndDarkPressedPen(const boost::shared_ptr<const Pen>& endDarkPressedPen);
-		void setEndBrightPressedPen(const boost::shared_ptr<const Pen>& endBrightPressedPen);
 		void setEndTextColor(const boost::shared_ptr<const Color>& endTextColor);
 
 		void setFont(const boost::shared_ptr<const Font>& font);
 
 		Color getBrushColor() const;
 		Color getDarkBrushColor() const;
-		Color getBrightBrushColor() const;
 		Color getPenColor() const;
 		Color getDarkPenColor() const;
-		Color getBrightPenColor() const;
 		Color getPressedPenColor() const;
 		Color getDarkPressedPenColor() const;
-		Color getBrightPressedPenColor() const;
 		Color getTextColor() const;
 
 		const Size getTextExtent(const std::string& text) const;
@@ -198,8 +191,7 @@ class DC
 
 		static const char* dcVersion;
 
-		unsigned int changedRectangles;
-		SDL_Rect changedRectangle[DC_MAX_CHANGED_RECTANGLES];
+		std::list<Rect> changedRectangles;
 		Uint16 max_x;
 		Uint16 max_y;
 
@@ -216,27 +208,21 @@ class DC
 
 
 		Point dp;
-		
+
 		boost::shared_ptr<const Brush> brush;
 		boost::shared_ptr<const Brush> darkBrush;
-		boost::shared_ptr<const Brush> brightBrush;
 		boost::shared_ptr<const Pen> pen;
 		boost::shared_ptr<const Pen> darkPen;
-		boost::shared_ptr<const Pen> brightPen;
 		boost::shared_ptr<const Pen> pressedPen;
 		boost::shared_ptr<const Pen> darkPressedPen;
-		boost::shared_ptr<const Pen> brightPressedPen;
 		boost::shared_ptr<const Color> textColor;
-
+		
 		boost::shared_ptr<const Brush> endBrush;
 		boost::shared_ptr<const Brush> endDarkBrush;
-		boost::shared_ptr<const Brush> endBrightBrush;
 		boost::shared_ptr<const Pen> endPen;
 		boost::shared_ptr<const Pen> endDarkPen;
-		boost::shared_ptr<const Pen> endBrightPen;
 		boost::shared_ptr<const Pen> endPressedPen;
 		boost::shared_ptr<const Pen> endDarkPressedPen;
-		boost::shared_ptr<const Pen> endBrightPressedPen;
 		boost::shared_ptr<const Color> endTextColor;
 
 		boost::shared_ptr<const Font> font;
@@ -481,7 +467,7 @@ inline void DC::setTextColor(const boost::shared_ptr<const Color>& textColor) {
 // evtl sowohl gradient als auch gradient TODO
 inline Color DC::getBrushColor() const {
 	if(gradient != 0) {
-		return brush->getColor()->mixColor(surface, *endBrush->getColor(), gradient);
+		return brush->getColor()->mixColor(surface, *endBrush->getColor(), gradient); // TODO brightness?
 	} else {
 		return brush->getColor()->changeRelativeBrightness(surface, brightness);
 	}
@@ -489,23 +475,15 @@ inline Color DC::getBrushColor() const {
 
 inline Color DC::getDarkBrushColor() const{
 	if(gradient != 0) {
-		return darkBrush->getColor()->mixColor(surface, *endDarkBrush->getColor(), gradient);
+		return darkBrush->getColor()->mixColor(surface, *endDarkBrush->getColor(), gradient); // TODO brightness?
 	} else {	
 		return darkBrush->getColor()->changeRelativeBrightness(surface, brightness);
 	}
 }
 
-inline Color DC::getBrightBrushColor() const{
-	if(gradient != 0) {
-		return brightBrush->getColor()->mixColor(surface, *endBrightBrush->getColor(), gradient);
-	} else {	
-		return brightBrush->getColor()->changeRelativeBrightness(surface, brightness);
-	}
-}
-
 inline Color DC::getPenColor() const{
 	if(gradient != 0) {
-		return pen->getColor()->mixColor(surface, *endPen->getColor(), gradient);
+		return pen->getColor()->mixColor(surface, *endPen->getColor(), gradient); // TODO brightness?
 	} else {	
 		return pen->getColor()->changeRelativeBrightness(surface, brightness);
 	}
@@ -513,23 +491,16 @@ inline Color DC::getPenColor() const{
 
 inline Color DC::getDarkPenColor() const{
 	if(gradient != 0) {
-		return darkPen->getColor()->mixColor(surface, *endDarkPen->getColor(), gradient);
+		return darkPen->getColor()->mixColor(surface, *endDarkPen->getColor(), gradient); // TODO brightness?
 	} else {	
 		return darkPen->getColor()->changeRelativeBrightness(surface, brightness);
 	}
 }
 
-inline Color DC::getBrightPenColor() const{
-	if(gradient != 0) {
-		return brightPen->getColor()->mixColor(surface, *endBrightPen->getColor(), gradient);
-	} else {	
-		return brightPen->getColor()->changeRelativeBrightness(surface, brightness);
-	}
-}
 
 inline Color DC::getPressedPenColor() const{
 	if(gradient != 0) {
-		return pressedPen->getColor()->mixColor(surface, *endPressedPen->getColor(), gradient);
+		return pressedPen->getColor()->mixColor(surface, *endPressedPen->getColor(), gradient); // TODO brightness?
 	} else {	
 		return pressedPen->getColor()->changeRelativeBrightness(surface, brightness);
 	}
@@ -537,23 +508,15 @@ inline Color DC::getPressedPenColor() const{
 
 inline Color DC::getDarkPressedPenColor() const{
 	if(gradient != 0) {
-		return darkPressedPen->getColor()->mixColor(surface, *endDarkPressedPen->getColor(), gradient);
+		return darkPressedPen->getColor()->mixColor(surface, *endDarkPressedPen->getColor(), gradient); // TODO brightness?
 	} else {	
 		return darkPressedPen->getColor()->changeRelativeBrightness(surface, brightness);
 	}
 }
 
-inline Color DC::getBrightPressedPenColor() const{
-	if(gradient != 0) {
-		return brightPressedPen->getColor()->mixColor(surface, *endBrightPressedPen->getColor(), gradient);
-	} else {	
-		return brightPressedPen->getColor()->changeRelativeBrightness(surface, brightness);
-	}
-}
-
 inline Color DC::getTextColor() const{
 	if(gradient != 0) {
-		return textColor->mixColor(surface, *endTextColor, gradient);
+		return textColor->mixColor(surface, *endTextColor, gradient); // TODO brightness?
 	} else if(brightness != 0) {
 		return textColor->changeRelativeBrightness(surface, brightness);
 	}
@@ -572,20 +535,12 @@ inline void DC::setDarkBrush(const boost::shared_ptr<const Brush>& darkBrush) {
 	this->darkBrush = darkBrush;
 }
 
-inline void DC::setBrightBrush(const boost::shared_ptr<const Brush>& brightBrush) {
-	this->brightBrush = brightBrush;
-}
-
 inline void DC::setPen(const boost::shared_ptr<const Pen>& pen) {
 	this->pen = pen;
 }
 
 inline void DC::setDarkPen(const boost::shared_ptr<const Pen>& darkPen) {
 	this->darkPen = darkPen;
-}
-
-inline void DC::setBrightPen(const boost::shared_ptr<const Pen>& brightPen) {
-	this->brightPen = brightPen;
 }
 
 inline void DC::setPressedPen(const boost::shared_ptr<const Pen>& pressedPen) {
@@ -596,21 +551,12 @@ inline void DC::setDarkPressedPen(const boost::shared_ptr<const Pen>& darkPresse
 	this->darkPressedPen = darkPressedPen;
 }
 
-inline void DC::setBrightPressedPen(const boost::shared_ptr<const Pen>& endrightPressedPen) {
-	this->brightPressedPen = brightPressedPen;
-}
-
-
 inline void DC::setEndBrush(const boost::shared_ptr<const Brush>& endBrush) {
 	this->endBrush = endBrush;
 }
 
 inline void DC::setEndDarkBrush(const boost::shared_ptr<const Brush>& endDarkBrush) {
 	this->endDarkBrush = endDarkBrush;
-}
-
-inline void DC::setEndBrightBrush(const boost::shared_ptr<const Brush>& endBrightBrush) {
-	this->endBrightBrush = endBrightBrush;
 }
 
 inline void DC::setEndPen(const boost::shared_ptr<const Pen>& endPen) {
@@ -621,20 +567,12 @@ inline void DC::setEndDarkPen(const boost::shared_ptr<const Pen>& endDarkPen) {
 	this->endDarkPen = endDarkPen;
 }
 
-inline void DC::setEndBrightPen(const boost::shared_ptr<const Pen>& endBrightPen) {
-	this->endBrightPen = endBrightPen;
-}
-
 inline void DC::setEndPressedPen(const boost::shared_ptr<const Pen>& endPressedPen) {
 	this->endPressedPen = endPressedPen;
 }
 
 inline void DC::setEndDarkPressedPen(const boost::shared_ptr<const Pen>& endDarkPressedPen) {
 	this->endDarkPressedPen = endDarkPressedPen;
-}
-
-inline void DC::setEndBrightPressedPen(const boost::shared_ptr<const Pen>& endBrightPressedPen) {
-	this->endBrightPressedPen = endBrightPressedPen;
 }
 
 inline void DC::setEndTextColor(const boost::shared_ptr<const Color>& endTextColor) {

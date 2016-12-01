@@ -1,6 +1,8 @@
 #ifndef _UI_PROGRESSBAR_HPP
 #define _UI_PROGRESSBAR_HPP
 
+#if 0
+
 #include <sdl/dc.hpp>
 #include <gui/theme.hpp>
 
@@ -16,5 +18,7 @@ class ProgressBar
 		unsigned int p;
 		unsigned int h;
 };
+
+#endif
 
 #endif // _UI_PROGRESSBAR_HPP

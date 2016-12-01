@@ -40,6 +40,8 @@ public:
 		const bool toolTips		
 		);
 
+	~GuiConfiguration();
+
 	Size getResolutionSize() const;
 	eBitDepth getBitDepth() const;
 	bool isFullScreen() const;
@@ -50,9 +52,7 @@ public:
 	bool isTransparency() const;
 	bool isToolTips() const;
 	bool isSoftwareMouse() const;
-	bool isGlowingButtons() const;
-
-	~GuiConfiguration();
+	bool isGlowingButtons() const;	
 
 private:
 	const Size resolutionSize;

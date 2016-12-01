@@ -13,11 +13,13 @@
 class MainConfiguration : public UUID<MainConfiguration>
 {
 public:
-	MainConfiguration(const boost::uuids::uuid id, const boost::uuids::uuid languageId, const boost::uuids::uuid guiId, const boost::shared_ptr<const Bitmap> backgroundBitmap, bool dnaSpiral);
-	MainConfiguration(const boost::uuids::uuid languageId, const boost::uuids::uuid guiId, const boost::shared_ptr<const Bitmap> backgroundBitmap, bool dnaSpiral);
+	MainConfiguration(const boost::uuids::uuid id, const boost::uuids::uuid languageId, const boost::uuids::uuid guiId, const boost::uuids::uuid soundConfigurationId, const bool firstStart, const boost::shared_ptr<const Bitmap> backgroundBitmap, bool dnaSpiral);
+	MainConfiguration(const boost::uuids::uuid languageId, const boost::uuids::uuid guiId, const boost::uuids::uuid soundConfigurationId, const bool firstStart, const boost::shared_ptr<const Bitmap> backgroundBitmap, bool dnaSpiral);
 
 	const boost::uuids::uuid& getLanguageId() const;
 	const boost::uuids::uuid& getGuiId() const;
+	const boost::uuids::uuid& getSoundConfigurationId() const;
+	bool isFirstStart() const;
 	const boost::shared_ptr<const Bitmap> getBackgroundBitmap() const;
 	bool isDnaSpiral() const;
 	
@@ -26,6 +28,8 @@ private:
 
 	const boost::uuids::uuid languageId;
 	const boost::uuids::uuid guiId;
+	const boost::uuids::uuid soundConfigurationId;
+	const bool firstStart;
 	const boost::shared_ptr<const Bitmap> backgroundBitmap;
 	const bool dnaSpiral;
 
@@ -38,6 +42,14 @@ inline const boost::uuids::uuid& MainConfiguration::getLanguageId() const {
 
 inline const boost::uuids::uuid& MainConfiguration::getGuiId() const {
 	return guiId;
+}
+
+inline const boost::uuids::uuid& MainConfiguration::getSoundConfigurationId() const {
+	return soundConfigurationId;
+}
+
+inline bool MainConfiguration::isFirstStart() const {
+	return firstStart;
 }
 
 inline const boost::shared_ptr<const Bitmap> MainConfiguration::getBackgroundBitmap() const {

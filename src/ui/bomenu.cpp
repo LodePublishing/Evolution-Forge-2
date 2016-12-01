@@ -1,4 +1,7 @@
 #include "bomenu.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 
 BoMenu::BoMenu(Object* bo_parent, const Rect bo_rect, const Size distance_bottom_right, const ePositionMode position_mode):
@@ -102,5 +105,4 @@ void BoMenu::resetData()
 	updateItemPositions();
 }
 
-
-
+#endif

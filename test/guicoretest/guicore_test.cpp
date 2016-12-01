@@ -44,6 +44,8 @@ BOOST_FIXTURE_TEST_SUITE( Bitmap_test, Bitmap_Fixture )
 {
 	BOOST_CHECK_EQUAL(test_bitmap1->getFileName(), test_fileName1);
 	BOOST_CHECK_EQUAL(test_bitmap2->getFileName(), test_fileName2);
+	BOOST_CHECK_EQUAL(test_bitmap1->isTransparent(), test_transparent1);
+	BOOST_CHECK_EQUAL(test_bitmap2->isTransparent(), test_transparent2);
 	BOOST_CHECK_EQUAL((*test_bitmap1)->w, 302);
 	BOOST_CHECK_EQUAL((*test_bitmap2)->w, 320);
 }
@@ -52,6 +54,8 @@ BOOST_AUTO_TEST_CASE (Bitmap_storage)
 {
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap1->getId())->getFileName(), test_fileName1);
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap2->getId())->getFileName(), test_fileName2);
+	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap1->getId())->isTransparent(), test_transparent1);
+	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap2->getId())->isTransparent(), test_transparent2);
 	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap1->getId()))->w, 302);
 	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap2->getId()))->w, 320);
 
@@ -60,6 +64,8 @@ BOOST_AUTO_TEST_CASE (Bitmap_storage)
 
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap1->getId())->getFileName(), test_fileName1);
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap2->getId())->getFileName(), test_fileName2);
+	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap1->getId())->isTransparent(), test_transparent1);
+	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap2->getId())->isTransparent(), test_transparent2);
 	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap1->getId()))->w, 302);
 	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap2->getId()))->w, 320);
 }
@@ -197,9 +203,9 @@ BOOST_AUTO_TEST_SUITE_END( )
 
 	BOOST_AUTO_TEST_CASE (Color_mix)
 {
-	Color temp_color(DC::instance().getSurface(), 255, 100, 10);
+	Color temp_color(dcFixture.test_dc->getSurface(), 255, 100, 10);
 		
-	Color new_color = test_color->mixColor(DC::instance().getSurface(), temp_color);
+	Color new_color = test_color->mixColor(dcFixture.test_dc->getSurface(), temp_color);
 
 	int r = (test_sdlcolor.r + 255) / 2;
 	int g = (test_sdlcolor.g + 100) / 2;
@@ -212,9 +218,9 @@ BOOST_AUTO_TEST_SUITE_END( )
 
 	BOOST_AUTO_TEST_CASE (Color_mixGradient)
 {
-	Color temp_color(DC::instance().getSurface(), 250, 100, 10);
+	Color temp_color(dcFixture.test_dc->getSurface(), 250, 100, 10);
 		
-	Color new_color = test_color->mixColor(DC::instance().getSurface(), temp_color, 40);
+	Color new_color = test_color->mixColor(dcFixture.test_dc->getSurface(), temp_color, 40);
 
 	int r = (test_sdlcolor.r*40 + 250*60) / 100;
 	int g = (test_sdlcolor.g*40 + 100*60) / 100;
@@ -227,7 +233,7 @@ BOOST_AUTO_TEST_SUITE_END( )
 
 	BOOST_AUTO_TEST_CASE (Color_absoluteBrightness)
 {
-	Color temp_color = test_color->changeAbsoluteBrightness(DC::instance().getSurface(), 10);
+	Color temp_color = test_color->changeAbsoluteBrightness(dcFixture.test_dc->getSurface(), 10);
 
 	int r = test_sdlcolor.r + 10;
 	int g = test_sdlcolor.g + 10;
@@ -244,7 +250,7 @@ BOOST_AUTO_TEST_SUITE_END( )
 
 BOOST_AUTO_TEST_CASE(Color_absoluteBrightness_nop)
 {
-	Color temp_color = test_color->changeAbsoluteBrightness(DC::instance().getSurface(), 0);
+	Color temp_color = test_color->changeAbsoluteBrightness(dcFixture.test_dc->getSurface(), 0);
 	BOOST_CHECK_EQUAL(temp_color.r(), test_sdlcolor.r);
 	BOOST_CHECK_EQUAL(temp_color.g(), test_sdlcolor.g);
 	BOOST_CHECK_EQUAL(temp_color.b(), test_sdlcolor.b);
@@ -252,8 +258,8 @@ BOOST_AUTO_TEST_CASE(Color_absoluteBrightness_nop)
 
 BOOST_AUTO_TEST_CASE (Color_relativeBrightness)
 {
-	Color temp_color1 = test_color->changeRelativeBrightness(DC::instance().getSurface(), 10);
-	Color temp_color2 = test_color->changeRelativeBrightness(DC::instance().getSurface(), 150);
+	Color temp_color1 = test_color->changeRelativeBrightness(dcFixture.test_dc->getSurface(), 10);
+	Color temp_color2 = test_color->changeRelativeBrightness(dcFixture.test_dc->getSurface(), 150);
 
 	int r1 = test_sdlcolor.r / 10;
 	int g1 = test_sdlcolor.g / 10;
@@ -277,8 +283,8 @@ BOOST_AUTO_TEST_CASE (Color_relativeBrightness)
 
 BOOST_AUTO_TEST_CASE (Color_relativeBrightness_nop)
 {
-	Color temp_color1 = test_color->changeRelativeBrightness(DC::instance().getSurface(), 100);
-	Color temp_color2 = test_color->changeRelativeBrightness(DC::instance().getSurface(), 0);
+	Color temp_color1 = test_color->changeRelativeBrightness(dcFixture.test_dc->getSurface(), 100);
+	Color temp_color2 = test_color->changeRelativeBrightness(dcFixture.test_dc->getSurface(), 0);
 
 	BOOST_CHECK_EQUAL(temp_color1.r(), test_sdlcolor.r);
 	BOOST_CHECK_EQUAL(temp_color1.g(), test_sdlcolor.g);
@@ -291,7 +297,7 @@ BOOST_AUTO_TEST_CASE (Color_relativeBrightness_nop)
 BOOST_AUTO_TEST_CASE (Color_storage)
 {
 
-	ColorStorage::init(DC::instance().getSurface());
+	ColorStorage::init(dcFixture.test_dc->getSurface());
 
 	BOOST_CHECK_EQUAL(ColorStorage::instance().get(test_color->getId())->r(), test_sdlcolor.r);
 	BOOST_CHECK_EQUAL(ColorStorage::instance().get(test_color->getId())->g(), test_sdlcolor.g);
@@ -303,7 +309,7 @@ BOOST_AUTO_TEST_CASE (Color_storage)
 
 	ColorStorage::saveToXML();
 	ColorStorage::reset();
-	ColorStorage::init(DC::instance().getSurface());
+	ColorStorage::init(dcFixture.test_dc->getSurface());
 
 	BOOST_CHECK_EQUAL(ColorStorage::instance().get(test_color->getId())->r(), test_sdlcolor.r);
 	BOOST_CHECK_EQUAL(ColorStorage::instance().get(test_color->getId())->g(), test_sdlcolor.g);

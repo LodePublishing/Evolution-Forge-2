@@ -1,5 +1,7 @@
-#ifndef _CORE_BUILDORDER_HPP
-#define _CORE_BUILDORDER_HPP
+#ifndef _BUILD_BUILDORDER_HPP
+#define _BUILD_BUILDORDER_HPP
+
+#if 0
 
 #include "prebuildorder.hpp"
 
@@ -101,5 +103,89 @@ inline const unsigned int BUILDORDER::gettFitness() const
         return(tFitness);
 }
 
+#endif
 
-#endif //_CORE_BUILDORDER_HPP
+
+#endif //_BUILD_BUILDORDER_HPP
+
+
+#if 0
+void DATABASE::saveBuildOrder(const std::string& name, const ANABUILDORDER* anarace) const
+{
+	std::ostringstream os;
+	os.str("");
+#ifdef __linux__
+	os << "output/bos/";
+	os << raceString[anarace->getRace()] << "/" << name << ".html";
+#elif WIN32
+	os << "output\\bos\\";
+	os << raceString[anarace->getRace()] << "\\" << name << ".html";
+#endif
+	std::ofstream pFile(os.str().c_str(), std::ios_base::out | std::ios_base::trunc);
+	
+	if(!pFile.is_open())
+	{
+		toLog("ERROR: (DATABASE::saveBuildOrder) Could not create file " + os.str() + " (write protection? disk space?)");
+		return;
+	}
+	
+	pFile << "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">" << std::endl;
+	pFile << "<html>" << std::endl;
+	pFile << "<head>" << std::endl;
+	pFile << "  <meta content=\"text/html; charset=ISO-8859-1\"" << std::endl;
+	pFile << " http-equiv=\"content-type\">" << std::endl;
+	pFile << "  <title>Build order list</title>" << std::endl;
+	pFile << "</head>" << std::endl;
+	pFile << "<body alink=\"#000099\" vlink=\"#990099\" link=\"#000099\" style=\"color: rgb("<< (int)UI_Object::theme.lookUpColor(BRIGHT_TEXT_COLOR)->r() << ", " << (int)UI_Object::theme.lookUpColor(BRIGHT_TEXT_COLOR)->g() << ", " << (int)UI_Object::theme.lookUpColor(BRIGHT_TEXT_COLOR)->b() << "); background-color: rgb(" << (int)UI_Object::theme.lookUpBrush(WINDOW_BACKGROUND_BRUSH)->GetColor()->r() << ", " << (int)UI_Object::theme.lookUpBrush(WINDOW_BACKGROUND_BRUSH)->GetColor()->g() << ", " << (int)UI_Object::theme.lookUpBrush(WINDOW_BACKGROUND_BRUSH)->GetColor()->b() << ");\">" << std::endl;
+	pFile << "<div style=\"text-align: center;\"><big style=\"font-weight: bold;\"><big>Evolution Forge " << CORE_VERSION << "</big></big><br><br>" << std::endl;
+	pFile << "<big>Buildorder list " << name << "</big><br>" << std::endl;
+	pFile << "</div>" << std::endl;
+	pFile << "<br>" << std::endl;
+	pFile << "<table style=\"background-color: rgb(" << (int)UI_Object::theme.lookUpBrush(WINDOW_FOREGROUND_BRUSH)->GetColor()->r() << ", " << (int)UI_Object::theme.lookUpBrush(WINDOW_FOREGROUND_BRUSH)->GetColor()->g() << ", " << (int)UI_Object::theme.lookUpBrush(WINDOW_FOREGROUND_BRUSH)->GetColor()->b() << "); text-align: center; vertical-align: middle; width: 600px; margin-left: auto; margin-right: auto;\""<< std::endl;
+	pFile << " border=\"1\" cellspacing=\"0\" cellpadding=\"1\">" << std::endl;
+	pFile << "  <tbody>" << std::endl;
+	pFile << "	<tr>" << std::endl;
+	pFile << "	  <td style=\"text-align: center; vertical-align: middle; width: 200px;\">" << UI_Object::theme.lookUpString(OUTPUT_UNITNAME_STRING) << "<br>" << std::endl;
+	pFile << "	  </td>" << std::endl;
+	pFile << "	  <td style=\"text-align: center; vertical-align: middle; width: 75px;\">" << UI_Object::theme.lookUpString(OUTPUT_SUPPLY_STRING) << "</td>" << std::endl;
+	pFile << "	  <td style=\"text-align: center; vertical-align: middle; width: 75px;\">" << UI_Object::theme.lookUpString(OUTPUT_MINERALS_STRING) << "<br>" << std::endl;
+	pFile << "	  </td>" << std::endl;
+	pFile << "	  <td style=\"text-align: center; vertical-align: middle; width: 75px;\">" << UI_Object::theme.lookUpString(OUTPUT_GAS_STRING) << "<br>" << std::endl;
+	pFile << "	  </td>" << std::endl;
+	pFile << "	  <td style=\"text-align: center; vertical-align: middle; width: 100px;\">" << UI_Object::theme.lookUpString(OUTPUT_LOCATION_STRING) << "<br>" << std::endl;
+	pFile << "	  </td>" << std::endl;
+	pFile << "	  <td style=\"text-align: center; vertical-align: middle; width: 75px;\">" << UI_Object::theme.lookUpString(OUTPUT_TIME_STRING) << "<br>" << std::endl;
+	pFile << "	  </td>" << std::endl;
+	pFile << "	</tr>" << std::endl;
+
+	for(std::list<PROGRAM>::const_iterator order = anarace->programList.begin(); order != anarace->programList.end(); ++order)
+	{
+		pFile << "	<tr style=\"text-align: center; vertical-align: middle; background-color: rgb(" << (int)UI_Object::theme.lookUpBrush((eBrush)(UNIT_TYPE_0_BRUSH+stats[anarace->getRace()][order->getUnit()].unitType))->GetColor()->r() << ", " << (int)UI_Object::theme.lookUpBrush((eBrush)(UNIT_TYPE_0_BRUSH+stats[anarace->getRace()][order->getUnit()].unitType))->GetColor()->g() << ", " << (int)UI_Object::theme.lookUpBrush((eBrush)(UNIT_TYPE_0_BRUSH+stats[anarace->getRace()][order->getUnit()].unitType))->GetColor()->b() << ");\">" << std::endl;
+		pFile << "	  <td style=\"\">" << UI_Object::theme.lookUpString((eString)(UNIT_TYPE_COUNT*anarace->getRace() + order->getUnit() + UNIT_NULL_STRING)) << "<br>" << std::endl;
+		pFile << "	  </td>" << std::endl;
+		pFile << "	  <td style=\"\">" << order->getStatisticsBefore().getNeedSupply() << "/" << order->getStatisticsBefore().getHaveSupply() << "<br>" << std::endl;
+		pFile << "	  </td>" << std::endl;
+
+		pFile << "	  <td style=\"\">" << order->getStatisticsBefore().getHaveMinerals()/100 << "<br>" << std::endl;
+		pFile << "	  </td>" << std::endl;
+
+		pFile << "	  <td style=\"\">" << order->getStatisticsBefore().getHaveGas()/100 << "<br>" << std::endl;
+		pFile << "	  </td>" << std::endl;
+
+		pFile << "	  <td style=\"\">" << (*anarace->getMap())->getLocation(order->getLocation())->getName() << "<br>" << std::endl;
+		pFile << "	  </td>" << std::endl;
+
+		pFile << "	  <td style=\"\">" << formatTime(order->getRealTime()) << "<br>" << std::endl;
+		pFile << "	  </td>" << std::endl;
+																								   
+		pFile << "	</tr>" << std::endl;
+	}
+
+	pFile << "  </tbody>" << std::endl;
+	pFile << "</table>" << std::endl;
+	pFile << "<br>" << std::endl;
+	pFile << "<b><a href=\"http://www.clawsoftware.de\">www.clawsoftware.de</a></b>\n";
+	pFile << "</body>\n";
+	pFile << "</html>" << std::endl;
+}
+#endif

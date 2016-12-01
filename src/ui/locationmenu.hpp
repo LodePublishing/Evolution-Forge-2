@@ -1,6 +1,8 @@
 #ifndef _UI_LOCATIONMENU_HPP
 #define _UI_LOCATIONMENU_HPP
 
+#if 0
+
 #include <gui/menu.hpp>
 #include "../core/basicmap.hpp"
 
@@ -21,6 +23,8 @@ class LocationMenu : public Menu
 		LocationMenu(const LocationMenu& object);
 		LocationMenu& operator=(const LocationMenu& object);
 };
+
+#endif
 
 #endif // _UI_LOCATIONMENU_HPP
 

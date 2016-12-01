@@ -1,4 +1,7 @@
 #include "game.hpp"
+
+#if 0
+
 #include <sstream>
 
 Game::Game(Object* game_parent, const BASIC_MAP* game_map, const unsigned int game_number, const unsigned int game_max) :
@@ -456,3 +459,5 @@ void Game::assignStartCondition(const unsigned int player_num, const START_CONDI
 //virtual machen ? TODO
 //resetData, updateItems, assignAnarace, checkOrders
 //
+
+#endif

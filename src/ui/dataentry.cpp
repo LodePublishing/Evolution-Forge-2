@@ -1,4 +1,7 @@
 #include "dataentry.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include <sstream>
 
@@ -75,3 +78,4 @@ void DataBaseEntry::draw() const
 {
 	Object::draw();
 }
+#endif

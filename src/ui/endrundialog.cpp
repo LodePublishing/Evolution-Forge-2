@@ -1,4 +1,7 @@
 #include "endrundialog.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 
 // ISO-LEVEL 2 
@@ -48,3 +51,4 @@ void EndRunDialog::draw(DC* const dc) const
 
 std::string EndRunDialog::lastString="bo";
 
+#endif

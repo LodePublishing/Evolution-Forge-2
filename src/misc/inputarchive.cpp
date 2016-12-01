@@ -13,7 +13,7 @@ inputFile(inputFile)
 InputArchive::~InputArchive() 
 { }
 
-InputArchive& InputArchive::operator>>(Node& node)  {
+InputArchive& InputArchive::operator>>(XmlNode& node)  {
 	while(!inputFile.eof()) {
 		std::string name = findName();
 		if(name.empty()) {
@@ -30,7 +30,7 @@ InputArchive& InputArchive::operator>>(Node& node)  {
 		{ char a;inputFile >> a;} // '<'
 		if(value.empty()) { // -> has children 
 			while(!inputFile.eof() && inputFile.peek() != '/') { // no closing statement
-				Node n;
+				XmlNode n;
 				*this >> n;
 				node.addChild(n);
 			}

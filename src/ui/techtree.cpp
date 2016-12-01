@@ -1,4 +1,7 @@
 #include "techtree.hpp"
+
+#if 0
+
 #include "../core/database.hpp"
 
 TechTreeWindow::TechTreeWindow(Object* techtree_parent) :
@@ -226,7 +229,4 @@ void TechTreeWindow::draw() const
 		}*/
 }
 
-
-
-
-
+#endif

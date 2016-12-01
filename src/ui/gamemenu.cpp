@@ -1,5 +1,7 @@
 #include "gamemenu.hpp"
 
+#if 0
+
 GameMenu::GameMenu(Object* game_parent, const Rect& game_rect, const Size distance_bottom_right, const ePositionMode position_mode) :
 	Menu(game_parent, game_rect, distance_bottom_right, position_mode, true, TWO_COLOUMNS_MENU, MAX_BUTTON_WIDTH_TYPES)
 //	Menu(game_parent, game_rect, distance_bottom_right, position_mode, true, ONE_COLOUMN_MENU, SMALL_BUTTON_WIDTH, 2, SETTING_ENGLISH_LANGUAGE_STRING, UNIT_TYPE_5_BUTTON)
@@ -26,3 +28,4 @@ void GameMenu::draw() const
 	Menu::draw();
 }	
 
+#endif

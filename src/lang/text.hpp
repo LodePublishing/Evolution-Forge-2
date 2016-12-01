@@ -15,24 +15,26 @@
 class Text : public UUID<Text>
 {
 public:
-		Text(const std::map<const boost::uuids::uuid, const std::string>& textMap);
-		Text(const boost::uuids::uuid id, const std::map<const boost::uuids::uuid, const std::string>& textMap);
-		~Text() { }
+	Text(const std::map<const boost::uuids::uuid, const std::string>& textMap);
+	Text(const boost::uuids::uuid id, const std::map<const boost::uuids::uuid, const std::string>& textMap);
+	~Text() { }
 
-		void updateLanguage(const boost::uuids::uuid languageId) const;
-		void updateParameters(const std::list<std::string> parameterList) const;
+	void updateLanguage(const boost::uuids::uuid languageId) const;
+	void updateParameters(const std::list<std::string> parameterList) const;
 
-		// use public boost::signals::trackable on the object wanting to connect to test
-		// .connect(boost::bind(&CLASS::function, this, _1));
-		boost::signals::connection connect(boost::signal<void (std::string)>::slot_function_type subscriber) const;
-		void disconnect(boost::signals::connection subscriber) const;
-		const std::map<const boost::uuids::uuid, const std::string>& getTextMap() const;
+	// use public boost::signals::trackable on the object wanting to connect to test
+	// .connect(boost::bind(&CLASS::function, this, _1));
+	boost::signals::connection connect(boost::signal<void (std::string)>::slot_function_type subscriber) const;
+	void disconnect(boost::signals::connection subscriber) const;
+	const std::map<const boost::uuids::uuid, const std::string>& getTextMap() const;
 	const std::string& getText() const;
+	const std::string getText(const std::list<std::string> parameterList) const;
+
 private:
 	const std::map<const boost::uuids::uuid, const std::string> textMap; // languageId -> string
-	
+
 	// only indirect access via signals!
-	
+
 	const std::string& getText(const boost::uuids::uuid languageId) const;
 	void updateText(const std::string& text) const;
 
@@ -42,6 +44,12 @@ private:
 // current Text
 inline const std::string& Text::getText() const {
 	return getText(languageId);
+}
+
+inline const std::string Text::getText(const std::list<std::string> parameterList) const {
+	std::string newString = getText(languageId);
+	Misc::formatString(newString, parameterList);
+	return newString;
 }
 
 

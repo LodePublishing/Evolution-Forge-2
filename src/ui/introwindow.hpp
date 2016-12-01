@@ -1,6 +1,8 @@
 #ifndef _UI_INTRO_WINDOW_HPP
 #define _UI_INTRO_WINDOW_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include <gui/longtext.hpp>
 
@@ -32,4 +34,6 @@ inline const bool IntroWindow::isDone() const {
 }
 
 #endif
+
+#endif // _UI_INTRO_WINDOW_HPP
 

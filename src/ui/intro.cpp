@@ -1,5 +1,7 @@
 #include "intro.hpp"
 
+#if 0
+
 Intro::Intro(Object* intro_parent, 
 				const Rect& intro_rect,
 				const Size distance_bottom_right, 
@@ -104,3 +106,4 @@ void Intro::process()
 	}
 }
 
+#endif

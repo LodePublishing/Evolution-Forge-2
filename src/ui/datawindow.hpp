@@ -1,6 +1,8 @@
 #ifndef _UI_DATABASE_WINDOW_HPP
 #define _UI_DATABASE_WINDOW_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include "dataentry.hpp"
 #include "game.hpp"
@@ -79,3 +81,4 @@ class DataBaseWindow : public Window
 
 #endif
 
+#endif // _UI_DATABASE_WINDOW_HPP

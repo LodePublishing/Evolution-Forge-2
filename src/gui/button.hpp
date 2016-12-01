@@ -25,11 +25,10 @@ class Button : public Object
 				const Rect& button_rect, 
 				const Size& distance_bottom_right,
 				const boost::shared_ptr<const ButtonColors>& button_colors, 
-				const boost::shared_ptr<const Text>& button_text, 
-				const boost::shared_ptr<const Text>& button_tooltip,
-				const std::list<std::string>& parameterList,
-				const boost::shared_ptr<const Bitmap>& button_bitmap,
-				const eButtonMode button_mode,				
+				const boost::shared_ptr<const Text>& button_text = boost::shared_ptr<const Text>(),
+				const std::list<std::string> parameterList = std::list<std::string>(),
+				const boost::shared_ptr<const Text>& button_tooltip = boost::shared_ptr<const Text>(),
+				const eButtonMode button_mode = PRESS_BUTTON_MODE,				
 				const ePositionMode button_position_mode = DO_NOT_ADJUST, 
 				const eAutoSize button_auto_size = NO_AUTO_SIZE);
 
@@ -37,13 +36,13 @@ class Button : public Object
 				const Rect& button_rect, 
 				const Size& distance_bottom_right,
 				const boost::shared_ptr<const ButtonColors>& button_colors, 
-				const boost::shared_ptr<const Text>& button_text, 
-				const boost::shared_ptr<const Text>& button_tooltip,
-				const std::list<std::string>& parameterList,
-				const boost::shared_ptr<const Bitmap>& button_bitmap,
-				const eButtonMode button_mode,				
+				const boost::shared_ptr<const Text>& button_text = boost::shared_ptr<const Text>(),
+				const std::list<std::string> parameterList = std::list<std::string>(),
+				const boost::shared_ptr<const Text>& button_tooltip = boost::shared_ptr<const Text>(),
+				const eButtonMode button_mode = PRESS_BUTTON_MODE,				
 				const ePositionMode button_position_mode = DO_NOT_ADJUST, 
 				const eAutoSize button_auto_size = NO_AUTO_SIZE);
+
 
 		~Button();
 		

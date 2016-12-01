@@ -18,7 +18,7 @@ struct Gui_Fixture
 	~Gui_Fixture();
 
 private:
-	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Gui> > Gui_Fixture::init_guimap_helper() const;
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Gui> > init_guimap_helper() const;
 };
 
 #endif // _GUI_FIXTURE_GUIFIXTURE_HPP

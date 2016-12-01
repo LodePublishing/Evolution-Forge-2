@@ -1,6 +1,8 @@
 #ifndef _UI_BOGRAPH_LINE_HPP
 #define _UI_BOGRAPH_LINE_HPP
 
+#if 0
+
 #include "bgentry.hpp"
 
 /*struct Not_Availible
@@ -91,6 +93,6 @@ inline void BoGraphLine::setLineHeight(const unsigned int bg_line_height) {
 }
 
 
-
-
 #endif
+
+#endif // _UI_BOGRAPH_LINE_HPP

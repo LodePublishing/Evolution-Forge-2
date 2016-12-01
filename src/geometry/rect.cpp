@@ -72,49 +72,55 @@ eTouchType Rect::getTouchType(const Rect& rect) const
 	}
 
 	// ist 'rect' innerhalb dieses Rects?
-	if(isRectInside(rect))
+	if(isRectInside(rect)) {
 		return TOUCHES_IS_COMPLETELY_INSIDE;
-	else if(isTopLeftCornerInside(rect.getTopLeft()) && isBottomLeftCornerInside(rect.getBottomLeft()))
+	} else if(isTopLeftCornerInside(rect.getTopLeft()) && isBottomLeftCornerInside(rect.getBottomLeft())) {
 		return TOUCHES_CROSSES_RIGHT_BORDER;
-	else if(isTopLeftCornerInside(rect.getTopLeft()) && isTopRightCornerInside(rect.getTopRight()))
+	} else if(isTopLeftCornerInside(rect.getTopLeft()) && isTopRightCornerInside(rect.getTopRight())) {
 		return TOUCHES_CROSSES_LOWER_BORDER;
-	else if(isTopRightCornerInside(rect.getTopRight()) && isBottomRightCornerInside(rect.getBottomRight()))
+	} else if(isTopRightCornerInside(rect.getTopRight()) && isBottomRightCornerInside(rect.getBottomRight())) {
 		return TOUCHES_CROSSES_LEFT_BORDER;
-	else if(isBottomRightCornerInside(rect.getBottomRight()) && isBottomLeftCornerInside(rect.getBottomLeft()))
+	} else if(isBottomRightCornerInside(rect.getBottomRight()) && isBottomLeftCornerInside(rect.getBottomLeft())) {
 		return TOUCHES_CROSSES_UPPER_BORDER;
-	else if(isTopLeftCornerInside(rect.getTopLeft()))
+	} else if(isTopLeftCornerInside(rect.getTopLeft())) {
 		return TOUCHES_CROSSES_BOTTOM_RIGHT_CORNER;
-	else if(isTopRightCornerInside(rect.getTopRight()))
+	} else if(isTopRightCornerInside(rect.getTopRight())) {
 		return TOUCHES_CROSSES_BOTTOM_LEFT_CORNER;
-	else if(isBottomRightCornerInside(rect.getBottomRight()))
+	} else if(isBottomRightCornerInside(rect.getBottomRight())) {
 		return TOUCHES_CROSSES_TOP_LEFT_CORNER;
-	else if(isBottomLeftCornerInside(rect.getBottomLeft()))
+	} else if(isBottomLeftCornerInside(rect.getBottomLeft())) {
 		return TOUCHES_CROSSES_TOP_RIGHT_CORNER;
+	}
 
-	else if((rect.getLeft() < getLeft()) && (rect.getRight() > getRight()) && (rect.getTop() >= getTop()) && (rect.getBottom() <= getBottom())) // ? =
+	else if((rect.getLeft() < getLeft()) && (rect.getRight() > getRight()) && (rect.getTop() >= getTop()) && (rect.getBottom() <= getBottom())) { // ? = 
 		return TOUCHES_CROSSES_LEFT_AND_RIGHT_BORDER;
-	else if((rect.getTop() < getTop()) && (rect.getBottom() > getBottom()) && (rect.getLeft() >= getLeft()) && (rect.getRight() <= getRight()))
+	} else if((rect.getTop() < getTop()) && (rect.getBottom() > getBottom()) && (rect.getLeft() >= getLeft()) && (rect.getRight() <= getRight())) {
 		return TOUCHES_CROSSES_TOP_AND_BOTTOM_BORDER;
+	}
 
-	else if((rect.getLeft() == getRight()) && (rect.getTop() == getTop()) && (rect.getBottom() == getBottom()))
+	else if((rect.getLeft() == getRight()) && (rect.getTop() == getTop()) && (rect.getBottom() == getBottom())) {
 		return TOUCHES_RIGHT_BORDER;
-	else if((rect.getTop() == getBottom()) && (rect.getLeft() == getLeft()) && (rect.getRight() == getRight()))
+	} else if((rect.getTop() == getBottom()) && (rect.getLeft() == getLeft()) && (rect.getRight() == getRight())) {
 		return TOUCHES_LOWER_BORDER;
-	else if((rect.getRight() == getLeft()) && (rect.getTop() == getTop()) && (rect.getBottom() == getBottom()))
+	} else if((rect.getRight() == getLeft()) && (rect.getTop() == getTop()) && (rect.getBottom() == getBottom())) {
 		return TOUCHES_LEFT_BORDER;
-	else if((rect.getBottom() == getTop()) && (rect.getLeft() == getLeft()) && (rect.getRight() == getRight()))
+	} else if((rect.getBottom() == getTop()) && (rect.getLeft() == getLeft()) && (rect.getRight() == getRight())) {
 		return TOUCHES_UPPER_BORDER;
+	}
 
-	else if((rect.isTopLeftCornerInside(getTopLeft())) && (rect.isTopRightCornerInside(getTopRight())) && (!rect.isBottomRightCornerInside(getBottomRight())) && (!rect.isBottomLeftCornerInside(getBottomLeft())))
+	else if((rect.isTopLeftCornerInside(getTopLeft())) && (rect.isTopRightCornerInside(getTopRight())) && (!rect.isBottomRightCornerInside(getBottomRight())) && (!rect.isBottomLeftCornerInside(getBottomLeft()))) {
 		return TOUCHES_CROSSES_UPPER_AREA;
-	else if((!rect.isTopLeftCornerInside(getTopLeft())) && (rect.isTopRightCornerInside(getTopRight())) && (rect.isBottomRightCornerInside(getBottomRight())) && (!rect.isBottomLeftCornerInside(getBottomLeft())))
+	} else if((!rect.isTopLeftCornerInside(getTopLeft())) && (rect.isTopRightCornerInside(getTopRight())) && (rect.isBottomRightCornerInside(getBottomRight())) && (!rect.isBottomLeftCornerInside(getBottomLeft()))) {
 		return TOUCHES_CROSSES_RIGHT_AREA;
-	else if((!rect.isTopLeftCornerInside(getTopLeft())) && (!rect.isTopRightCornerInside(getTopRight())) && (rect.isBottomRightCornerInside(getBottomRight())) && (rect.isBottomLeftCornerInside(getBottomLeft())))
+	} else if((!rect.isTopLeftCornerInside(getTopLeft())) && (!rect.isTopRightCornerInside(getTopRight())) && (rect.isBottomRightCornerInside(getBottomRight())) && (rect.isBottomLeftCornerInside(getBottomLeft()))) {
 		return TOUCHES_CROSSES_LOWER_AREA;
-	else if((rect.isTopLeftCornerInside(getTopLeft())) && (!rect.isTopRightCornerInside(getTopRight())) && (!rect.isBottomRightCornerInside(getBottomRight())) && (rect.isBottomLeftCornerInside(getBottomLeft())))
+	} else if((rect.isTopLeftCornerInside(getTopLeft())) && (!rect.isTopRightCornerInside(getTopRight())) && (!rect.isBottomRightCornerInside(getBottomRight())) && (rect.isBottomLeftCornerInside(getBottomLeft()))) {
 		return TOUCHES_CROSSES_LEFT_AREA;
+	}
 
-	else return TOUCHES_NO_TOUCH;
+	else { 
+		return TOUCHES_NO_TOUCH;
+	}
 }
 
 //problem bei touches wenn this ein Rechteck ist, das in das andere Rechteck halb eintaucht
@@ -168,6 +174,74 @@ const Rect Rect::commonRect(const Rect& rect) const
 	}
 }
 
+
+// ok, laeuft perfekt.
+std::list<Rect> Rect::withoutRect(const Rect& rect) const
+{
+
+	// Schnittmenge:
+	std::list<Rect> rects;
+	if(rect == *this) {
+		return rects;
+	}
+
+	Rect cut = commonRect(rect);
+
+	// Schnitt ist gleich dem Rechteck
+	if(cut == *this) {
+		return rects;
+	} else if(cut.getWidth() == 0 || cut.getHeight() == 0) {
+		rects.push_back(*this);
+		return rects;
+	} else
+	{
+		// Sonst: bis zu 4 rectangles:
+		// Rechteck mit vollstaendiger Breite, wenn cut im unteren Teil stattgefunden hat
+		if(cut.getTop() > getTop()) {
+			rects.push_back(Rect(getTopLeft(), Point(getRight(), cut.getTop())));
+		}
+		// links
+		if(cut.getLeft() > getLeft()) {
+			rects.push_back(Rect(Point(getLeft(), cut.getTop()), cut.getBottomLeft()));
+		}
+		// rechts
+		if(cut.getRight() < getRight()) {
+			rects.push_back(Rect(cut.getTopRight(), Point(getRight(), cut.getBottom())));
+		}
+		// unten
+		// Rechteck mit vollstaendiger Breite, wenn unter dem cut Recht noch Platz ist
+		if(cut.getBottom() < getBottom()) {
+			rects.push_back(Rect(Point(getLeft(), cut.getBottom()), getBottomRight()));
+		}
+	}
+	return rects;
+}
+
+
+
+
+// add the rect to the rect list, merge overlapping rects
+std::list<Rect> Rect::removeRects(const std::list<Rect>& rects) const {
+	std::list<Rect> remainingRects;
+	remainingRects.push_back(*this);
+
+	for(std::list<Rect>::const_iterator i = rects.begin(); i != rects.end(); i++) {
+		std::list<Rect> temp;
+		for(std::list<Rect>::const_iterator j = remainingRects.begin(); j != remainingRects.end(); j++) {
+			std::list<Rect> wr = j->withoutRect(*i);
+			temp.insert(temp.end(), wr.begin(), wr.end());
+		}
+		remainingRects.clear();
+		if(temp.size() > 0) {
+			remainingRects.insert(remainingRects.end(), temp.begin(), temp.end());
+		}
+	}
+
+	return remainingRects;
+}
+
+
+		
 
 // Vereinigung, falls es ein schoenes Rect ergibt
 /*const std::list<Rect> Rect::connectRect(const Rect& rect, bool& change) const
@@ -255,46 +329,3 @@ void Rect::connectRects(std::list<std::pair<GEOMETRY_Object*, Rect> >& rects)
 
 }
 #endif 
-
-// ok, laeuft perfekt.
-std::list<Rect> Rect::withoutRect(Rect rect) const
-{
-
-	// Schnittmenge:
-	std::list<Rect> rects;
-	Rect cut = commonRect(rect);
-
-	// Schnitt ist gleich dem Rechteck
-	if(cut == *this) {
-		return rects;
-	} else if(cut.getWidth() == 0 || cut.getHeight() == 0) {
-		rects.push_back(*this);
-		return rects;
-	} else
-	{
-		// Sonst: bis zu 4 rectangles:
-		// Rechteck mit vollstaendiger Breite, wenn cut im unteren Teil stattgefunden hat
-		if(cut.getTop() > getTop()) {
-			rects.push_back(Rect(getTopLeft(), Point(getRight(), cut.getTop())));
-		}
-		// links
-		if(cut.getLeft() > getLeft()) {
-			rects.push_back(Rect(Point(getLeft(), cut.getTop()), cut.getBottomLeft()));
-		}
-		// rechts
-		if(cut.getRight() < getRight()) {
-			rects.push_back(Rect(cut.getTopRight(), Point(getRight(), cut.getBottom())));
-		}
-		// unten
-		// Rechteck mit vollstaendiger Breite, wenn unter dem cut Recht noch Platz ist
-		if(cut.getBottom() < getBottom()) {
-			rects.push_back(Rect(Point(getLeft(), cut.getBottom()), getBottomRight()));
-		}
-	}
-	return rects;
-}
-
-
-
-
-

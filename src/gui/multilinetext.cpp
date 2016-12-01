@@ -15,7 +15,7 @@ MultiLineText::MultiLineText(SDL_Object* const mlt_parent,
 	BasicText(mlt_parent, mlt_pos, Size(), text, parameterList),
 	windowColors(windowColors)
 {
-//	setDrawType(TRANSPARENT_OBJECT);
+//	setDrawType(ANTI_ALIASED_OBJECT);
     text->connect(boost::bind(&MultiLineText::updateText, this, _1));
 	reloadOriginalSize();
 }

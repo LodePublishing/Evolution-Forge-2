@@ -1,6 +1,8 @@
 #ifndef _UI_BOWINDOW_HPP
 #define _UI_BOWINDOW_HPP
 
+#if 0
+
 #include <gui/window.hpp>
 #include <gui/group.hpp>
 
@@ -104,6 +106,7 @@ inline const std::list<unsigned int>& BoWindow::getSelectedItems() const {
 	return(selectedItems);
 }
 
+#endif
 
 #endif // _UI_BOWINDOW_HPP
 

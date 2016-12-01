@@ -1,8 +1,8 @@
 #ifndef _MISC_MESSAGEHANDLER_HPP
 #define _MISC_MESSAGEHANDLER_HPP
 
-#include <string>
 #include <list>
+#include <string>
 
 class MessageHandler
 {
@@ -11,18 +11,18 @@ public:
 	~MessageHandler();
 
 	void addMessage(const std::string& msg);
-	const std::list<const std::string>& getRemainingMessages() const;
+	const std::list<std::string>& getRemainingMessages() const;
 	void clearMessages();
 
 private:
-	std::list<const std::string> remainingMessages;
+	std::list<std::string> remainingMessages;
 };
 
 inline void MessageHandler::addMessage(const std::string& msg) {
 	remainingMessages.push_back(msg);
 }
 
-inline const std::list<const std::string>& MessageHandler::getRemainingMessages() const {
+inline const std::list<std::string>& MessageHandler::getRemainingMessages() const {
 	return remainingMessages;
 }
 

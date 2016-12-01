@@ -21,7 +21,7 @@ EditField::EditField(SDL_Object* const edit_parent,
 	ani(5),
 	pressedEnter(false),
 	pressedEscape(false),
-	editField(new Button(this, Rect(Point(120, 0), Size(200, st_font->getTextExtent("01gfFA").getHeight()+8)), Size(0,0), button_colors, formatText, boost::shared_ptr<const Text>(), boost::assign::list_of(text), boost::shared_ptr<const Bitmap>(), TAB_BUTTON_MODE, SPECIAL_BUTTON_LEFT)),
+	editField(new Button(this, Rect(Point(120, 0), Size(200, st_font->getTextExtent("01gfFA").getHeight()+8)), Size(0,0), button_colors, formatText, boost::assign::list_of(text), boost::shared_ptr<const Text>(), TAB_BUTTON_MODE, SPECIAL_BUTTON_LEFT)),
 	descriptionText(new StaticText(this, Rect(Point(0, 4), Size(100, st_font->getTextExtent("01gfFA").getHeight()+8)), Size(0,0), text_color, st_font, description_text, std::list<std::string>(), DO_NOT_ADJUST)),
 	text(initialText)
 { }

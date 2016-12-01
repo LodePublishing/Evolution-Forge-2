@@ -1,4 +1,7 @@
 #include "racemenu.hpp"
+
+#if 0
+
 #include "../core/game.hpp"
 
 RaceMenu::RaceMenu(Object* race_parent, const Rect race_rect, const Size distance_bottom_right, const ePositionMode position_mode) :
@@ -49,3 +52,4 @@ void RaceMenu::draw() const
 	Menu::draw();
 }
 
+#endif

@@ -1,8 +1,18 @@
 #include "background.hpp"
 
-BackGround::BackGround(const Size& size, SDL_Surface* const bitmap) : 
-	Object( NULL, Rect(Point(0,0), size), Size(), DO_NOT_ADJUST),
-	bitmap(bitmap)
+#include <guicore/color_storage.hpp>
+#include <guicore/font_storage.hpp>
+#include <misc/ids.hpp>
+
+BackGround::BackGround(const boost::shared_ptr<const Bitmap>& bitmap, const boost::shared_ptr<const Text>& text) : 
+	Object( NULL, Rect(Point(0,0), bitmap->getSize()), Size(), DO_NOT_ADJUST),
+	bitmap(bitmap),
+	text(new StaticText(this, Rect(), Size(), 
+		ColorStorage::instance().get(IDS::FPS_TEXT_COLOR_ID),
+		FontStorage::instance().get(IDS::SMALL_FONT_ID),
+		text,
+		boost::assign::list_of(""),
+		BOTTOM_RIGHT))
 {
 	makePufferInvalid();
 }
@@ -10,15 +20,23 @@ BackGround::BackGround(const Size& size, SDL_Surface* const bitmap) :
 BackGround::~BackGround()
 { }
 
+void BackGround::updateParameters(std::list<std::string> parameterList) 
+{
+	text->updateParameters(parameterList);	
+}
+
 void BackGround::reloadOriginalSize()
 {
 //	setOriginalSize(gui.getCurrentResolutionSize());
+	setOriginalSize(bitmap->getSize());
 	Object::reloadOriginalSize();
+	adjustSize(NULL, CHILD_WAS_CHANGED, getSize());
 }
 
-void BackGround::updateBitmap(SDL_Surface* const bitmap) {
+void BackGround::updateBitmap(const boost::shared_ptr<const Bitmap>& bitmap) {
 	if(this->bitmap != bitmap) {
 		this->bitmap = bitmap;
+		reloadOriginalSize();
 		redrawWholeObject();
 	}
 }
@@ -32,15 +50,15 @@ void BackGround::draw(DC* const dc) const
 {
 	BOOST_ASSERT(dc);
 
-	Object::draw(dc);
-	if(bitmap)
-	{
-		SDL_Rect rc = Rect::createRect(0, 0, dc->getMaxX(), dc->getMaxY());
-		dc->Blit(bitmap, rc);
+	dc->setBrightness(getBrightness());
+
+	if(getClipRect() != Rect()) {
+		dc->DrawBitmap(*bitmap, Point(), getClipRect());
 	}
 	else {
-		dc->clearScreen();
+		dc->DrawBitmap(*bitmap, Point());
 	}
+	Object::draw(dc);
 
 	// TODO evtl Versionsnummern an background übergeben!
 	/*dc->setFont(gui.lookUpFont(SMALL_FONT));

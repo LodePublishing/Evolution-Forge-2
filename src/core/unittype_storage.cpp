@@ -11,9 +11,9 @@
 template<> const std::string SingleStorage<UnitType>::DATA_FILE_NAME_BASE = IO::getDirectory(boost::assign::list_of("data")("storage")("core")) + "unittype.xml";
 template<> const std::string SingleStorage<UnitType>::DATA_FILE_IDENTIFIER = "UnitTypeStorage";
 
-template<> boost::shared_ptr<UnitType> NodeCreator<UnitType>::createObjectFromNode(const std::vector<Node>& node) {
+template<> boost::shared_ptr<UnitType> NodeCreator<UnitType>::createObjectFromNode(const std::vector<XmlNode>& node) {
 	std::list<UnitResourceType> unitResourceTypeList;
-	for(std::vector<Node>::const_iterator i = node[3].getChildren().begin(); i != node[3].getChildren().end(); i++) {
+	for(std::vector<XmlNode>::const_iterator i = node[3].getChildren().begin(); i != node[3].getChildren().end(); i++) {
 		boost::shared_ptr<UnitResourceType> unitResourceType = NodeCreator<UnitResourceType>::createObjectFromNode(i->getChildren());
 		unitResourceTypeList.push_back(*unitResourceType);
 	}
@@ -29,24 +29,24 @@ template<> boost::shared_ptr<UnitType> NodeCreator<UnitType>::createObjectFromNo
 		boost::lexical_cast<unsigned int>(node[9].getValue())));
 }
 
-template<> Node NodeCreator<UnitType>::createNodeFromObject(const UnitType& t) {
-	Node n("unittype");
-	n.addChild(Node("id", boost::lexical_cast<std::string>(t.getId())));
-	n.addChild(Node("name", t.getName()));
-	n.addChild(Node("raceID", boost::lexical_cast<std::string>(t.getRaceId())));
+template<> XmlNode NodeCreator<UnitType>::createNodeFromObject(const UnitType& t) {
+	XmlNode n("unittype");
+	n.addChild(XmlNode("id", boost::lexical_cast<std::string>(t.getId())));
+	n.addChild(XmlNode("name", t.getName()));
+	n.addChild(XmlNode("raceID", boost::lexical_cast<std::string>(t.getRaceId())));
 
-	Node resourcesList("resources");
+	XmlNode resourcesList("resources");
 	for(std::list<UnitResourceType>::const_iterator i = t.getResources().begin(); i != t.getResources().end(); i++) {
 		resourcesList.addChild(NodeCreator<UnitResourceType>::createNodeFromObject(*i));
 	}
 	n.addChild(resourcesList);
 
-	n.addChild(Node("corporeal", boost::lexical_cast<std::string>(t.isCorporeal())));
-	n.addChild(Node("maxCount", boost::lexical_cast<std::string>(t.getMaxCount())));
-	n.addChild(Node("buildTime", boost::lexical_cast<std::string>(t.getBuildTime())));
-	n.addChild(Node("movementType", boost::lexical_cast<std::string>(t.getMovementType())));
-	n.addChild(Node("speed", boost::lexical_cast<std::string>(t.getSpeed())));
-	n.addChild(Node("upgradedSpeed", boost::lexical_cast<std::string>(t.getUpgradedSpeed())));
+	n.addChild(XmlNode("corporeal", boost::lexical_cast<std::string>(t.isCorporeal())));
+	n.addChild(XmlNode("maxCount", boost::lexical_cast<std::string>(t.getMaxCount())));
+	n.addChild(XmlNode("buildTime", boost::lexical_cast<std::string>(t.getBuildTime())));
+	n.addChild(XmlNode("movementType", boost::lexical_cast<std::string>(t.getMovementType())));
+	n.addChild(XmlNode("speed", boost::lexical_cast<std::string>(t.getSpeed())));
+	n.addChild(XmlNode("upgradedSpeed", boost::lexical_cast<std::string>(t.getUpgradedSpeed())));
 	
 	return n;
 }

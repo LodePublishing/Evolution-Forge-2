@@ -1,6 +1,8 @@
 #ifndef _UI_FORCEMENU_HPP
 #define _UI_FORCEMENU_HPP
 
+#if 0
+
 #include "menu.hpp"
 #include "../core/anabuildorder.hpp"
 #include "../core/database.hpp"
@@ -16,6 +18,8 @@ class ForceMenu : public Menu
 		void draw(DC* const dc) const;
 	private:
 };
+
+#endif
 
 #endif // _UI_FORCEMENU_HPP
 

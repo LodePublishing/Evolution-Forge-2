@@ -40,11 +40,17 @@ StaticText::~StaticText()
 
 // register this in the text object signal
 void StaticText::updateText(const std::string& text) {
-	drawText = text;
-	makePufferInvalid();
-	setSize(font->getTextExtent(text) + Size(1+font->getSize()/6, font->getSize()/6)); // if it has shadow...
-
-	sig(text, getSize());
+	if(drawText != text) {
+		drawText = text;
+		makePufferInvalid();
+		Size fontSize = font->getTextExtent(text);
+		if(font->isShadow()) {
+			fontSize += Size(1+font->getSize()/6, font->getSize()/6);
+		}
+		setSize(fontSize);
+		// call all registered parent objects
+		sig(text, fontSize);
+	}
 }
 
 const Object* StaticText::checkToolTip(const Point& mouse) const {
@@ -66,7 +72,7 @@ void StaticText::draw(DC* const dc) const
 	dc->setEndTextColor(endTextColor);
 	dc->setBrightness(getBrightness());
 
-		Point p = Point(0,3);
+		Point p = Point(3,3);
 		/*bool done = false;
 		for(unsigned int i = 0; i < text.size(); i++)
 			// Schatten oder so? TODO

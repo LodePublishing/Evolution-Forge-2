@@ -1,6 +1,8 @@
 #ifndef _UI_BOGRAPH_ENTRY_HPP
 #define _UI_BOGRAPH_ENTRY_HPP
 
+#if 0
+
 #include <gui/button.hpp>
 #include "../core/program.hpp"
 
@@ -30,6 +32,8 @@ inline void BoGraphEntry::setNumber(const unsigned int my_number) {
 inline const unsigned int BoGraphEntry::getNumber() const {
 	return(number);
 }
+
+#endif
 
 #endif // _UI_BOGRAPH_ENTRY_HPP
 

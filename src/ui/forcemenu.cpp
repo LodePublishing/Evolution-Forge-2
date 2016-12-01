@@ -1,5 +1,7 @@
 #include "forcemenu.hpp"
 
+#if 0
+
 ForceMenu::ForceMenu(Object* force_parent, ANABUILDORDER* force_anarace, const Rect force_rect, const Size distance_bottom_right, const ePositionMode position_mode):
 	Menu(force_parent, force_rect, distance_bottom_right, position_mode, true)
 {
@@ -40,3 +42,4 @@ void ForceMenu::draw(DC* const dc) const
 	Menu::draw(dc);
 }
 
+#endif

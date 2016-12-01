@@ -1,4 +1,7 @@
 #include "statistics.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include <sstream>
 
@@ -253,3 +256,4 @@ void StatisticsWindow::process()
 	statEntry[FPS_STAT_ENTRY]->updateText(os.str());
 }
 
+#endif

@@ -1,4 +1,7 @@
 #include "score.hpp"
+
+#if 0
+
 #include <sstream>
 #include "configuration.hpp"
 
@@ -202,3 +205,5 @@ const bool ScoreWindow::openMenu(const ePlayerOrder order)
 	} while(i!=currentPlayer);
 	return(false);
 }
+
+#endif

@@ -1,4 +1,7 @@
 #include "player.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include <sstream>
 
@@ -173,3 +176,5 @@ const bool Player::wasResetted() const
 		return(false);
 	return(boWindow->wasResetted());
 }
+
+#endif

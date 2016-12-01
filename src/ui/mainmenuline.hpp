@@ -18,8 +18,9 @@ class MainMenuLine : public Object
 	public:
 		MainMenuLine(Object* main_parent);
 		~MainMenuLine();
+
 		void process();
-		void draw() const;
+		void draw(DC* dc) const;
 		void reloadOriginalSize();
 	
 		void addNewGameTab();
@@ -27,7 +28,6 @@ class MainMenuLine : public Object
 		
 		const unsigned int getGameTabCount() const;
 
-		void reloadStrings();
 
 		// absolute Nummer
 		void activateTab(const eTabs tab_number);
@@ -39,6 +39,7 @@ class MainMenuLine : public Object
 		const bool  markedForNewGame() const;
 		const bool hasTabChanged() const;
 		const unsigned int getNewGameTab() const;
+
 	private:
 		Button* tab[MAX_TABS];
 
@@ -66,7 +67,7 @@ class MainMenuLine : public Object
 };
 
 inline const bool MainMenuLine::hasTabChanged() const {
-	return(tabHasChanged);
+	return tabHasChanged;
 }
 
 inline const unsigned int MainMenuLine::getGameTabCount() const {
@@ -74,14 +75,15 @@ inline const unsigned int MainMenuLine::getGameTabCount() const {
 }
 
 inline const unsigned int MainMenuLine::getNewGameTab() const {
-	return(newGameTab);
+	return newGameTab;
 }
 
 inline const bool MainMenuLine::markedForNewGame() const {
-	return(markForNewGame);
+	return markForNewGame;
 }
+
 inline const bool MainMenuLine::markedForRemove() const {
-	return(markForRemove);
+	return markForRemove;
 }
 
 #endif // _UI_MAINMENULINE_HPP

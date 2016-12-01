@@ -1,4 +1,7 @@
 #include "datawindow.hpp"
+
+#if 0
+
 #include "../core/database.hpp"
 
 DataBaseWindow::DataBaseWindow(Object* database_parent) :
@@ -265,3 +268,4 @@ void DataBaseWindow::newGeneration()
 		game->newGeneration();
 }
 
+#endif

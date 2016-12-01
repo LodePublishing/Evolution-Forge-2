@@ -1,6 +1,8 @@
 #ifndef _GUI_DIAGRAM_HPP
 #define _GUI_DIAGRAM_HPP
 
+#if 0
+
 #include "graphpoint.hpp"
 #include "statictext.hpp"
 #include "windowcolors.hpp"
@@ -60,5 +62,6 @@ inline std::vector<std::list<GraphPoint> >& Diagram::getGraphList() {
 	return graphList;
 }
 
+#endif
 
 #endif // _GUI_DIAGRAM_HPP

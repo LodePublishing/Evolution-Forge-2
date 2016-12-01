@@ -12,6 +12,8 @@ Window::Window(SDL_Object* const window_parent,
 		const eIsAutoAdjust window_is_auto_adjust, 
 		const Rect clientRect) :
 	Object(window_parent, rect, Size()),
+	layoutManager(boost::shared_ptr<LayoutManager>()),
+	windowLayout(boost::shared_ptr<const WindowLayout>()),
 	filledHeight(0),
 	doAdjustments(false),
 	clientRect(clientRect),
@@ -46,6 +48,45 @@ Window::Window(SDL_Object* const window_parent,
 //	filledHeight=clientRect.getHeight();
 // ------ Buttons, ScrollBars etc.
 }
+
+
+Window::Window(SDL_Object* const window_parent, const boost::shared_ptr<LayoutManager> layoutManager,
+				const boost::shared_ptr<const WindowLayout> windowLayout, 
+				const boost::shared_ptr<const Text>& window_title_string, 
+				const std::list<std::string>& parameterList,
+				const boost::shared_ptr<const WindowColors>& windowColors,
+				const eIsScrolled window_is_scrolled, 
+				const boost::shared_ptr<const ButtonColors>& scroll_up_button_colors,
+				const boost::shared_ptr<const ButtonColors>& scroll_down_button_colors,
+				const eIsAutoAdjust window_is_auto_adjust, 
+				const Rect win_client_area // TODO
+				):
+	Object(window_parent, 
+		Rect(layoutManager->getGlobalWindowPosition(windowLayout, windowLayout->getSize()), windowLayout->getSize()),
+		Size()),
+	layoutManager(layoutManager),
+	windowLayout(windowLayout),
+	filledHeight(0),
+	doAdjustments(false),
+	clientRect(clientRect),
+	clientStartRect(),
+	clientTargetRect(),
+	originalClientRect(), // TODO 
+	maxHeight(windowLayout->getMaxHeight()),
+	isAutoAdjust(window_is_auto_adjust), //?
+	isScrollable(window_is_scrolled), // TODO
+	highlighted(false),
+	//helpButton(NULL),
+	//helpChapter(INDEX_CHAPTER),
+	windowColors(windowColors),
+	title(new Title(this, window_title_string, parameterList, windowColors)),
+	scrollBar(isScrollable != NOT_SCROLLED?new ScrollBar(this, getRelativeClientRectUpperBound(), getMaxHeight(), scroll_up_button_colors, scroll_down_button_colors, windowColors):NULL)
+{
+	calculateClientRect();
+	layoutManager->registerWindow(this);
+}
+
+
 
 Window::~Window()
 {

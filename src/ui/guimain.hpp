@@ -1,6 +1,8 @@
 #ifndef _UI_MAIN_HPP
 #define _UI_MAIN_HPP
 
+#if 0
+
 #include "game.hpp"
 #include "msgwindow.hpp"
 //#include "info.hpp"
@@ -80,6 +82,7 @@ class Main
 		void goBack();
 		
 		void poll(const eTicks etick);
+
 	private:
 		MainMenuLine* mainMenuLine;
 		UI_FrameRateControl frameRateControl;
@@ -149,6 +152,7 @@ inline const bool Main::hasGameTypeChanged() const {
 	return(gameTypeHasChanged);
 }
 
-																		
 #endif
+																	
+#endif // _UI_MAIN_HPP
 

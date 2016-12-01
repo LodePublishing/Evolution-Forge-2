@@ -458,17 +458,15 @@ void DC::DrawFilledEdgedBorderRound_16bit(const Sint16 x, const Sint16 y, const 
 
 
 // ------ TOP AND LOWER HORIZONTAL LINE ------
-	Uint16 dark_pen_col, bright_pen_col, pen_col;
+	Uint16 dark_pen_col, pen_col;
 	if(pressedRectangle)
 	{
 		dark_pen_col = static_cast<Uint16>(getDarkPressedPenColor());
-		bright_pen_col = static_cast<Uint16>(getBrightPressedPenColor());
 		pen_col = static_cast<Uint16>(getPressedPenColor());
 	
 	} else
 	{
 		dark_pen_col = static_cast<Uint16>(getDarkPenColor());
-		bright_pen_col = static_cast<Uint16>(getBrightPenColor());
 		pen_col = static_cast<Uint16>(getPenColor());
 	}
 	
@@ -483,7 +481,7 @@ void DC::DrawFilledEdgedBorderRound_16bit(const Sint16 x, const Sint16 y, const 
 		i = dx;
 		for(;i--;p0+=2,p1+=2)
 		{
-			*(Uint16*)p0 = bright_pen_col;
+			*(Uint16*)p0 = pen_col; //bright?
 			*(Uint16*)p1 = dark_pen_col;
 		}
 	}
@@ -497,12 +495,13 @@ void DC::DrawFilledEdgedBorderRound_16bit(const Sint16 x, const Sint16 y, const 
 		register Uint16 i = dy;
 		for(;i--;p0+=surface->pitch, p1+=surface->pitch)
 		{
-			*(Uint16*)p0 = bright_pen_col;
+			*(Uint16*)p0 = pen_col; //bright?
 			*(Uint16*)p1 = dark_pen_col;
 		}
 		i = corner;
-		for(;i--;p0+=surface->pitch)
-			*(Uint16*)p0 = bright_pen_col;	
+		for(;i--;p0+=surface->pitch) {
+			*(Uint16*)p0 = pen_col;	 //bright?
+		}
 	}
 // ------ END OF LEFT AND RIGHT VERTICAL LINE ------
 
@@ -552,8 +551,8 @@ void DC::DrawFilledEdgedBorderRound_16bit(const Sint16 x, const Sint16 y, const 
 	
 		while (i <= radius) 
 		{
-			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-radius)*surface->pitch + ((Xcenter - i)<<1) )) = bright_pen_col;
-			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-i)*surface->pitch + ((Xcenter - radius)<<1) )) = bright_pen_col;
+			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-radius)*surface->pitch + ((Xcenter - i)<<1) )) = pen_col; // bright ?
+			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-i)*surface->pitch + ((Xcenter - radius)<<1) )) = pen_col; // bright ?
 
 			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-radius)*surface->pitch + ((X2center + i)<<1) )) = pen_col;
 			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-i)*surface->pitch + ((X2center + radius)<<1) )) = pen_col;
@@ -629,17 +628,15 @@ void DC::DrawTab_16bit(const Sint16 x, const Sint16 y, const Uint16 width, const
 
 
 // ------ TOP AND LOWER HORIZONTAL LINE ------
-	Uint16 dark_pen_col, bright_pen_col, pen_col;
+	Uint16 dark_pen_col, pen_col;
 	if(pressedRectangle)
 	{
 		dark_pen_col = static_cast<Uint16>(getDarkPressedPenColor());
-		bright_pen_col = static_cast<Uint16>(getBrightPressedPenColor());
 		pen_col = static_cast<Uint16>(getPressedPenColor());
 	
 	} else
 	{
 		dark_pen_col = static_cast<Uint16>(getDarkPenColor());
-		bright_pen_col = static_cast<Uint16>(getBrightPenColor());
 		pen_col = static_cast<Uint16>(getPenColor());
 	}
 	
@@ -654,7 +651,7 @@ void DC::DrawTab_16bit(const Sint16 x, const Sint16 y, const Uint16 width, const
 		i = dx;
 		for(;i--;p0+=2,p1+=2)
 		{
-			*(Uint16*)p0 = bright_pen_col;
+			*(Uint16*)p0 = pen_col;
 			*(Uint16*)p1 = dark_pen_col;
 		}
 	}
@@ -668,12 +665,12 @@ void DC::DrawTab_16bit(const Sint16 x, const Sint16 y, const Uint16 width, const
 		register Uint16 i = dy;
 		for(;i--;p0+=surface->pitch, p1+=surface->pitch)
 		{
-			*(Uint16*)p0 = bright_pen_col;
+			*(Uint16*)p0 = pen_col;
 			*(Uint16*)p1 = dark_pen_col;
 		}
 		i = corner;
 		for(;i--;p0+=surface->pitch)
-			*(Uint16*)p0 = bright_pen_col;	
+			*(Uint16*)p0 = pen_col;	
 	}
 // ------ END OF LEFT AND RIGHT VERTICAL LINE ------
 
@@ -723,8 +720,8 @@ void DC::DrawTab_16bit(const Sint16 x, const Sint16 y, const Uint16 width, const
 	
 		while (i <= radius) 
 		{
-			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-radius)*surface->pitch + ((Xcenter - i)<<1) )) = bright_pen_col;
-			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-i)*surface->pitch + ((Xcenter - radius)<<1) )) = bright_pen_col;
+			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-radius)*surface->pitch + ((Xcenter - i)<<1) )) = pen_col;
+			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-i)*surface->pitch + ((Xcenter - radius)<<1) )) = pen_col;
 
 			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-radius)*surface->pitch + ((X2center + i)<<1) )) = pen_col;
 			*((Uint16*)((Uint8*)surface->pixels + (Ycenter-i)*surface->pitch + ((X2center + radius)<<1) )) = pen_col;

@@ -1,4 +1,7 @@
 #include "boentry.hpp"
+
+#if 0
+
 #include "configuration.hpp"
 #include <sstream>
 
@@ -36,8 +39,8 @@ void BoEntry::draw() const
 
 void BoEntry::process()
 {
-//	if(!isShown())
-//		return;
+	if(!isShown())
+		return;
 	bool different = isMoving();
 	if(different)
 		BoEntry::entryIsMoving = true;
@@ -73,3 +76,5 @@ const bool BoEntry::locked() const
 }*/
 
 bool BoEntry::entryIsMoving = false;
+
+#endif

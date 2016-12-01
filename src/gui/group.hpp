@@ -5,7 +5,7 @@
 #include "enums/grouptype.hpp"
 
 // simplified window class, maybe inheritate Window from Group...
-class Group : public SDL_Object
+class Group : public Object
 {
 	public:
 		Group(SDL_Object* const group_parent, 

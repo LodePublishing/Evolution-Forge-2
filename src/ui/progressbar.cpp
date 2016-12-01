@@ -1,4 +1,7 @@
 #include "progressbar.hpp"
+
+#if 0
+
 #include <gui/object.hpp>
 
 void ProgressBar::draw(DC* const dc, const unsigned int dp)
@@ -31,3 +34,4 @@ void ProgressBar::draw(DC* const dc, const unsigned int dp, const eString text)
 	++h;
 }
 
+#endif

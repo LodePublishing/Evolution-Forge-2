@@ -1,0 +1,11 @@
+#ifndef _GAMES_ENUMS_MOORACES_HPP
+#define _GAMES_ENUMS_MOORACES_HPP
+
+enum eMooRaces
+{
+	NEUTRAL_RACE,
+
+	MAX_RACE_NUM
+};
+
+#endif // _GAMES_ENUMS_MOORACES_HPP

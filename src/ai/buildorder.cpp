@@ -9,7 +9,7 @@ BuildOrder::BuildOrder(int locationCount):
 }
 
 BuildOrder::~BuildOrder()
-{}
+{ }
 
 // TODO if a code has finished 0 is returned...
 const std::vector<unsigned int> BuildOrder::getCurrentCode() const {
@@ -41,11 +41,12 @@ bool BuildOrder::isCalculationDone() const {
 		if(!ready) 
 		{
 			ready = calculateReady();
-			if(!ready)
+			if(!ready) {
 				setTimer(0);
+			}
 		}		
-		return(true);
+		return true;
 	}
-	return(false);
+	return false;
 
 }

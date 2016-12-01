@@ -1,17 +1,31 @@
-#include <random_fixture.hpp>
-#include <globalstorage.hpp>
+#include <misc/randomgenerator.hpp>
 
 #include "race_fixture.hpp"
-
+#include <core/race_storage.hpp>
+#include <core/core_directories.hpp>
 
 Race_Fixture::Race_Fixture():
-	test_race_name("my_race_Name"),
-	test_race(boost::shared_ptr<Race>(new Race(test_race_name)))
+	test_race_name("my_race_Name" + RandomGenerator::instance().rndString()),
+	test_race(new Race(test_race_name)),
+	test_raceMap(init_racemap_helper())
 { 
-	GlobalStorage::instance().addRace(test_race);	
+	CoreDirectories::initTemp("temp");
+
+	RaceStorage::instance(test_raceMap);	
 }
 
 Race_Fixture::~Race_Fixture() 
 { 
-	GlobalStorage::instance().removeRace(test_race->getId());
+	CoreDirectories::initTemp("temp");
+
+	RaceStorage::clear();
+
+	CoreDirectories::init();
+}
+
+
+const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Race> > Race_Fixture::init_racemap_helper() {
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<const Race> > raceMap;
+	raceMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<const Race> >(test_race->getId(), test_race));
+	return raceMap;
 }

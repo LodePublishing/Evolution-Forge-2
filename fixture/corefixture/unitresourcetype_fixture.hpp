@@ -1,12 +1,13 @@
-#ifndef _COREFIXTURE_UNITRESOURCETYPEFIXTURE_HPP
-#define _COREFIXTURE_UNITRESOURCETYPEFIXTURE_HPP
+#ifndef _CORE_FIXTURE_UNITRESOURCETYPEFIXTURE_HPP
+#define _CORE_FIXTURE_UNITRESOURCETYPEFIXTURE_HPP
 
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <unitresourcetype.hpp>
-#include <enums/unitresourcetypeenums.hpp>
+#include <core/unitresourcetype.hpp>
+
+#include <core/enums/unitresourcetype.hpp>
 
 struct UnitResourceType_Fixture
 {
@@ -22,4 +23,4 @@ private:
 	const std::list<std::list<boost::uuids::uuid> > init_unittypeidlist_helper();
 };
 
-#endif // _COREFIXTURE_UNITRESOURCETYPEFIXTURE_HPP
+#endif // _CORE_FIXTURE_UNITRESOURCETYPEFIXTURE_HPP

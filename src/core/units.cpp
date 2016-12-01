@@ -1,8 +1,10 @@
 #include "units.hpp"
 #include "location.hpp"
 
-Units::Units():
-	unitList(),
+Units::Units(const boost::uuids::uuid id, const std::list<boost::shared_ptr<Unit> > unitList):
+	UUID<Units>(id),
+	boost::enable_shared_from_this<Units>(),
+	unitList(unitList),
 	unitMap(),
 	globalNeutralAvailable(),
 	globalNeutralTotal(),
@@ -14,8 +16,9 @@ Units::Units():
 	localNeutralTotal()
 { }
 
-/// TODO, requires initializeUnitList etc.
 Units::Units(const std::list<boost::shared_ptr<Unit> > unitList):
+	UUID<Units>(),
+	boost::enable_shared_from_this<Units>(),
 	unitList(unitList),
 	unitMap(),
 	globalNeutralAvailable(),
@@ -53,7 +56,9 @@ void Units::clear()
 	globalNeutralTotal.clear();
 }
 
-Units::Units(const Units& object)
+Units::Units(const Units& object):
+	UUID<Units>(object),
+	boost::enable_shared_from_this<Units>(object)
 {
 	// TODO evtl direkt einzelne Felder initialisieren, sind ja eh shared pointer? mmmh...
 	for(std::list<boost::shared_ptr<Unit> >::const_iterator i = object.unitList.begin(); i != object.unitList.end(); i++) {
@@ -69,7 +74,7 @@ Units& Units::operator=(const Units& object)
 		addUnit(boost::shared_ptr<Unit>(new Unit(**i)));
 	}
 
-	return(*this);
+	return *this;
 }
 
 void Units::initializeUnitList() {
@@ -122,7 +127,7 @@ void Units::removeUnit(const boost::shared_ptr<Unit> unit) {
 	BOOST_ASSERT(found);
 
 	if(!unit->isUnderConstruction()) {
-	// adjust availability and total values
+		// adjust availability and total values
 		removeLocalUnit(unit);
 	}
 

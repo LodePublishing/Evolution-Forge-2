@@ -1,5 +1,5 @@
-#ifndef _COREFIXTURE_PLAYERFIXTURE_HPP
-#define _COREFIXTURE_PLAYERFIXTURE_HPP
+#ifndef _CORE_FIXTURE_PLAYERFIXTURE_HPP
+#define _CORE_FIXTURE_PLAYERFIXTURE_HPP
 
 #include <string>
 
@@ -7,7 +7,7 @@
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <player.hpp>
+#include <core/player.hpp>
 
 #include "government_fixture.hpp"
 
@@ -16,11 +16,15 @@ struct Player_Fixture
 	Government_Fixture governmentFixture;
 
 	const std::string test_player_name;
-	const boost::shared_ptr<const Units> test_startingUnits;
-	const boost::shared_ptr<const Player> test_player;
+	const boost::shared_ptr<Player> test_player;
 
 	Player_Fixture();
 	virtual ~Player_Fixture();
+
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Player> > test_playerMap;
+
+private:
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Player> > init_playermap_helper();
 };
 
-#endif // _COREFIXTURE_PLAYERFIXTURE_HPP
+#endif // _CORE_FIXTURE_PLAYERFIXTURE_HPP

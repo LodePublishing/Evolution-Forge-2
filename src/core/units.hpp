@@ -8,15 +8,17 @@
 #pragma warning(pop)
 
 #include "unit.hpp"
+
+#include <misc/uuid.hpp>
 /**
 * Indexed container of a set of units
 */
 
-class Units : public boost::enable_shared_from_this<Units>
+class Units : public UUID<Units>, public boost::enable_shared_from_this<Units>
 {
 public:
-	Units();
-	Units(const std::list<boost::shared_ptr<Unit> > unitList); // TODO
+	Units(const boost::uuids::uuid id, const std::list<boost::shared_ptr<Unit> > unitList = std::list<boost::shared_ptr<Unit> >());
+	Units(const std::list<boost::shared_ptr<Unit> > unitList = std::list<boost::shared_ptr<Unit> >());
 	~Units();
 	void clear();
 
@@ -28,7 +30,7 @@ public:
 	unsigned int getLocalTotal(const UnitLocalKey& key) const;
 	unsigned int getLocalNeutralAvailable(const UnitLocalNeutralKey& key) const;
 	unsigned int getLocalNeutralTotal(const UnitLocalNeutralKey& key) const;
-	
+
 	bool unitExists(const boost::shared_ptr<Unit> unit) const;
 
 	const std::list<boost::shared_ptr<Unit> >& getUnitList() const;
@@ -37,7 +39,7 @@ public:
 	void addUnit(const boost::shared_ptr<Unit> unit);
 	void addUnits(const std::list<boost::shared_ptr<Unit> > unitList);
 	void removeUnit(const boost::shared_ptr<Unit> unit);
-	
+
 	void addLocalUnit(const boost::shared_ptr<Unit> unit);
 	void removeLocalUnit(const boost::shared_ptr<Unit> unit);
 
@@ -51,46 +53,17 @@ public:
 	void removeOneLocalNeutralAvailable(const UnitLocalNeutralKey& key);
 
 	void process();
-			
+
 	Units(const Units& object);	
 	Units& operator=(const Units& object);
+	void initializeUnitList();
 
 private:
-	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{ }	
-
-	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const Units* units, const unsigned int version) { 
-
-		const std::list<boost::shared_ptr<Unit> >&  unitList = units->getUnitList();
-
-		if(version > 0) {
-		}
-
-		ar & BOOST_SERIALIZATION_NVP(unitList);
-	}
-
-	template<class Archive>
-	inline friend void load_construct_data(Archive& ar, Units* units, const unsigned int version)
-	{
-		std::list<boost::shared_ptr<Unit> > unitList;
-
-		ar & BOOST_SERIALIZATION_NVP(unitList);
-			
-		if(version > 0) {
-		}
-
-		::new(units)Units(unitList);
-
-		units->initializeUnitList();
-	}
-	// only call after deserialization
-	void initializeUnitList();
+	// only call after deserialization (load_construct_data)
 
 
 	std::list<boost::shared_ptr<Unit> > unitList;
-	
+
 	// temporary variables (cache etc.)
 
 	// unitID -> Unit map (unique! NOT unitTypeId!)
@@ -176,8 +149,8 @@ inline unsigned int Units::getGlobalTotal(const UnitGlobalKey& key) const {
 
 
 /**
- * LOCAL
- */
+* LOCAL
+*/
 inline void Units::addOneLocalAvailable(const UnitLocalKey& key) {
 	++localAvailable[key];
 
@@ -211,8 +184,8 @@ inline void Units::removeOneLocalTotal(const UnitLocalKey& key) {
 }
 
 /**
- *  GLOBAL
- */
+*  GLOBAL
+*/
 inline void Units::addOneGlobalAvailable(const UnitGlobalKey& key) {
 	++globalAvailable[key];
 
@@ -242,8 +215,8 @@ inline void Units::removeOneGlobalTotal(const UnitGlobalKey& key) {
 }
 
 /**
- * NEUTRAL
- */
+* NEUTRAL
+*/
 
 // remember: there are no global neutral units!
 inline void Units::addOneLocalNeutralAvailable(const UnitLocalNeutralKey& key) {
@@ -265,6 +238,7 @@ inline void Units::removeOneLocalNeutralTotal(const UnitLocalNeutralKey& key) {
 
 	--localNeutralTotal[key];
 }
+
 
 #endif // _CORE_UNITS_HPP
 

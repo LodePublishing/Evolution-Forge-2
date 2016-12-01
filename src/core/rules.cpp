@@ -3,7 +3,7 @@
 Rules::Rules(const std::string& name, 
 	const std::list<boost::shared_ptr<const Race> > raceList,
 	const std::list<boost::shared_ptr<const UnitType> > unitTypeList):
-	name(name),
+name(name),
 	unitTypeList(unitTypeList),
 	unitTypeIdList(),
 	unitTypeMap(),
@@ -19,7 +19,7 @@ Rules::Rules(
 	const std::string& name, 
 	const std::list<boost::shared_ptr<const Race> > raceList,
 	const std::list<boost::shared_ptr<const UnitType> > unitTypeList):
-	UUID<Rules>(id),
+UUID<Rules>(id),
 	name(name),
 	unitTypeList(unitTypeList),
 	unitTypeIdList(),
@@ -51,17 +51,17 @@ void Rules::initialize()
 // TODO make const unit type? How to load from disk then?
 const boost::shared_ptr<const UnitType> Rules::getUnitType(boost::uuids::uuid unitTypeId) const {
 	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> >::const_iterator i = unitTypeMap.find(unitTypeId);
-    if(i == unitTypeMap.end()) {
+	if(i == unitTypeMap.end()) {
 		throw std::exception();
 	}
-    return i->second;
+	return i->second;
 }
 
 
 const boost::shared_ptr<const Race> Rules::getRace(boost::uuids::uuid raceId) const {
 	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Race> >::const_iterator i = raceMap.find(raceId);
-    if(i == raceMap.end()) {
+	if(i == raceMap.end()) {
 		throw std::exception();
 	}
-    return i->second;
+	return i->second;
 }

@@ -2,20 +2,25 @@
 #include <boost/assign/list_of.hpp>
 #pragma warning(pop)
 
-#include <random_fixture.hpp>
+#include <misc/randomgenerator.hpp>
 
 #include "unit_fixture.hpp"
-
+#include <games/enums/broodwarunits.hpp>
+#include <core/units.hpp>
 
 Unit_Fixture::Unit_Fixture():
 	playerFixture(),
 	mapFixture(),
 	broodwar(),
 
-	test_construction_time(Random_Fixture::instance().rnd()), // TODO UnitResourceType ?
+	test_constructionTime(RandomGenerator::instance().rnd()),
+	test_unitType(broodwar.getRules()->getUnitType(broodwar.unit_id_map[SCV])),
+	test_units(new Units()),
+	test_unit(new Unit(playerFixture.test_player, test_unitType, mapFixture.test_map->getLocationByIndex(0), test_units))
+{ 
+	test_units->addUnit(test_unit);
+}
 
-	test_units(boost::shared_ptr<Units>(new Units()))
-{ }
 
 Unit_Fixture::~Unit_Fixture() 
 { }

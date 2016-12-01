@@ -1,5 +1,5 @@
-#ifndef _COREFIXTURE_UNITTYPEFIXTURE_HPP
-#define _COREFIXTURE_UNITTYPEFIXTURE_HPP
+#ifndef _CORE_FIXTURE_UNITTYPEFIXTURE_HPP
+#define _CORE_FIXTURE_UNITTYPEFIXTURE_HPP
 
 #include <string>
 
@@ -7,9 +7,11 @@
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <unittype.hpp>
+#include <core/unittype.hpp>
+#include <map>
 
 #include "race_fixture.hpp"
+
 
 struct UnitType_Fixture
 {
@@ -48,10 +50,11 @@ struct UnitType_Fixture
 
 	UnitType_Fixture();
 	virtual ~UnitType_Fixture();
-	
-private:
-	const std::list<UnitResourceType> init_resourceslist_helper();
 
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > test_unitTypeMap;
+private:
+	const std::list<UnitResourceType> init_resourceslist_helper();	
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > init_unittypemap_helper();
 };
 
-#endif // _COREFIXTURE_UNITTYPEFIXTURE_HPP
+#endif // _CORE_FIXTURE_UNITTYPEFIXTURE_HPP

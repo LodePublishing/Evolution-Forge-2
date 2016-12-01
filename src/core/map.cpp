@@ -10,7 +10,7 @@
 #include "map.hpp"
 
 Map::Map(const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList):
-	name(name),
+name(name),
 	locationVector(locationVector),
 	pathList(pathList),
 	locationMap(),
@@ -25,7 +25,7 @@ Map::Map(const std::string& name, const std::vector<boost::shared_ptr<Location> 
 }
 
 Map::Map(const boost::uuids::uuid id, const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList):
-	UUID<Map>(id),
+UUID<Map>(id),
 	name(name),
 	locationVector(locationVector),
 	pathList(pathList),
@@ -41,7 +41,7 @@ Map::Map(const boost::uuids::uuid id, const std::string& name, const std::vector
 }
 
 Map::~Map()
-{}
+{ }
 
 void Map::processLocations() {
 	int index = 0;
@@ -51,27 +51,6 @@ void Map::processLocations() {
 		locationMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<Location> >((*i)->getId(), *i));
 		index++;
 	}
-}
-
-// needs to be called after deserialization
-void Map::initialize() {
-	processLocations();
-
-	for(std::list<boost::shared_ptr<const Path> >::const_iterator i = pathList.begin(); i != pathList.end(); i++) {
-		const boost::shared_ptr<Location> source_location = getLocation((*i)->getSourceLocationId());
-		source_location->addPath(*i);
-	}
-}
-
-
-
-void Map::processPaths() {
-	for(std::list<boost::shared_ptr<const Path> >::const_iterator i = pathList.begin(); i != pathList.end(); i++) {
-		// TODO Test for multiple paths for the same source&target?
-		getLocation((*i)->getSourceLocationId())->addPath(*i);
-	}
-
-	// "paths" are initialized at the end of the initialization process (see "initialize", they need to be in the correct sequence, first all paths from locations 0, then from location 1 etc.
 }
 
 const std::string Map::toString() const {
@@ -134,7 +113,7 @@ unsigned int Map::getLocationIndex(const boost::uuids::uuid locationId) const {
 
 const boost::shared_ptr<Location> Map::getLocation(const boost::uuids::uuid locationId) const {
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<Location> >::const_iterator locationentry = locationMap.find(locationId);
-		if(locationentry == locationMap.end()) {
+	if(locationentry == locationMap.end()) {
 		throw std::exception();
 	}
 	return locationentry->second;

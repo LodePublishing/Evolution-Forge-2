@@ -1,5 +1,5 @@
-#ifndef _COREFIXTURE_<NAME>FIXTURE_HPP
-#define _COREFIXTURE_<NAME>FIXTURE_HPP
+#ifndef _CORE_FIXTURE_<NAME>FIXTURE_HPP
+#define _CORE_FIXTURE_<NAME>FIXTURE_HPP
 
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
@@ -17,4 +17,4 @@ struct <NAME>_Fixture
 	~<NAME>_Fixture();
 };
 
-#endif // _COREFIXTURE_<NAME>FIXTURE_HPP
+#endif // _CORE_FIXTURE_<NAME>FIXTURE_HPP

@@ -1,13 +1,13 @@
-#ifndef _COREFIXTURE_UNITSFIXTURE_HPP
-#define _COREFIXTURE_UNITSFIXTURE_HPP
+#ifndef _CORE_FIXTURE_UNITSFIXTURE_HPP
+#define _CORE_FIXTURE_UNITSFIXTURE_HPP
 
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
+#include <map>
+#include <core/units.hpp>
 
-#include <units.hpp>
-
-#include <broodwar.hpp>
+#include <games/broodwar.hpp>
 
 #include "player_fixture.hpp"
 #include "location_fixture.hpp"
@@ -17,7 +17,7 @@ struct Units_Fixture
 {	
 	Player_Fixture playerFixture;
 	Location_Fixture locationFixture;
-	Broodwar broodwar;
+	BroodWar broodwar;
 
 	const unsigned int test_construction_time;
 	const boost::shared_ptr<Units> test_units;
@@ -28,7 +28,12 @@ struct Units_Fixture
 
 	Units_Fixture();
 	virtual ~Units_Fixture();
+
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Units> > test_unitsMap;
+
+private:
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Units> > init_unitsmap_helper();
 };
 
 
-#endif // _COREFIXTURE_UNITSFIXTURE_HPP
+#endif // _CORE_FIXTURE_UNITSFIXTURE_HPP

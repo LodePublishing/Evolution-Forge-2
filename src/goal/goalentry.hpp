@@ -14,23 +14,23 @@
 #include <boost/serialization/nvp.hpp>
 #pragma warning(pop)
 
-#include <uuid.hpp>
+#include <misc/uuid.hpp>
 
-#include "goal.hpp"
+#include "goalitem.hpp"
 
 class GoalEntry : public UUID<GoalEntry>
 {
 public:
-	GoalEntry(const boost::uuids::uuid id, const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
-	GoalEntry(const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList);
+	GoalEntry(const boost::uuids::uuid id, const std::string& name, const std::list<std::list<std::list<GoalItem> > >& goalItemList);
+	GoalEntry(const std::string& name, const std::list<std::list<std::list<GoalItem> > >& goalItemList);
 	~GoalEntry() {}
 
 	const std::string& getName() const;
 
-	// ALL [std::list<std::list<Goal> >]s in the std::list<[std::list<std::list<Goal> >] > list have to be fulfilled (AND)
-	// ANY [std::list<Goal>]s in the std::list<[std::list<Goal>] > list have to be fulfilled (OR)
-	// ALL [Goal]s in the std::list<Goal> have to be fulfilled (AND)
-	const std::list<std::list<std::list<Goal> > >& getGoalList() const;
+	// ALL [std::list<std::list<GoalItem> >]s in the std::list<[std::list<std::list<GoalItem> >] > list have to be fulfilled (AND)
+	// ANY [std::list<GoalItem>]s in the std::list<[std::list<GoalItem>] > list have to be fulfilled (OR)
+	// ALL [Goal]s in the std::list<GoalItem> have to be fulfilled (AND)
+	const std::list<std::list<std::list<GoalItem> > >& getGoalItemList() const;
 
 private:
 	friend class boost::serialization::access;
@@ -40,42 +40,42 @@ private:
 	{ }
 
 	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const GoalEntry* goalEntry, const unsigned int version) { 
+	inline friend void save_construct_data(Archive &ar, GoalEntry* goalEntry, const unsigned int version) { 
 
 		const boost::uuids::uuid& id = goalEntry->getId();
-		const std::string& name = goalEntry->getGoalList();
-		const std::list<std::list<std::list<Goal> > >& goalList = goalEntry->getGoalList();
+		const std::string& name = goalEntry->getName();
+		const std::list<std::list<std::list<GoalItem> > >& goalItemList = goalEntry->getGoalItemList();
 
 		if(version > 0) {
 		}
 
 		ar & BOOST_SERIALIZATION_NVP(id)
 		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(goalList);
+		   & BOOST_SERIALIZATION_NVP(goalItemList);
 	} 
 
 	template<class Archive> 
-	friend inline void load_construct_data(Archive& ar, GoalEntry*& goalEntry, const unsigned int version)
+	inline friend void load_construct_data(Archive& ar, GoalEntry*& goalEntry, const unsigned int version)
 	{
 		boost::uuids::uuid id;
 		std::string name;
-		std::list<std::list<std::list<Goal> > > goalList;
+		std::list<std::list<std::list<GoalItem> > > goalItemList;
 
 		ar & BOOST_SERIALIZATION_NVP(id)
 		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(goalList);
+		   & BOOST_SERIALIZATION_NVP(goalItemList);
 
-		::new(goalEntry)GoalEntry(id, name, goalList);
+		::new(goalEntry)GoalEntry(id, name, goalItemList);
 	}
 
 	const std::string name;
-	const std::list<std::list<std::list<Goal> > > goalList;
+	const std::list<std::list<std::list<GoalItem> > > goalItemList;
 
 	GoalEntry& operator=(const GoalEntry& other);
 };
 
-inline const std::list<std::list<std::list<Goal> > >& GoalEntry::getGoalList() const {
-	return goalList;
+inline const std::list<std::list<std::list<GoalItem> > >& GoalEntry::getGoalItemList() const {
+	return goalItemList;
 }
 
 inline const std::string& GoalEntry::getName() const {

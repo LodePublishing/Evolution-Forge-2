@@ -7,7 +7,7 @@
 #include "player.hpp"
 #include "units.hpp"
 
-// create new unit
+// create new unit, no goalLocation, constructingUnitList etc. needed, the unit starts out 'fresh'
 Unit::Unit(
 	const boost::shared_ptr<const Player> player,
 	const boost::shared_ptr<const UnitType> unitType,
@@ -17,7 +17,7 @@ Unit::Unit(
 	const unsigned int remainingConstructionTime,
 	const std::list<boost::shared_ptr<Unit> > occupiedFacilityList
 	):
-	player(player),
+player(player),
 	playerId(player->getId()),
 	unitType(unitType),
 	unitTypeId(unitType->getId()),
@@ -40,11 +40,11 @@ Unit::Unit(
 	// TODO sanity check? currently you can produce say a space marine in an SCV...
 	for(std::list<boost::shared_ptr<Unit> >::iterator i = this->occupiedFacilityList.begin(); i != this->occupiedFacilityList.end(); i++) {
 		occupiedFacilityIdList.push_back((*i)->getId());
-	}	
+	}
 }
 
 
-
+// if we load a unit the unit could already be building something or it could be on the move
 Unit::Unit(
 	const boost::uuids::uuid id,
 	const boost::shared_ptr<const Player> player, 
@@ -57,7 +57,7 @@ Unit::Unit(
 	const std::list<boost::uuids::uuid> occupiedFacilityIdList,
 	const std::list<boost::uuids::uuid> constructingUnitIdList
 	):
-	UUID<Unit>(id),
+UUID<Unit>(id),
 	player(player),
 	playerId(player->getId()),
 	unitType(unitType),
@@ -86,13 +86,15 @@ void Unit::initialize(const boost::shared_ptr<Units> units) {
 	constructingUnitList.clear();
 
 	for(std::list<boost::uuids::uuid>::const_iterator i = occupiedFacilityIdList.begin(); i != occupiedFacilityIdList.end(); i++) {
-		occupiedFacilityList.push_back(units->getUnit(*i));
-
-		globalUnits->removeOneLocalAvailable(occupiedFacilityList.back()->getLocalKey());
+		occupiedFacilityList.push_back(globalUnits.lock()->getUnit(*i));
+		// we filled the available array of 'units', now we have to remove all which are not available
+		globalUnits.lock()->removeOneLocalAvailable(occupiedFacilityList.back()->getLocalKey());
+		
+		// TODO under construction, on movement etc.
 	}
 
 	for(std::list<boost::uuids::uuid>::const_iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
-		constructingUnitList.push_back(units->getUnit(*i));
+		constructingUnitList.push_back(globalUnits.lock()->getUnit(*i));
 	}
 }
 
@@ -114,23 +116,24 @@ void Unit::clearConstructions()
 }
 
 Unit::~Unit() {
-	//if(!this->isUnderConstruction()) {
-	//	globalUnits->removeUnit(this);
-	//} TODO?
+	/*if(!this->isUnderConstruction()) {
+		globalUnits.lock()->removeUnit(this);
+	}*/ // TODO?
 }
 
 
 // adds a unit to the construction queue of the unit
+// TODO call globalUnits->removeOneLocalAvailable(getLocalKey()); if it was a success
 bool Unit::addToConstruction(const boost::shared_ptr<Unit> unit) {
 	if(isAvailable()) {
-		constructingUnitList.push_back(unit);
-		globalUnits->removeOneLocalAvailable(getLocalKey());
+		constructingUnitList.push_back(unit);		
 		return true;
 	} else {
 		return false;
 	}
 	// TODO multiple construction slots?
 } // TODO?
+
 
 void Unit::removeFromConstruction(const boost::shared_ptr<const Unit> unit) {
 	bool was_constructing = isConstructing();
@@ -139,7 +142,7 @@ void Unit::removeFromConstruction(const boost::shared_ptr<const Unit> unit) {
 		if((*i)->getId() == unit->getId()) {
 			constructingUnitList.erase(i);
 			if(was_constructing && !isConstructing()) {
-				globalUnits->addOneLocalAvailable(getLocalKey());
+				globalUnits.lock()->addOneLocalAvailable(getLocalKey());
 				// TODO multiple construction slots?
 			}
 			for(std::list<boost::uuids::uuid>::iterator i = constructingUnitIdList.begin(); i != constructingUnitIdList.end(); i++) {
@@ -180,19 +183,19 @@ void Unit::setGoalLocation(boost::shared_ptr<const Location> goalLocation) {
 	this->goalLocation = goalLocation;
 
 	switch(unitType->getMovementType()) {
-		case NO_MOVEMENT_TYPE:
-			BOOST_ASSERT(false);
-			break;
-		case FLYING_MOVEMENT_TYPE:
-			remainingMovementTime = location->getAirDistance(goalLocation);
-			break;
-		case GROUND_MOVEMENT_TYPE:
-			remainingMovementTime = location->getGroundDistance(goalLocation);
-			break;
-		case MOVEMENT_TYPE_TYPES:
-		default:
-			BOOST_ASSERT(false);
-			break;
+	case NO_MOVEMENT_TYPE:
+		BOOST_ASSERT(false);
+		break;
+	case FLYING_MOVEMENT_TYPE:
+		remainingMovementTime = location->getAirDistance(goalLocation);
+		break;
+	case GROUND_MOVEMENT_TYPE:
+		remainingMovementTime = location->getGroundDistance(goalLocation);
+		break;
+	case MOVEMENT_TYPE_TYPES:
+	default:
+		BOOST_ASSERT(false);
+		break;
 	}
 	remainingMovementTime /=  unitType->getSpeed();
 }
@@ -204,11 +207,11 @@ void Unit::process() {
 	if(isMoving()) {
 		remainingMovementTime--;
 		if(remainingMovementTime == 0) {
-			globalUnits->removeLocalUnit(shared_from_this());
+			globalUnits.lock()->removeLocalUnit(shared_from_this());
 			location = goalLocation;
 			unitLocalKey.locationId = location->getId();
 			unitLocalNeutralKey.locationId = location->getId();
-			globalUnits->addLocalUnit(shared_from_this());
+			globalUnits.lock()->addLocalUnit(shared_from_this());
 		}
 	} else
 		// TODO maybe include the application of special UnitType / FacilityType rules
@@ -223,7 +226,7 @@ void Unit::process() {
 				occupiedFacilityIdList.clear();
 
 				// add this unit
-				globalUnits->addLocalUnit(shared_from_this());
+				globalUnits.lock()->addLocalUnit(shared_from_this());
 
 			}
 		}
@@ -243,6 +246,8 @@ void Unit::addConstructingUnit(const boost::shared_ptr<Unit> unit) {
 
 	// is this facility became available again? Notify the listeners
 	if(this->isAvailable() != was_available) {
-		globalUnits->removeOneLocalAvailable(getLocalKey());
+		globalUnits.lock()->removeOneLocalAvailable(getLocalKey());
 	}
 }
+
+

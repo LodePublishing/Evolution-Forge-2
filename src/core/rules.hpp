@@ -3,25 +3,16 @@
 
 #include <map>
 
-#pragma warning(push, 0)  
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/uuid/uuid_serialize.hpp>
+#pragma warning(push, 0)
 #include <boost/shared_ptr.hpp>
 #pragma warning(pop)
 
-#include <loadsave.hpp>
-#include <uuid.hpp>
-
-#include <globalstorage.hpp>
+#include <misc/uuid.hpp>
 
 #include "unittype.hpp"
 
 
-class Rules : public LoadSave<Rules>, public UUID<Rules>
+class Rules : public UUID<Rules>
 {
 public:
 	Rules(const boost::uuids::uuid id,
@@ -43,66 +34,16 @@ public:
 	const std::list<boost::shared_ptr<const Race> >& getRaceList() const;
 	const std::list<boost::uuids::uuid>& getRaceIdList() const;
 	unsigned int getRaceCount() const;
-	
 
-private:
-	friend class boost::serialization::access;
-	template<class Archive> void serialize(Archive &ar, const unsigned int version)
-	{ }
 
-	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const Rules* rules, const unsigned int version) { 
-
-		const boost::uuids::uuid& id = rules->getId();
-		const std::string& name = rules->getName();
-		const std::list<boost::uuids::uuid>& unitTypeIdList = rules->getUnitTypeIdList();
-		const std::list<boost::uuids::uuid>& raceIdList = rules->getRaceIdList();
-
-		if(version > 0) {
-		}
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(raceIdList)
-		   & BOOST_SERIALIZATION_NVP(unitTypeIdList);
-	}
-
-	template<class Archive> 
-	inline friend void load_construct_data(Archive& ar, Rules*& rules, const unsigned int version)
-	{
-		boost::uuids::uuid id;
-		std::string name;
-		std::list<boost::uuids::uuid> raceIdList;
-		std::list<boost::uuids::uuid> unitTypeIdList;
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(raceIdList)
-		   & BOOST_SERIALIZATION_NVP(unitTypeIdList);
-
-		if(version > 0) {
-		}
-
-		std::list<boost::shared_ptr<const Race> > raceList;
-		std::list<boost::shared_ptr<const UnitType> > unitTypeList;
-
-		for(std::list<boost::uuids::uuid>::const_iterator i = raceIdList.begin(); i != raceIdList.end(); i++) {
-			raceList.push_back(GlobalStorage::instance().getRace(*i));
-		}
-		for(std::list<boost::uuids::uuid>::const_iterator i = unitTypeIdList.begin(); i != unitTypeIdList.end(); i++) {
-			unitTypeList.push_back(GlobalStorage::instance().getUnitType(*i));
-		}
-
-		::new(rules)Rules(id, name, raceList, unitTypeList);
-	}
-
+private:	
 	void initialize();
 
 	const std::string name;
 	const std::list<boost::shared_ptr<const UnitType> > unitTypeList;	
 	std::list<boost::uuids::uuid> unitTypeIdList;
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > unitTypeMap;
-	
+
 	const std::list<boost::shared_ptr<const Race> > raceList;	
 	std::list<boost::uuids::uuid> raceIdList;
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<const Race> > raceMap;

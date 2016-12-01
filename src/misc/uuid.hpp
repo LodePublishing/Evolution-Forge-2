@@ -12,7 +12,6 @@
 #include <boost/uuid/uuid_serialize.hpp>
 #pragma warning(pop)
 
-// CRTP pattern
 
 template <typename T> 
 class UUID

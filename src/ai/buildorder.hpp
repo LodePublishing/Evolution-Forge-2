@@ -216,23 +216,23 @@ class PREBUILDORDER
 
 		
 inline START* PREBUILDORDER::getpStart() const {
-	return(pStart);
+	return pStart;
 }
 
 inline const unsigned int PREBUILDORDER::getPlayerNumber() const {
-	return(playerNum);
+	return playerNum;
 }
 
 inline const bool PREBUILDORDER::haveConditionsChanged() const {
-	return(conditionsChanged);
+	return conditionsChanged;
 }
 
 inline const unsigned int PREBUILDORDER::getRace() const {
-	return(pStart->getPlayerRace());
+	return pStart->getPlayerRace();
 }
 
 inline const BASIC_MAP* const* PREBUILDORDER::getMap() const {
-	return(pStart->getMap());
+	return pStart->getMap();
 }
 
 inline GOAL_ENTRY* PREBUILDORDER::getGoal() const 
@@ -242,9 +242,9 @@ inline GOAL_ENTRY* PREBUILDORDER::getGoal() const
 		toErrorLog("DEBUG (PREBUILDORDER::getGoal()()): Variable pGoal was not initialized.");
 	}
 #endif
-	return(pGoal);*/
+	return pGoal;*/
 /*
-	return(pStart->getCurrentGoal());
+	return pStart->getCurrentGoal();
 }
 
 inline void PREBUILDORDER::setStartPosition(const unsigned int start_position) 
@@ -269,18 +269,18 @@ inline void PREBUILDORDER::assignStartGoal(const GOAL_ENTRY* start_goal) {
 // ------ Units ------
 
 inline Units& PREBUILDORDER::getUnit(const unsigned int player_number, const unsigned int location_number) const {
-	assert(player_number < (*getMap())->getMaxPlayer());
-	assert(location_number < (*getMap())->getMaxLocations());
+	BOOST_ASSERT(player_number < (*getMap())->getMaxPlayer());
+	BOOST_ASSERT(location_number < (*getMap())->getMaxLocations());
 
-	return(unit[player_number][location_number]);
+	return unit[player_number][location_number];
 }
 
 inline const unsigned int PREBUILDORDER::getLocationTotal(const unsigned int location_number, const unsigned int unit_type) const {
-	return(getUnit(playerNum, location_number).getTotal(unit_type));
+	return getUnit(playerNum, location_number).getTotal(unit_type);
 }
 
 inline const unsigned int PREBUILDORDER::getLocationAvailable(const unsigned int location_number, const unsigned int unit_type) const {
-	return(getUnit(playerNum, location_number).getAvailable(unit_type));
+	return getUnit(playerNum, location_number).getAvailable(unit_type);
 }
 
 inline void PREBUILDORDER::modifyLocationAvailable(const unsigned int location_number, const unsigned int unit_type, const signed int available)
@@ -357,44 +357,44 @@ inline void PREBUILDORDER::removeOneAvailableEverywhere(const unsigned int unit_
 
 // ----- SUPPLY ------
 inline void PREBUILDORDER::setNeedSupply(const unsigned int need_supply) {
-	assert(need_supply <= 2*GAME::MAX_SUPPLY);
+	BOOST_ASSERT(need_supply <= 2*GAME::MAX_SUPPLY);
 
 	needSupply = need_supply;
 }
 
 inline const unsigned int PREBUILDORDER::getNeedSupply() const {
-	assert(needSupply <= 2*GAME::MAX_SUPPLY);
+	BOOST_ASSERT(needSupply <= 2*GAME::MAX_SUPPLY);
 
-	return(needSupply);
+	return needSupply;
 }
 
 inline void PREBUILDORDER::setHaveSupply(const unsigned int have_supply) {
-	assert(have_supply <= 2*GAME::MAX_SUPPLY);
+	BOOST_ASSERT(have_supply <= 2*GAME::MAX_SUPPLY);
 
 	haveSupply = have_supply;
 }
 
 inline const unsigned int PREBUILDORDER::getHaveSupply() const {
-	assert(haveSupply <= 2*GAME::MAX_SUPPLY);
+	BOOST_ASSERT(haveSupply <= 2*GAME::MAX_SUPPLY);
 
-	return(haveSupply);
+	return haveSupply;
 }
 // ----- END SUPPLY ------
 
 // ----- HARVEST ------
 
 inline void PREBUILDORDER::setResource(const unsigned int resource_type, const unsigned int have_resource) {
-	assert(resource_type < GameRace::MAX_RESOURCE_TYPES);
-	assert(have_resource <= GAME::MAX_RESOURCES);
+	BOOST_ASSERT(resource_type < GameRace::MAX_RESOURCE_TYPES);
+	BOOST_ASSERT(have_resource <= GAME::MAX_RESOURCES);
 
 	resource[resource_type] = have_resource;
 }
 
 inline const unsigned int PREBUILDORDER::getResource(const unsigned int resource_type) const {
-	assert(resource_type < GameRace::MAX_RESOURCE_TYPES);
-	assert(resource[resource_type] <= GAME::MAX_RESOURCES);
+	BOOST_ASSERT(resource_type < GameRace::MAX_RESOURCE_TYPES);
+	BOOST_ASSERT(resource[resource_type] <= GAME::MAX_RESOURCES);
 
-	return(resource[resource_type]);
+	return resource[resource_type];
 }
 /*
 inline void PREBUILDORDER::setResourceHarvestPerFrame( const unsigned int resource_type, const unsigned int location_number, const unsigned int worker, const unsigned int resource_harvest_per_frame ) {
@@ -418,54 +418,54 @@ inline void PREBUILDORDER::setResourceHarvestPerFrame( const unsigned int resour
 /*
 
 inline void PREBUILDORDER::setHarvestedResource( const unsigned int resource_type, const unsigned int harvested_resource ) {
-	assert(resource_type < GameRace::MAX_RESOURCE_TYPES);
-	assert(harvested_resource < GAME::MAX_RESOURCES);
+	BOOST_ASSERT(resource_type < GameRace::MAX_RESOURCE_TYPES);
+	BOOST_ASSERT(harvested_resource < GAME::MAX_RESOURCES);
 
 	harvestedResource[resource_type] = harvested_resource;
 }
 
 inline const unsigned int PREBUILDORDER::getHarvestedResource( const unsigned int resource_type ) const {
-	assert(resource_type < GameRace::MAX_RESOURCE_TYPES);
-	assert(harvestedResource[resource_type] <= GAME::MAX_RESOURCES);
+	BOOST_ASSERT(resource_type < GameRace::MAX_RESOURCE_TYPES);
+	BOOST_ASSERT(harvestedResource[resource_type] <= GAME::MAX_RESOURCES);
 
-	return(harvestedResource[resource_type]);
+	return harvestedResource[resource_type];
 }
 
 // ----- END HARVEST -----
 
 
 inline const START_CONDITION* const* PREBUILDORDER::getStartCondition() const {
-	return(pStart->getStartCondition());
+	return pStart->getStartCondition();
 }
 
 
 inline void PREBUILDORDER::setTimer(const unsigned int time) {
-	assert(time <= coreConfiguration.getMaxTime());
+	BOOST_ASSERT(time <= coreConfiguration.getMaxTime());
 
 	timer = time;
 }
 
 inline const unsigned int PREBUILDORDER::getTimer() const {
-	assert(timer <= coreConfiguration.getMaxTime());
+	BOOST_ASSERT(timer <= coreConfiguration.getMaxTime());
 
-	return(timer);
+	return timer;
 }
 
 inline const unsigned int PREBUILDORDER::getRealTimer() const {
-	assert(timer <= coreConfiguration.getMaxTime());
+	BOOST_ASSERT(timer <= coreConfiguration.getMaxTime());
 
-	return(coreConfiguration.getMaxTime()-timer);
+	return coreConfiguration.getMaxTime()-timer;
 	// TODO auf > checken
 }
 
 inline const std::vector<UnitStatistics>* PREBUILDORDER::getpStats() const {
 /*#ifdef _SCC_DEBUG
 	if(!pStatsInitialized)	{
-		toErrorLog("DEBUG (PREBUILDORDER::getpStats()()): Variable pStats not initialized.");return(0);
+		toErrorLog("DEBUG (PREBUILDORDER::getpStats()()): Variable pStats not initialized.");return 0;
 	}
 #endif
-	return(pStats);*/
-	/*return(pStart->getpStats());
+	return pStats;*/
+	/*return pStart->getpStats();
 }
 
 
@@ -476,21 +476,21 @@ inline void PREBUILDORDER::resetTimeOut() {
 inline void PREBUILDORDER::setTimeOut(const unsigned int time_out) {
 	if(timeout == time_out)
 		return;	
-	assert(time_out <= coreConfiguration.getMaxTimeOut());
+	BOOST_ASSERT(time_out <= coreConfiguration.getMaxTimeOut());
 
 	timeout = time_out;
 }
 
 inline const bool PREBUILDORDER::isTimeOut() const {
-	assert(timeout <= coreConfiguration.getMaxTimeOut());
+	BOOST_ASSERT(timeout <= coreConfiguration.getMaxTimeOut());
 
-	return(timeout==0);
+	return timeout==0;
 }
 
 inline const unsigned int PREBUILDORDER::getTimeOut() const {
-	assert(timeout <= coreConfiguration.getMaxTimeOut());
+	BOOST_ASSERT(timeout <= coreConfiguration.getMaxTimeOut());
 
-	return(timeout);
+	return timeout;
 }
 
 
@@ -499,26 +499,26 @@ inline const unsigned int PREBUILDORDER::getTimeOut() const {
 // --------------------------------------
 
 inline void PREBUILDORDER::removeLarvaFromQueue(const unsigned int location_number) {
-	assert(location_number > 0 && location_number < (*getMap())->getMaxLocations());
-	assert(larvaInProduction[location_number]>0 && larvaInProduction[location_number] < GAME::MAX_SUPPLY);
+	BOOST_ASSERT(location_number > 0 && location_number < (*getMap())->getMaxLocations());
+	BOOST_ASSERT(larvaInProduction[location_number]>0 && larvaInProduction[location_number] < GAME::MAX_SUPPLY);
 
 	--larvaInProduction[location_number];
 }
 
 inline void PREBUILDORDER::addLarvaToQueue(const unsigned int location_number) {
-	assert(location_number > 0 && location_number < (*getMap())->getMaxLocations());
-	assert(larvaInProduction[location_number] < GAME::MAX_SUPPLY);
+	BOOST_ASSERT(location_number > 0 && location_number < (*getMap())->getMaxLocations());
+	BOOST_ASSERT(larvaInProduction[location_number] < GAME::MAX_SUPPLY);
 
 	++larvaInProduction[location_number];
 }
 
 
 inline const bool PREBUILDORDER::isAlwaysBuildWorkers() const {
-	return(alwaysBuildWorkers);
+	return alwaysBuildWorkers;
 }
 
 inline const bool PREBUILDORDER::isOnlySwapOrders() const {
-	return(onlySwapOrders);
+	return onlySwapOrders;
 }
 
 inline void PREBUILDORDER::assignCode(const PREBUILDORDER& player) {
@@ -534,7 +534,7 @@ inline void PREBUILDORDER::copyCode(std::list<unsigned int>& dst) const {
 }
 
 inline const bool PREBUILDORDER::isDifferent(const std::list<unsigned int>& code) const {
-	return(Code != code);
+	return Code != code;
 }
 
 

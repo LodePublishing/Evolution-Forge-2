@@ -5,24 +5,20 @@
 #include "player.hpp"
 
 Player::Player(const std::string& name,
-		const boost::shared_ptr<const Government> government,
-		const boost::shared_ptr<const Units> startingUnits):
-	name(name),
+	const boost::shared_ptr<const Government> government):
+name(name),
 	government(government),
-	governmentId(government->getId()),
-	startingUnits(startingUnits)
-{}
+	governmentId(government->getId())
+{ }
 
 Player::Player(const boost::uuids::uuid id,
-		const std::string& name,
-		const boost::shared_ptr<const Government> government,
-		const boost::shared_ptr<const Units> startingUnits):
-	UUID<Player>(id),
+	const std::string& name,
+	const boost::shared_ptr<const Government> government):
+UUID<Player>(id),
 	name(name),
 	government(government),
-	governmentId(government->getId()),
-	startingUnits(startingUnits)
-{}
+	governmentId(government->getId())
+{ }
 
 Player::~Player()
-{}
+{ }

@@ -1,7 +1,7 @@
 #ifndef _GOALTEST_PROCESSEDGOALFIXTURE_HPP
 #define _GOALTEST_PROCESSEDGOALFIXTURE_HPP
 
-#include <processedgoal.hpp>
+#include <goal/processedgoal.hpp>
 
 struct ProcessedGoal_Fixture
 {

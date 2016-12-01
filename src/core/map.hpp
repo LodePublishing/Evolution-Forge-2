@@ -5,16 +5,7 @@
 #include <vector>
 #include <map>
 
-#pragma warning(push, 0)  
-#include <boost/config.hpp>
-#include <boost/property_map/property_map.hpp>
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#pragma warning(pop)
-
-#include <loadsave.hpp>
-#include <uuid.hpp>
+#include <misc/uuid.hpp>
 
 #include "location.hpp"
 #include "path.hpp"
@@ -22,7 +13,7 @@
 // pointer nur bei mehrfach genutzten Objekten (z.B. Units, locations)
 
 
-class Map : public LoadSave<Map>, public UUID<Map>
+class Map : public UUID<Map>
 {
 public:		
 	Map(const boost::uuids::uuid id, const std::string& name, const std::vector<boost::shared_ptr<Location> > locationVector, const std::list<boost::shared_ptr<const Path> > pathList);
@@ -45,61 +36,20 @@ public:
 	const boost::shared_ptr<Location> getLocation(const boost::uuids::uuid locationId) const;
 	unsigned int getLocationIndex(const boost::uuids::uuid locationId) const;
 	const boost::uuids::uuid getLocationId(const unsigned int index) const;
-	
+
+
 private:
-	friend class boost::serialization::access;
-
-	template<class Archive> 
-	void serialize(Archive &ar, const unsigned int version)
-	{ }
-
-	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const Map* map, const unsigned int version) { 
-
-		const boost::uuids::uuid& id = map->getId();
-		const std::string& name = map->getName();
-		const std::vector<boost::shared_ptr<Location> >& locationVector = map->getLocationVector();
-		const std::list<boost::shared_ptr<const Path> >& pathList = map->getPathList();
-
-		if(version > 0) {
-		}
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(locationVector)
-		   & BOOST_SERIALIZATION_NVP(pathList);
-	}
-	// TODO write test for locations?
-	template<class Archive>
-	inline friend void load_construct_data(Archive& ar, Map*& map, const unsigned int version)
-	{
-		boost::uuids::uuid id;
-		std::string name;
-		std::vector<boost::shared_ptr<Location> > locationVector;
-		std::list<boost::shared_ptr<const Path> > pathList;
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(name)
-		   & BOOST_SERIALIZATION_NVP(locationVector)
-		   & BOOST_SERIALIZATION_NVP(pathList);
-			
-		if(version > 0) {
-		}
-
-		::new(map)Map(id, name, locationVector, pathList);
-	}
-
 	const std::string name;
 	const std::vector<boost::shared_ptr<Location> > locationVector;
 	const std::list<boost::shared_ptr<const Path> > pathList;
-	
+
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<Location> > locationMap; // uuid -> location
 	std::map<const boost::uuids::uuid, const unsigned int> idIndexMap; // uuid -> index
 	std::map<const unsigned int, const boost::uuids::uuid> indexIdMap; // index -> uuid
 
 	//cached entries:
 	std::vector<std::vector<unsigned int> > minDistance;
-
+	
 	Map(const Map& other);
 	Map& operator=(const Map& other);
 };
@@ -119,6 +69,7 @@ inline const std::list<boost::shared_ptr<const Path> >& Map::getPathList() const
 inline const boost::shared_ptr<Location> Map::getLocationByIndex(const unsigned index) const {
 	return locationVector[index];
 }
+
 
 #endif // _CORE_MAP_HPP
 

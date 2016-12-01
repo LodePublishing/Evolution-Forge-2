@@ -2,21 +2,21 @@
 #include <boost/assign/list_of.hpp>
 #pragma warning(pop)
 
-#include <random_fixture.hpp>
-#include <globalstorage.hpp>
+#include <misc/randomgenerator.hpp>
 
 #include "unittype_fixture.hpp"
-
+#include <core/unittype_storage.hpp>
+#include <core/core_directories.hpp>
 
 UnitType_Fixture::UnitType_Fixture():
 	raceFixture(),
 
-	test_unitName1("Test Unit Name1"), 
-	test_unitName2("Test Unit Name2"), 
-	test_buildtime(Random_Fixture::instance().rnd()),
-	test_maxcount(Random_Fixture::instance().rnd()),
+	test_unitName1("Test Unit Name" + RandomGenerator::instance().rndString()), 
+	test_unitName2("Test Unit Name" + RandomGenerator::instance().rndString()), 
+	test_buildtime(RandomGenerator::instance().rnd()),
+	test_maxcount(RandomGenerator::instance().rnd()),
 
-	test_speed(Random_Fixture::instance().rnd()),
+	test_speed(RandomGenerator::instance().rnd()),
 	test_default_speed(0), 
 	test_unitMovementType(GROUND_MOVEMENT_TYPE), 
 	test_default_movementType(NO_MOVEMENT_TYPE), 
@@ -32,23 +32,28 @@ UnitType_Fixture::UnitType_Fixture():
 	test_unitID4(boost::uuids::random_generator()()),
 	test_unitID5(boost::uuids::random_generator()()),
 
-	test_amount1(Random_Fixture::instance().rnd()),
-	test_amount2(Random_Fixture::instance().rnd()),
-	test_amount3(Random_Fixture::instance().rnd()),
+	test_amount1(RandomGenerator::instance().rnd()),
+	test_amount2(RandomGenerator::instance().rnd()),
+	test_amount3(RandomGenerator::instance().rnd()),
 
 	test_resources(init_resourceslist_helper()),
 
-	test_unittype(boost::shared_ptr<UnitType>(new UnitType(test_unitName1, raceFixture.test_race, test_buildtime, test_maxcount, true, test_unitMovementType, test_speed, test_resources))),
-	test_unittype_noncorporeal(boost::shared_ptr<UnitType>(new UnitType(test_unitName2, raceFixture.test_race, test_buildtime, test_maxcount, false, NO_MOVEMENT_TYPE, 0, test_resources)))
-{ 
-	GlobalStorage::instance().addUnitType(test_unittype);
-	GlobalStorage::instance().addUnitType(test_unittype_noncorporeal);
+	test_unittype(new UnitType(test_unitName1, raceFixture.test_race, test_resources, true, test_maxcount, test_buildtime, test_unitMovementType, test_speed)),
+	test_unittype_noncorporeal(new UnitType(test_unitName2, raceFixture.test_race, test_resources, false, test_maxcount, test_buildtime, NO_MOVEMENT_TYPE, 0)),
+	test_unitTypeMap(init_unittypemap_helper())
+{
+	CoreDirectories::initTemp("temp");
+
+	UnitTypeStorage::instance(test_unitTypeMap);	
 }
 
 UnitType_Fixture::~UnitType_Fixture() 
-{
-	GlobalStorage::instance().removeUnitType(test_unittype->getId());
-	GlobalStorage::instance().removeUnitType(test_unittype_noncorporeal->getId());
+{ 
+	CoreDirectories::initTemp("temp");
+
+	UnitTypeStorage::clear();
+
+	CoreDirectories::init();
 }
 
 const std::list<UnitResourceType> UnitType_Fixture::init_resourceslist_helper() {
@@ -60,3 +65,11 @@ const std::list<UnitResourceType> UnitType_Fixture::init_resourceslist_helper() 
 }
 
 // TODO vielleicht hier eine allgemeine Prüffunktion rein
+
+
+const std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > UnitType_Fixture::init_unittypemap_helper() {
+	std::map<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> > unitTypeMap;
+	unitTypeMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> >(test_unittype->getId(), test_unittype));
+	unitTypeMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<const UnitType> >(test_unittype_noncorporeal->getId(), test_unittype_noncorporeal));
+	return unitTypeMap;
+}

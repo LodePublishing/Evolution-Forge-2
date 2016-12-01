@@ -5,24 +5,22 @@
 #include <list>
 #include <vector>
 
-#pragma warning(push, 0)  
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/nvp.hpp>
+#pragma warning(push, 0) 
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/list_of.hpp>
 #pragma warning(pop)
 
-#include <uuid.hpp>
+#include <misc/uuid.hpp>
 
 #include "unitresourcetype.hpp"
 #include "race.hpp"
-#include "enums/unitmovementtypeenums.hpp"
+#include "enums/unitmovementtype.hpp"
 
 
 class UnitType : public UUID<UnitType>
 {
 public:
-	
+
 	UnitType(const boost::uuids::uuid id,
 		const std::string& name, 
 		const boost::shared_ptr<const Race> race, // TODO relevant?
@@ -43,7 +41,7 @@ public:
 		const eUnitMovementType movementType = NO_MOVEMENT_TYPE, 
 		const unsigned int speed = 0,
 		const unsigned int upgradedSpeed = 0);
-	
+
 	~UnitType();
 
 	const std::string& getName() const;
@@ -55,31 +53,22 @@ public:
 	unsigned int getBuildTime() const;	
 	eUnitMovementType getMovementType() const;
 	unsigned int getSpeed() const;
-	unsigned int getUpgradedSpeed();
+	unsigned int getUpgradedSpeed() const;
 
 private:
-	friend class boost::serialization::access;
-
-	template<class Archive> 
-	void serialize(Archive &ar, const unsigned int version)
-	{ }
-
-	template<class Archive> friend void save_construct_data(Archive &ar, const UnitType* unitType, const unsigned int version);
-	template<class Archive> friend void load_construct_data(Archive& ar, UnitType*& unitType, const unsigned int version);
-
 	// mandatory fields
 	const std::string name;
 	const boost::shared_ptr<const Race> race;
 	const boost::uuids::uuid raceId;
 	const std::list<UnitResourceType> resources;
 	// maximal number of units of this type a player can have
+	const bool corporeal;
 	const unsigned int maxCount;
 	const unsigned int buildTime;
-	const bool corporeal;
 	const eUnitMovementType movementType;
 	const unsigned int speed;	
 	const unsigned int upgradedSpeed;
-	
+
 	UnitType& operator=(const UnitType& other);	
 };
 

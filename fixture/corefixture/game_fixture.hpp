@@ -1,33 +1,32 @@
-#ifndef _COREFIXTURE_GAMEFIXTURE_HPP
-#define _COREFIXTURE_GAMEFIXTURE_HPP
+#ifndef _CORE_FIXTURE_GAMEFIXTURE_HPP
+#define _CORE_FIXTURE_GAMEFIXTURE_HPP
 
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <game.hpp>
-#include <broodwar.hpp>
+#include <core/game.hpp>
 
 #include "player_fixture.hpp"
 #include "map_fixture.hpp"
-#include "units_fixture.hpp"
+#include "startcondition_fixture.hpp"
 
 struct Game_Fixture
 {
 	const Player_Fixture playerFixture;
 	const Map_Fixture mapFixture;
-	const Units_Fixture unitsFixture;
-	const Broodwar broodwar;
-
-	const unsigned int test_startingTime;
+	const StartCondition_Fixture startConditionFixture;
+	const std::string test_name;
 	
-	const boost::shared_ptr<Game> test_game;
-
-	const std::string test_filename_xml;
-	const std::string test_filename;
-
+	const boost::shared_ptr<const Game> test_game;
+	
 	Game_Fixture();
 	virtual ~Game_Fixture();
+	
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Game> > test_gameMap;
+
+private:
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Game> > init_gamemap_helper();
 };
 
-#endif // _COREFIXTURE_GAMEFIXTURE_HPP
+#endif // _CORE_FIXTURE_GAMEFIXTURE_HPP

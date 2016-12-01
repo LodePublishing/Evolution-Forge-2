@@ -1,13 +1,13 @@
 #include "goalentry.hpp"
 
-GoalEntry::GoalEntry(const boost::uuids::uuid id, const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList):
+GoalEntry::GoalEntry(const boost::uuids::uuid id, const std::string& name, const std::list<std::list<std::list<GoalItem> > >& goalItemList):
 	UUID<GoalEntry>(id), 
 	name(name), 
-	goalList(goalList) 
+	goalItemList(goalItemList) 
 {
 }
 
-GoalEntry::GoalEntry(const std::string& name, const std::list<std::list<std::list<Goal> > >& goalList):
+GoalEntry::GoalEntry(const std::string& name, const std::list<std::list<std::list<GoalItem> > >& goalItemList):
 	name(name),
-	goalList(goalList) 
+	goalItemList(goalItemList) 
 { }

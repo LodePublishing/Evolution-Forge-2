@@ -1,0 +1,13 @@
+#ifndef _UI_ENUMS_GRAPHTYPE_HPP
+#define _UI_ENUMS_GRAPHTYPE_HPP
+
+enum eGraphType {
+	GRAPH_LINE,
+	GRAPH_FILLED_LINE,
+	GRAPH_BOX,
+	GRAPH_SECOND_BOX, // need_supply!
+
+	MAX_GRAPH_TYPES
+};
+
+#endif // _UI_ENUMS_GRAPHTYPE_HPP

@@ -1,11 +1,11 @@
-#ifndef _COREFIXTURE_PATHFIXTURE_HPP
-#define _COREFIXTURE_PATHFIXTURE_HPP
+#ifndef _CORE_FIXTURE_PATHFIXTURE_HPP
+#define _CORE_FIXTURE_PATHFIXTURE_HPP
 
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <path.hpp>
+#include <core/path.hpp>
 
 class Location;
 
@@ -21,4 +21,4 @@ struct Path_Fixture
 	virtual ~Path_Fixture();
 };
 
-#endif // _COREFIXTURE_PATHFIXTURE_HPP
+#endif // _CORE_FIXTURE_PATHFIXTURE_HPP

@@ -1,13 +1,13 @@
-#ifndef _COREFIXTURE_UNITFIXTURE_HPP
-#define _COREFIXTURE_UNITFIXTURE_HPP
+#ifndef _CORE_FIXTURE_UNITFIXTURE_HPP
+#define _CORE_FIXTURE_UNITFIXTURE_HPP
 
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <unit.hpp>
+#include <core/unit.hpp>
 
-#include <broodwar.hpp>
+#include <games/broodwar.hpp>
 
 #include "player_fixture.hpp"
 #include "map_fixture.hpp"
@@ -17,14 +17,15 @@ struct Unit_Fixture
 {
 	Player_Fixture playerFixture;
 	Map_Fixture mapFixture;
-	Broodwar broodwar;
+	BroodWar broodwar;
 
-	const unsigned int test_construction_time;
-
+	const unsigned int test_constructionTime;
+	const boost::shared_ptr<const UnitType> test_unitType;
 	const boost::shared_ptr<Units> test_units;
+	const boost::shared_ptr<Unit> test_unit;
 
 	Unit_Fixture();
 	virtual ~Unit_Fixture();
 };
 
-#endif // _COREFIXTURE_UNITFIXTURE_HPP
+#endif // _CORE_FIXTURE_UNITFIXTURE_HPP

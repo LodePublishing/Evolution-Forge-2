@@ -26,12 +26,11 @@ public:
 
 protected:
     virtual ~Singleton() {}
-     Singleton() {}
+    Singleton() {}	
 
 private:
-     static boost::scoped_ptr<T> t;
-     static boost::once_flag flag;
-
+	static boost::scoped_ptr<T> t;
+    static boost::once_flag flag;
 };
 
 template<class T> boost::scoped_ptr<T> Singleton<T>::t(0);

@@ -7,13 +7,13 @@
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
 
-#include <goalentry.hpp>
+#include <goal/goalentry.hpp>
 
 struct GoalEntry_Fixture
 {
 	const std::string test_goalentry_name;
 
-	const std::list<std::list<std::list<Goal> > > test_goalentry_goallist;
+	const std::list<std::list<std::list<GoalItem> > > test_goalentry_goalitemlist;
 	
 	const boost::shared_ptr<const GoalEntry> test_goalentry;
 	
@@ -21,7 +21,7 @@ struct GoalEntry_Fixture
 	virtual ~GoalEntry_Fixture();
 
 private:
-	const std::list<std::list<std::list<Goal> > > init_goallist_helper();	
+	const std::list<std::list<std::list<GoalItem> > > init_goalitemlist_helper();	
 };
 
 #endif // _COREFIXTURE_PLAYERFIXTURE_HPP

@@ -1,0 +1,11 @@
+#ifndef _GAMES_ENUMS_MOOUNITS_HPP
+#define _GAMES_ENUMS_MOOUNITS_HPP
+
+enum eMooUnits
+{
+	NONE,
+
+	MAX_UNIT_TYPE_NUM
+};	
+
+#endif // _GAMES_ENUMS_MOOUNITS_HPP

@@ -3,10 +3,10 @@
 
 #include <map>
 
-#include <units.hpp>
-#include <rules.hpp>
-#include <map.hpp>
-#include <player.hpp>
+#include <core/units.hpp>
+#include <core/rules.hpp>
+#include <core/map.hpp>
+#include <core/player.hpp>
 
 #include "goalentry.hpp"
 #include "processedgoal.hpp"
@@ -18,12 +18,12 @@ public:
 	ProcessedGoalEntry(const boost::shared_ptr<const GoalEntry> goalEntry, const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Map> map, const boost::shared_ptr<const Units> startingUnits, const boost::shared_ptr<const Rules> rules);
 	~ProcessedGoalEntry();
 
-	const std::list<std::list<std::list<Goal> > >& getGoalList() const;
+	const std::list<std::list<std::list<GoalItem> > >& getGoalList() const;
 	const std::map<UnitLocalNeutralKey, ProcessedGoal>& getProcessedGoalMap() const;
 	const std::list<boost::uuids::uuid>& getBuildableUnits(const boost::uuids::uuid locationId) const;
 
 	std::string getGoalString() const;
-	void addGoal(std::list<std::list<Goal> >& goal);
+	void addGoalItem(std::list<std::list<GoalItem> >& goalItem);
 
 	void fillBuildableListAndAddGoals(const boost::shared_ptr<const Rules> rules, const boost::shared_ptr<const Map> map, const boost::shared_ptr<const Player> player, const boost::shared_ptr<const Units> startingUnits); 
 
@@ -35,7 +35,7 @@ private:
 	void eraseUnreachableORGoals();
 	// fill this list with all goals from goalEntry
 	// then add all steps in between as a goal (for fitness calculation)
-	std::list<std::list<std::list<Goal> > > goalList;
+	std::list<std::list<std::list<GoalItem> > > goalItemList;
 	std::map<const boost::uuids::uuid, std::list<boost::uuids::uuid> > buildableUnits; // location -> unitTypeList
 
 	// TODO Buildable at start
@@ -85,8 +85,8 @@ inline const std::map<UnitLocalNeutralKey, ProcessedGoal>& ProcessedGoalEntry::g
 	return processedGoalMap;
 }
 
-inline const std::list<std::list<std::list<Goal> > >& ProcessedGoalEntry::getGoalList() const {
-	return goalList;
+inline const std::list<std::list<std::list<GoalItem> > >& ProcessedGoalEntry::getGoalList() const {
+	return goalItemList;
 }
 
 

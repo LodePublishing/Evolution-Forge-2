@@ -6,20 +6,19 @@
 #include <map>
 
 #pragma warning(push, 0)  
-#include <boost/serialization/base_object.hpp>
 #include <boost/smart_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #pragma warning(pop)
 
-#include <uuid.hpp>
-#include <globalstorage.hpp>
+#include <misc/uuid.hpp>
 
 #include "unittype.hpp"
-
+#include "player.hpp"
+#include "location.hpp"
 
 struct UnitLocalNeutralKey
 {
-//	UnitLocalNeutralKey():locationId(0),unitTypeId(0) {}
+	//	UnitLocalNeutralKey():locationId(0),unitTypeId(0) {}
 	UnitLocalNeutralKey(boost::uuids::uuid locationId, boost::uuids::uuid unitTypeId) : locationId(locationId), unitTypeId(unitTypeId) {}
 
 	boost::uuids::uuid locationId;
@@ -30,7 +29,7 @@ struct UnitLocalNeutralKey
 
 struct UnitLocalKey
 {
-//	UnitLocalKey():locationId(0),playerId(0),unitTypeId(0) {}
+	//	UnitLocalKey():locationId(0),playerId(0),unitTypeId(0) {}
 	UnitLocalKey(boost::uuids::uuid locationId, boost::uuids::uuid playerId, boost::uuids::uuid unitTypeId) : locationId(locationId), playerId(playerId), unitTypeId(unitTypeId) {}
 
 	boost::uuids::uuid locationId;
@@ -42,7 +41,7 @@ struct UnitLocalKey
 
 struct UnitGlobalKey
 {
-//	UnitGlobalKey():playerId(0),unitTypeId(0) {}
+	//	UnitGlobalKey():playerId(0),unitTypeId(0) {}
 	UnitGlobalKey(boost::uuids::uuid playerId, boost::uuids::uuid unitTypeId):playerId(playerId),unitTypeId(unitTypeId) {}
 
 	boost::uuids::uuid playerId;
@@ -51,10 +50,8 @@ struct UnitGlobalKey
 	bool operator<(const UnitGlobalKey& other) const { return playerId < other.playerId || (playerId == other.playerId && unitTypeId < other.unitTypeId); }
 };
 
-class Player;
-class Location;
+
 class Units;
-class Unit;
 
 /**
 * A single unit / building / research etc.
@@ -71,6 +68,7 @@ public:
 		const unsigned int remainingConstructionTime = 0,
 		const std::list<boost::shared_ptr<Unit> > occupiedFacilityList = std::list<boost::shared_ptr<Unit> >()
 		);
+	// load unit from a database
 	Unit(const boost::uuids::uuid id,
 		const boost::shared_ptr<const Player> player, 
 		const boost::shared_ptr<const UnitType> unitType,
@@ -82,6 +80,8 @@ public:
 		const std::list<boost::uuids::uuid> occupiedFacilityIdList,
 		const std::list<boost::uuids::uuid> constructingUnitIdList
 		);
+	// call after deserialization of units (by Units)
+	void initialize(const boost::shared_ptr<Units> units);
 	~Unit();
 
 	/**
@@ -126,90 +126,13 @@ public:
 	void clearConstructions();
 	void addOccupiedFacility(const boost::shared_ptr<Unit> facility);
 	void addConstructingUnit(const boost::shared_ptr<Unit> unit);
-	
+
 	// sets new goal location (and movement time etc. - different to assignGoalLocation which only sets the goal location variable to fit the goalLocationID)
 	void setGoalLocation(const boost::shared_ptr<const Location> location);
 
-	// call after deserialization of units (by Units)
-	void initialize(const boost::shared_ptr<Units> units);
+
 
 private:
-	friend class boost::serialization::access;
-
-	template<class Archive> 
-	void serialize(Archive &ar, const unsigned int version)
-	{ }
-
-	template<class Archive>
-	friend inline void save_construct_data(Archive &ar, const Unit* unit, const unsigned int version) { 
-
-		const boost::uuids::uuid& id = unit->getId();
-		const boost::uuids::uuid& playerId = unit->getPlayerId();
-		const boost::uuids::uuid& unitTypeId = unit->getUnitTypeId();
-		const boost::uuids::uuid& locationId = unit->getLocationId();
-		const boost::uuids::uuid& goalLocationId = unit->getLocationId();
-		const unsigned int& count = unit->getCount();
-		const unsigned int& remainingMovementTime = unit->getRemainingMovementTime();
-		const unsigned int& remainingConstructionTime = unit->getRemainingConstructionTime();
-		const std::list<boost::uuids::uuid>& occupiedFacilityIdList = unit->getOccupiedFacilityIdList();
-		const std::list<boost::uuids::uuid>& constructingUnitIdList = unit->getConstructingUnitIdList();
-
-		if(version > 0) {
-		}
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(playerId)
-		   & BOOST_SERIALIZATION_NVP(unitTypeId)
-		   & BOOST_SERIALIZATION_NVP(locationId)
-		   & BOOST_SERIALIZATION_NVP(goalLocationId)
-		   & BOOST_SERIALIZATION_NVP(count)
-		   & BOOST_SERIALIZATION_NVP(remainingMovementTime)
-		   & BOOST_SERIALIZATION_NVP(remainingConstructionTime)
-		   & BOOST_SERIALIZATION_NVP(occupiedFacilityIdList)
-		   & BOOST_SERIALIZATION_NVP(constructingUnitIdList);
-	}
-
-	template<class Archive> 
-	inline friend void load_construct_data(Archive& ar, Unit*& unit, const unsigned int version)
-	{
-		boost::uuids::uuid id;
-		boost::uuids::uuid playerId;
-		boost::uuids::uuid unitTypeId;
-		boost::uuids::uuid locationId;
-		boost::uuids::uuid goalLocationId;
-		unsigned int count;
-		unsigned int remainingMovementTime;
-		unsigned int remainingConstructionTime;
-		std::list<boost::uuids::uuid> occupiedFacilityIdList;
-		std::list<boost::uuids::uuid> constructingUnitIdList;
-
-		ar & BOOST_SERIALIZATION_NVP(id)
-		   & BOOST_SERIALIZATION_NVP(playerId)
-		   & BOOST_SERIALIZATION_NVP(unitTypeId)
-		   & BOOST_SERIALIZATION_NVP(locationId)
-		   & BOOST_SERIALIZATION_NVP(goalLocationId)
-		   & BOOST_SERIALIZATION_NVP(remainingMovementTime)
-		   & BOOST_SERIALIZATION_NVP(remainingConstructionTime)
-		   & BOOST_SERIALIZATION_NVP(occupiedFacilityIdList)
-		   & BOOST_SERIALIZATION_NVP(constructingUnitIdList);
-
-		if(version > 0) {
-		}
-
-		::new(unit)Unit(id, 
-			// TODO let it depend on Rules?
-			GlobalStorage::instance().getPlayer(playerId), 
-			GlobalStorage::instance().getUnitType(unitTypeId), 			
-			GlobalStorage::instance().getLocation(locationId), 
-			GlobalStorage::instance().getLocation(goalLocationId),
-			count,
-			remainingMovementTime,
-			remainingConstructionTime,
-			occupiedFacilityIdList,
-			constructingUnitIdList);
-	}
-
-
 	const boost::shared_ptr<const Player> player;
 	const boost::uuids::uuid playerId;
 
@@ -223,9 +146,9 @@ private:
 
 	boost::shared_ptr<const Location> goalLocation;
 	boost::uuids::uuid goalLocationId;
-	
+
 	// not const: need to be initialized later
-	boost::shared_ptr<Units> globalUnits;
+	boost::weak_ptr<Units> globalUnits;
 
 	unsigned int count;
 	unsigned int remainingConstructionTime; // == 0? complete!		

@@ -3,26 +3,37 @@
 #pragma warning(pop)
 
 #include "game.hpp"
-#include "units.hpp"
 
-Game::Game(const boost::shared_ptr<const Rules> rules,
+Game::Game(const std::string& name,
+	const boost::shared_ptr<const Rules>& rules,
 	const boost::shared_ptr<const Map> map,
-	const unsigned int startingTime,
-	const std::list<boost::shared_ptr<const Player> > playerList):
+	const boost::shared_ptr<const StartCondition> startCondition):
+	
+	UUID<Game>(),
+	name(name),
 	rules(rules),
 	rulesId(rules->getId()),
 	map(map),
-	mapId(map->getId()),	
-	startingTime(startingTime),
-	playerList(playerList),
-	playerIdList(),
-	playerMap()
-{
-	for(std::list<boost::shared_ptr<const Player> >::const_iterator i = playerList.begin(); i != playerList.end(); i++) {
-		playerIdList.push_back((*i)->getId());
-		playerMap.insert(std::pair<const boost::uuids::uuid, const boost::shared_ptr<const Player> >((*i)->getId(), *i));
-	}
-}
+	mapId(map->getId()),
+	startCondition(startCondition),
+	startConditionId(startCondition->getId())
+{ }
 
+Game::Game(const boost::uuids::uuid id,
+	const std::string& name,
+	const boost::shared_ptr<const Rules>& rules,
+	const boost::shared_ptr<const Map> map,
+	const boost::shared_ptr<const StartCondition> startCondition):
+	
+	UUID<Game>(id),	
+	name(name),
+	rules(rules),
+	rulesId(rules->getId()),
+	map(map),
+	mapId(map->getId()),
+	startCondition(startCondition),
+	startConditionId(startCondition->getId())
+{ }
+	
 Game::~Game()
-{}
+{ }

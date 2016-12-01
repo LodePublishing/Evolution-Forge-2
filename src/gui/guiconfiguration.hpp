@@ -9,7 +9,6 @@
 #include <misc/uuid.hpp>
 #include <geometry/size.hpp>
 #include <sdlwrap/enums/bitdepth.hpp>
-#include <guicore/bitmap.hpp>
 
 class GuiConfiguration : public UUID<GuiConfiguration>
 {
@@ -23,11 +22,9 @@ public:
                 const bool unloadGraphics,
                 const bool smoothMovements,
                 const bool transparency,
-                const boost::shared_ptr<const Bitmap> backgroundBitmap,
                 const bool softwareMouse,
                 const bool glowingButtons,
-                const bool toolTips,
-                const bool dnaSpiral
+                const bool toolTips
                 );
 
 	GuiConfiguration(const Size resolutionSize,
@@ -38,11 +35,9 @@ public:
 		const bool unloadGraphics,
 		const bool smoothMovements,
 		const bool transparency,
-		const boost::shared_ptr<const Bitmap> backgroundBitmap,
 		const bool softwareMouse,
 		const bool glowingButtons,
-		const bool toolTips,
-		const bool dnaSpiral		
+		const bool toolTips		
 		);
 
 	Size getResolutionSize() const;
@@ -53,13 +48,10 @@ public:
 	bool isUnloadGraphics() const;
 	bool isSmoothMovements() const;		
 	bool isTransparency() const;
-	const boost::shared_ptr<const Bitmap> getBackgroundBitmap() const;
+	bool isToolTips() const;
 	bool isSoftwareMouse() const;
 	bool isGlowingButtons() const;
-	bool isToolTips() const;
-	bool isDnaSpiral() const;
 
-	const boost::shared_ptr<const GuiConfiguration> getDefaultConfiguration();
 	~GuiConfiguration();
 
 private:
@@ -72,14 +64,10 @@ private:
 	const bool unloadGraphics;
 	const bool smoothMovements;
 	const bool transparency;
-	const boost::shared_ptr<const Bitmap> backgroundBitmap;
 	const bool softwareMouse;
 	const bool glowingButtons;
 	const bool toolTips;
-	const bool dnaSpiral;
-
-	static const boost::shared_ptr<const GuiConfiguration> defaultConfiguration;
-
+	
 	GuiConfiguration();
 };
 
@@ -123,20 +111,8 @@ inline bool GuiConfiguration::isSmoothMovements() const {
 	return smoothMovements;
 }
 
-inline const boost::shared_ptr<const Bitmap> GuiConfiguration::getBackgroundBitmap() const {
-	return backgroundBitmap;
-}
-
-inline bool GuiConfiguration::isDnaSpiral() const {
-	return dnaSpiral;
-}
-
 inline bool GuiConfiguration::isSoftwareMouse() const {
 	return softwareMouse;
-}
-
-inline const boost::shared_ptr<const GuiConfiguration> GuiConfiguration::getDefaultConfiguration() {
-	return defaultConfiguration;
 }
 
 #endif // _GUI_GUICONFIGURATION_HPP

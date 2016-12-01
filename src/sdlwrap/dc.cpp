@@ -2,11 +2,13 @@
 #include <cstdlib>
 
 #include <misc/exceptions.hpp>
+#include <sstream>
+#include <lang/text_storage.hpp>
+#include <misc/ids.hpp>
 
 // ---- INIITIALIZATION ----
 
-DC::DC():
-Singleton<DC>(),
+DC::DC(Uint32 initflags):
 	surface(NULL),
 	oldSurface(NULL),
 	pressedRectangle(false),
@@ -29,25 +31,26 @@ Singleton<DC>(),
 	changedRectangles(0),
 	max_x(0),
 	max_y(0),
-	brightness(0)
-{ }
+	brightness(0),
+	defaultCursor(initAndGetDefaultCursor(initflags))
+{
+	atexit(SDL_Quit);
+}
+
+SDL_Cursor* DC::initAndGetDefaultCursor(Uint32 initflags) {
+	if ( SDL_Init(initflags) < 0 ) {
+		throw SDLException("ERROR (DC::initSDL()): Could not initialize SDL (" + std::string(SDL_GetError()) + ").");
+	}
+	return SDL_GetCursor();
+}
 
 
 DC::~DC()
 {
+	SDL_SetCursor(defaultCursor);
 	//	SDL_FreeSurface(surface); TODO?
 }
 
-
-bool DC::initSDL(const Size& current_resolution, const eBitDepth bit_depth, const Uint32 nflags, const Uint32 initflags)
-{
-	if ( SDL_Init(initflags) < 0 ) {
-		throw SDLException("ERROR (DC::initSDL()): Could not initialize SDL (" + std::string(SDL_GetError()) + ").");
-	}
-
-	atexit(SDL_Quit);
-	return setScreen(current_resolution, bit_depth, nflags);
-}
 
 bool DC::setScreen(const Size current_resolution, const eBitDepth bit_depth, const Uint32 nflags)
 {
@@ -232,4 +235,91 @@ void DC::updateScreen()
 	changedRectangles = 0;
 }
 
-const char* DC::dcVersion = "1.70";
+
+
+
+// ----- DC INTERFACE: -----
+
+const std::string DC::printHardwareInformation()
+{
+	// TODO: uebersetzen bzw. dem Aufrufer nur Daten uebergeben
+	SDL_Rect **modes;
+	std::ostringstream os;
+	os.str("");
+	modes = SDL_ListModes(NULL, SDL_SWSURFACE);
+	if(modes == (SDL_Rect **)0) {
+		os << "* " << TextStorage::instance().get(IDS::START_SDL_NO_MODES_AVAILABLE_TEXT_ID)->getText() << std::endl;
+	}
+	else
+	{
+		if(modes == (SDL_Rect **)-1) {
+			os << "* " << TextStorage::instance().get(IDS::START_SDL_ALL_RESOLUTIONS_AVAILABLE_TEXT_ID)->getText() << std::endl;
+		} else
+		{
+			os << "* " << TextStorage::instance().get(IDS::START_SDL_AVAILABLE_MODES_TEXT_ID)->getText();
+			for(unsigned int i=0; modes[i]; ++i) {
+				os << "  " << modes[i]->w << " x " << modes[i]->h;
+			}
+			os << std::endl;
+		}
+	}
+	const SDL_VideoInfo* hardware = SDL_GetVideoInfo();
+	os << " - " << TextStorage::instance().get(IDS::START_SDL_MAX_COLOR_DEPTH_TEXT_ID)->getText() << (unsigned int)hardware->vfmt->BitsPerPixel;
+	//	if(hardware->hw_available) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_HARDWARE_SURFACES_POSSIBLE_TEXT_ID)->getText();
+	if(hardware->wm_available) os << "\n - " << TextStorage::instance().get(IDS::START_SDL_WINDOW_MANAGER_AVAILABLE_TEXT_ID)->getText();
+	if(hardware->blit_hw) os << "\n - " << TextStorage::instance().get(IDS::START_SDL_HARDWARE_TO_HARDWARE_BLITS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->blit_hw_CC) os << "\n - " << TextStorage::instance().get(IDS::START_SDL_HARDWARE_TO_HARDWARE_COLORKEY_BLITS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->blit_hw_A) os << "\n - " << TextStorage::instance().get(IDS::START_SDL_HARDWARE_TO_HARDWARE_ALPHA_BLITS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->blit_sw) os << "\n - " << TextStorage::instance().get(IDS::START_SDL_SOFTWARE_TO_HARDWARE_BLITS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->blit_sw_CC) os << "\n - " << TextStorage::instance().get(IDS::START_SDL_SOFTWARE_TO_HARDWARE_COLORKEY_BLITS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->blit_sw_A)	os << "\n - " << TextStorage::instance().get(IDS::START_SDL_SOFTWARE_TO_HARDWARE_ALPHA_BLITS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->blit_fill)	os << "\n - " << TextStorage::instance().get(IDS::START_SDL_COLOR_FILLS_ACCELERATED_TEXT_ID)->getText();
+	if(hardware->video_mem>0) {
+		std::string memoryString = TextStorage::instance().get(IDS::START_SDL_TOTAL_VIDEO_MEMORY_TEXT_ID)->getText();
+		std::list<std::string> parameterList;
+		parameterList.push_back(boost::lexical_cast<std::string>(hardware->video_mem));
+		Misc::formatString(memoryString, parameterList);
+		os << "\n - " << memoryString;
+	}
+	//	Total amount of video memory: " << hardware->video_mem << "kb";
+
+	return os.str();
+}
+
+
+
+
+const std::string DC::printSurfaceInformation()
+{
+	BOOST_ASSERT(surface);
+
+	std::ostringstream os; os.str("");
+	os << surface->w << " x " << surface->h << " @ " << (unsigned int)(surface->format->BitsPerPixel);
+	if (surface->flags & SDL_SWSURFACE) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_STORED_IN_SYSTEM_MEMORY_TEXT_ID)->getText();
+	//Surface is stored in system memory";
+	else if(surface->flags & SDL_HWSURFACE) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_STORED_IN_VIDEO_MEMORY_TEXT_ID)->getText();
+	//			Surface is stored in video memory";
+	if(surface->flags & SDL_ASYNCBLIT) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_USES_ASYNCHRONOUS_BLITS_TEXT_ID)->getText();
+	//urface uses asynchronous blits if possible";
+	if(surface->flags & SDL_ANYFORMAT) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_ALLOWS_ANY_PIXEL_FORMAT_TEXT_ID)->getText();
+	if(surface->flags & SDL_HWPALETTE) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_HAS_EXCLUSIVE_PALETTE_TEXT_ID)->getText();
+	if(surface->flags & SDL_DOUBLEBUF) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_IS_DOUBLE_BUFFERED_TEXT_ID)->getText();
+	if(surface->flags & SDL_OPENGL) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_HAS_OPENGL_CONTEXT_TEXT_ID)->getText();
+	if(surface->flags & SDL_OPENGLBLIT) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_SUPPORTS_OPENGL_BLITTING_TEXT_ID)->getText();
+	if(surface->flags & SDL_RESIZABLE) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_IS_RESIZABLE_TEXT_ID)->getText();
+	if(surface->flags & SDL_HWACCEL) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_BLIT_USES_HARDWARE_ACCELERATION_TEXT_ID)->getText();
+	//Surface blit uses hardware acceleration";
+	if(surface->flags & SDL_SRCCOLORKEY) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_USES_COLORKEY_BLITTING_TEXT_ID)->getText();
+	//Surface use colorkey blitting";
+	if(surface->flags & SDL_RLEACCEL) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_COLORKEY_BLITTING_RLE_ACCELERATED_TEXT_ID)->getText();
+	//Colorkey blitting is accelerated with RLE";
+	if(surface->flags & SDL_SRCALPHA) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_BLIT_USES_ALPHA_BLENDING_TEXT_ID)->getText();
+	//	Surface blit uses alpha blending";
+	if(surface->flags & SDL_PREALLOC) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_USES_PREALLOCATED_MEMORY_TEXT_ID)->getText();
+	if(SDL_MUSTLOCK(surface)) os << "\n- " << TextStorage::instance().get(IDS::START_SDL_SURFACE_NEEDS_LOCKING_TEXT_ID)->getText();
+
+	return os.str();
+}
+
+
+const char* DC::dcVersion = "2.00";

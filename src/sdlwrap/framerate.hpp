@@ -19,14 +19,13 @@ class SDL_API FrameRate
 	public:
 		
 		bool allowCalculation();
-		void setOptimizing(const bool is_optimizing);
 
 		const std::list<unsigned int> getPercentList() const;
 		unsigned int getFramesPerSecond() const;
 		unsigned int getGenerationsPerSecond() const;		
 
 
-		FrameRate(const bool is_optimizing, const unsigned int desired_framerate, const unsigned int desired_cpu);
+		FrameRate(const unsigned int desired_framerate, const unsigned int desired_cpu);
 		~FrameRate();
 
 		bool setDesiredFramerate(const unsigned int desired_frame_rate);

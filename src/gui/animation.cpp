@@ -59,6 +59,11 @@ Animation::~Animation()
 
 	delete text;
 //	lockAnimation(false);
+
+	#ifdef USE_SMPEG
+	//toInfoLog("* " + lookUpString(END_FREEING_ANIMATIONS_TEXT_ID)->getText());
+	//SMPEG_delete(l->animation);
+	#endif
 }
 
 //void Animation::lockAnimation(const bool lock)

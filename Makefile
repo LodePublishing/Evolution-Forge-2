@@ -21,6 +21,7 @@ SDLWRAP=sdlwrap
 SIMULATOR=simulator
 SOUND=sound
 UI=ui
+EF2=ef2
 
 # sub projects (fixtures)
 AI_FIXTURE=aifixture
@@ -35,6 +36,7 @@ SDLWRAP_FIXTURE=sdlwrapfixture
 GUICORE_FIXTURE=guicorefixture
 GUI_FIXTURE=guifixture
 UI_FIXTURE=uifixture
+MAIN_FIXTURE=mainfixture
 
 # sub projects (tests)
 AI_TEST=aitest
@@ -49,6 +51,7 @@ SDLWRAP_TEST=sdlwraptest
 GUICORE_TEST=guicoretest
 GUI_TEST=guitest
 UI_TEST=uitest
+MAIN_TEST=maintest
 
 
 ## directories
@@ -83,6 +86,7 @@ SDLWRAP_FIXTURE_DIR=$(FIXTURE)/$(SDLWRAP_FIXTURE)
 GUICORE_FIXTURE_DIR=$(FIXTURE)/$(GUICORE_FIXTURE)
 GUI_FIXTURE_DIR=$(FIXTURE)/$(GUI_FIXTURE)
 UI_FIXTURE_DIR=$(FIXTURE)/$(UI_FIXTURE)
+MAIN_FIXTURE_DIR=$(FIXTURE)/$(MAIN_FIXTURE)
 
 
 # sub projects (tests)
@@ -98,6 +102,7 @@ SDLWRAP_TEST_DIR=$(TEST)/$(SDLWRAP_TEST)
 GUICORE_TEST_DIR=$(TEST)/$(GUICORE_TEST)
 GUI_TEST_DIR=$(TEST)/$(GUI_TEST)
 UI_TEST_DIR=$(TEST)/$(UI_TEST)
+MAIN_TEST_DIR=$(TEST)/$(MAIN_TEST)
 
 BOOST_INCLUDES = -isystem /var/source/boost_1_44_0
 LIBRARIES = -lSDL -lSDLmain -L/var/source/boost_1_44_0/stage/lib -lboost_serialization -lboost_program_options -lboost_thread -lboost_system -lboost_log -lboost_date_time -lboost_filesystem -lboost_signals -L/usr/local/lib -lSDL_ttf -lSDL_image -lSDL_mixer -lboost_unit_test_framework
@@ -149,6 +154,8 @@ GUI_TEST_DEPS = $(GUI_TEST_DIR)/$(GUI_TEST).a $(GUI_FIXTURE_DIR)/$(GUI_FIXTURE).
 
 UI_TEST_DEPS = $(UI_TEST_DIR)/$(UI_TEST).a $(UI_FIXTURE_DIR)/$(UI_FIXTURE).a $(UI_DIR)/$(UI).a $(GUI_DIR)/$(GUI).a $(SDLWRAP_DIR)/$(SDLWRAP).a $(GUICORE_DIR)/$(GUICORE).a $(MISC_DIR)/$(MISC).a $(GEOMETRY_DIR)/$(GEOMETRY).a
 
+MAIN_TEST_DEPS = $(MAIN_TEST_DIR)/$(MAIN_TEST).a $(MAIN_FIXTURE_DIR)/$(MAIN_FIXTURE).a $(MAIN_DIR)/$(MAIN).a $(GUI_DIR)/$(GUI).a $(SDLWRAP_DIR)/$(SDLWRAP).a $(GUICORE_FIXTURE_DIR)/$(GUICORE_FIXTURE).a $(GUICORE_DIR)/$(GUICORE).a $(LANG_FIXTURE_DIR)/$(LANG_FIXTURE).a $(LANG_DIR)/$(LANG).a $(MISC_DIR)/$(MISC).a $(GEOMETRY_DIR)/$(GEOMETRY).a
+
 
 # --- TEST TARGETS ---
 AI_TEST_TARGETS = $(AI_TEST) $(AI_FIXTURE) $(AI)
@@ -174,6 +181,8 @@ SDLWRAP_TEST_TARGETS = $(SDLWRAP_TEST) $(SDLWRAP_FIXTURE) $(SDLWRAP) $(GUICORE) 
 GUI_TEST_TARGETS = $(GUI_TEST) $(GUI_FIXTURE) $(GUI) $(SDLWRAP) $(GUICORE_FIXTURE) $(GUICORE) $(LANG) $(MISC) $(GEOMETRY)
 
 UI_TEST_TARGETS = $(UI_TEST) $(UI_FIXTURE) $(UI) $(GUI) $(SDLWRAP) $(GUICORE) $(MISC) $(GEOMETRY)
+
+MAIN_TEST_TARGETS = $(MAIN_TEST) $(MAIN_FIXTURE) $(MAIN) $(GUI) $(SDLWRAP) $(GUICORE_FIXTURE) $(GUICORE) $(LANG_FIXTURE) $(LANG) $(MISC) $(GEOMETRY)
 
 
 # --- Link programs ---
@@ -214,7 +223,11 @@ $(GUI_TEST).bin : $(GUI_TEST_TARGETS) $(GUI_TEST_DEPS)
 $(UI_TEST).bin : $(UI_TEST_TARGETS) $(UI_TEST_DEPS)
 	$(CXX) $(UI_TEST_DEPS) $(CXXFLAGS) -o $(UI_TEST_DIR)/$(UI_TEST).bin
 
-ALL_TESTS = trace_lang.info trace_geometry.info trace_misc.info trace_core.info trace_goal.info trace_sdlwrap.info trace_guicore.info trace_gui.info
+$(MAIN_TEST).bin : $(MAIN_TEST_TARGETS) $(MAIN_TEST_DEPS)
+	$(CXX) $(MAIN_TEST_DEPS) $(CXXFLAGS) -o $(MAIN_TEST_DIR)/$(MAIN_TEST).bin
+
+
+ALL_TESTS = trace_lang.info trace_geometry.info trace_misc.info trace_core.info trace_goal.info trace_sdlwrap.info trace_guicore.info trace_gui.info trace_main.info
 #trace_ai.info trace_build.info trace_simulator.info trace_ui.info
 
 all_tests: $(ALL_TESTS)
@@ -292,6 +305,12 @@ trace_ui.info:
 	@lcov --capture --directory . --output-file $@ --test-name my_test_ui
 	@lcov --extract $@ \*src\*  --output-file $@ ;
 
+trace_main.info:
+	@lcov --zerocounters --directory .
+	@$(MAIN_TEST_DIR)/$(MAIN_TEST).bin
+	@lcov --capture --directory . --output-file $@ --test-name my_test_main
+	@lcov --extract $@ \*src\*  --output-file $@ ;
+
 
 GENPNG = genpng
 USE_GENPNG := $(shell $(GENPNG) --help >/dev/null 2>/dev/null; echo $$?)
@@ -305,12 +324,13 @@ output:
 	@LC_ALL=en_US
 	@export LC_ALL
 	@rm /var/www/coverage/* -rf
-	@genhtml $(ALL_TESTS) --output-directory /var/www/coverage --title "Evolution Forge 2 Coverage" --show-details --description-file descriptions $(FRAMES) --legend 
-descriptions: descriptions.txt
-	@gendesc descriptions.txt -o descriptions
-	@doxygen Doxygen
+	@genhtml $(ALL_TESTS) --output-directory /var/www/coverage --title "Evolution Forge 2 Coverage" --show-details --description-file descriptions $(FRAMES) --legend
+	@doxygen Doxyfile
 	@rm /var/www/doxygen/* -rf
 	@cp -r html/* /var/www/doxygen
+       	
+descriptions: descriptions.txt
+	@gendesc descriptions.txt -o descriptions
 
 # Compiling targets
 $(AI):
@@ -394,6 +414,9 @@ $(GUI_FIXTURE):
 $(UI_FIXTURE):
 	@cd $(UI_FIXTURE_DIR) ; make $(UI_FIXTURE) ;
 
+$(MAIN_FIXTURE):
+	@cd $(MAIN_FIXTURE_DIR) ; make $(MAIN_FIXTURE) ;
+
 
 $(AI_TEST):
 	@cd $(AI_TEST_DIR) ; make $(AI_TEST) ;
@@ -431,6 +454,8 @@ $(GUI_TEST):
 $(UI_TEST):
 	@cd $(UI_TEST_DIR) ; make $(UI_TEST) ;
 
+$(MAIN_TEST):
+	@cd $(MAIN_TEST_DIR) ; make $(MAIN_TEST) ;
 
 clean:
 	@cd $(AI_DIR) ; make clean
@@ -460,6 +485,7 @@ clean:
 	@cd $(GUICORE_FIXTURE_DIR) ; make clean
 	@cd $(GUI_FIXTURE_DIR) ; make clean
 	@cd $(UI_FIXTURE_DIR) ; make clean
+	@cd $(MAIN_FIXTURE_DIR) ; make clean	
 	@cd $(AI_TEST_DIR) ; make clean
 	@cd $(BUILD_TEST_DIR) ; make clean
 	@cd $(CORE_TEST_DIR) ; make clean
@@ -472,6 +498,7 @@ clean:
 	@cd $(GUICORE_TEST_DIR) ; make clean
 	@cd $(GUI_TEST_DIR) ; make clean
 	@cd $(UI_TEST_DIR) ; make clean
+	@cd $(MAIN_TEST_DIR) ; make clean
 	@find . -name \*.gcov -type f -delete
 	@find . -name \*.gcda -type f -delete
 	@find . -name \*.gcno -type f -delete

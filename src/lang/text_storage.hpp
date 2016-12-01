@@ -6,6 +6,9 @@
 #include "text.hpp"
 
 class TextStorage : public SingleStorage<Text>
-{ };
+{ 
+public:
+	static void updateLanguage(const boost::uuids::uuid languageId);
+};
 
 #endif // _LANG_STORAGES_TEXT_HPP

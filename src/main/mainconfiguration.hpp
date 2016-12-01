@@ -1,74 +1,51 @@
 #ifndef _MAIN_CONFIGURATION_HPP
 #define _MAIN_CONFIGURATION_HPP
 
-#include <list>
-#include <map>
-#include <string>
-
 #pragma warning(push, 0)  
-#include <boost/serialization/base_object.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/uuid/uuid.hpp>
+#include <boost/shared_ptr.hpp>
 #pragma warning(pop)
 
-#include <misc/singleton.hpp>
-#include <misc/loadsave.hpp>
+#include <misc/uuid.hpp>
 
-// TODO Default configuration
-// TODO evtl Liste machen mit Konstanten -> Einfaches Hinzufügen von Optionen möglich
+#include <guicore/bitmap.hpp>
 
-class MainConfiguration : public LoadSave<MainConfiguration>, public Singleton<MainConfiguration>
+class MainConfiguration : public UUID<MainConfiguration>
 {
-	friend class Singleton<MainConfiguration>;
 public:
-	const boost::uuids::uuid getLanguageId() const;
+	MainConfiguration(const boost::uuids::uuid id, const boost::uuids::uuid languageId, const boost::uuids::uuid guiId, const boost::shared_ptr<const Bitmap> backgroundBitmap, bool dnaSpiral);
+	MainConfiguration(const boost::uuids::uuid languageId, const boost::uuids::uuid guiId, const boost::shared_ptr<const Bitmap> backgroundBitmap, bool dnaSpiral);
 
+	const boost::uuids::uuid& getLanguageId() const;
+	const boost::uuids::uuid& getGuiId() const;
+	const boost::shared_ptr<const Bitmap> getBackgroundBitmap() const;
+	bool isDnaSpiral() const;
+	
+	~MainConfiguration();
 private:
-	friend class boost::serialization::access;
-
-	template<class Archive> 
-	void serialize(Archive& ar, const unsigned int version)
-	{ }
-
-	template<class Archive>
-	inline friend void save_construct_data(Archive &ar, MainConfiguration* mainConfiguration, const unsigned int version);
-
-	template<class Archive> 
-	inline friend void load_construct_data(Archive& ar, MainConfiguration*& mainConfiguration, const unsigned int version);
 
 	const boost::uuids::uuid languageId;
+	const boost::uuids::uuid guiId;
+	const boost::shared_ptr<const Bitmap> backgroundBitmap;
+	const bool dnaSpiral;
 
 	MainConfiguration();
-	~MainConfiguration();
-);
+};
 
-inline const boost::uuids::uuid MainConfiguration::getLanguageId() const {
+inline const boost::uuids::uuid& MainConfiguration::getLanguageId() const {
 	return languageId;
 }
 
+inline const boost::uuids::uuid& MainConfiguration::getGuiId() const {
+	return guiId;
+}
 
-template<class Archive>
-void save_construct_data(Archive &ar, MainConfiguration* mainConfiguration, const unsigned int version) { 
+inline const boost::shared_ptr<const Bitmap> MainConfiguration::getBackgroundBitmap() const {
+	return backgroundBitmap;
+}
 
-	const boost::uuids::uuid& languageId = mainConfiguration->getLanguageId();
-
-	if(version > 0) {
-	}
-
-	ar & BOOST_SERIALIZATION_NVP(languageId);
-} 
-
-template<class Archive> 
-void load_construct_data(Archive& ar, MainConfiguration*& mainConfiguration, const unsigned int version)
-{
-	boost::uuids::uuid languageId;
-
-	ar & BOOST_SERIALIZATION_NVP(languageId);
-
-	if(version > 0) {
-	}
-
-	mainConfiguration->languageId = languageId;
+inline bool MainConfiguration::isDnaSpiral() const {
+	return dnaSpiral;
 }
 
 #endif // _MAIN_CONFIGURATION_HPP

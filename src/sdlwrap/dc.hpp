@@ -25,9 +25,10 @@
 
 #include "enums/bitdepth.hpp"
 
-#include <misc/singleton.hpp>
-
 #include <guicore/surface.hpp>
+#include <misc/exceptions.hpp>
+
+#include <SDL_image.h>
 
 #pragma warning(push, 0)
 #include <boost/shared_ptr.hpp>
@@ -58,14 +59,12 @@ typedef struct tColorY {
 #endif
 
 
-class DC : public Singleton<DC>
+class DC
 {
-	friend class Singleton<DC>;
 	public:
-		DC();
+		DC(const Uint32 initflags);
 		~DC();
-		bool initSDL(const Size& current_resolution, const eBitDepth bit_depth, const Uint32 nflags, const Uint32 initflags);
-		
+				
 		static const char* getVersion();
 
 		operator SDL_Surface*() const;
@@ -104,7 +103,8 @@ class DC : public Singleton<DC>
 		
 		void clearScreen();
 		
-		bool SaveBMP(const std::string& file) const;
+		void saveBMP(const std::string& fileName) const;
+		SDL_Surface* loadBMP(const std::string& fileName) const;
 
 		bool setFullScreen(const bool fullscreen = true);
 		bool isFullScreen() const;
@@ -187,7 +187,14 @@ class DC : public Singleton<DC>
 		void setGradient(const unsigned int gradient);
 		void resetGradient();
 
+		unsigned int getScreenDataSize() const;
+
+		const std::string printHardwareInformation();
+		const std::string printSurfaceInformation();
+
 	private:
+		SDL_Cursor* initAndGetDefaultCursor(Uint32 initflags);
+		SDL_Cursor* defaultCursor;
 
 		static const char* dcVersion;
 
@@ -313,6 +320,15 @@ class DC : public Singleton<DC>
 		DC &operator=(const DC& other);
 };
 
+inline unsigned int DC::getScreenDataSize() const {
+	BOOST_ASSERT(surface);
+	return surface->w * surface->h * (unsigned int)(surface->format->BitsPerPixel);
+}
+
+inline SDL_Surface* DC::loadBMP(const std::string& fileName) const {
+	return IMG_Load(fileName.c_str());
+}
+
 inline void DC::setGradient(const unsigned int gradient) {
 	this->gradient = gradient;
 }
@@ -368,7 +384,7 @@ inline bool DC::valid() const {
 		
 inline Uint32 DC::flags() const {
 	BOOST_ASSERT(surface);
-	return getSurface()->flags;
+	return surface->flags;
 }
 
 inline const Size DC::getSize() const {
@@ -377,12 +393,12 @@ inline const Size DC::getSize() const {
 		
 inline Uint16 DC::w() const {
 	BOOST_ASSERT(surface);
-	return static_cast<Uint16>(getSurface()->w);
+	return static_cast<Uint16>(surface->w);
 }
 		
 inline Uint16 DC::h() const {
 	BOOST_ASSERT(surface);
-	return static_cast<Uint16>(getSurface()->h);
+	return static_cast<Uint16>(surface->h);
 }
 		
 inline Uint16 DC::pitch() const {
@@ -405,13 +421,12 @@ inline const struct private_hwdata* DC::hwdata() const {
 	return surface->hwdata;
 }
 		
-inline bool DC::SaveBMP(const std::string& file) const {
-	if(file.size() == 0) {
-		return false;// TODO SaveBMP(file.c_str()); 
+inline void DC::saveBMP(const std::string& fileName) const {
+	BOOST_ASSERT(fileName.size() > 0);
+	if(SDL_SaveBMP(surface, fileName.c_str())) {
+		throw SDLException("ERROR (DC::saveBMP()): Could not save surface to bitmap " + fileName + " (" + std::string(SDL_GetError()) + ").");
 	}
-	else {
-		return true;
-	}
+ 
 }
 
 inline void DC::DrawLine(const Point& p1, const Point& p2) const {

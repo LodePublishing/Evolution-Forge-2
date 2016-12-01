@@ -7,7 +7,7 @@
 Color_Fixture::Color_Fixture() :
 	dcFixture(),
 	test_sdlcolor(Color::toSDL_Color(static_cast<Uint8>(RandomGenerator::instance().rnd()), static_cast<Uint8>(RandomGenerator::instance().rnd()), static_cast<Uint8>(RandomGenerator::instance().rnd()), static_cast<Uint8>(RandomGenerator::instance().rnd()))),
-	test_color(new Color(DC::instance().getSurface(), test_sdlcolor)),
+	test_color(new Color(dcFixture.test_dc->getSurface(), test_sdlcolor)),
 	test_colorMap(init_colormap_helper())
 { 
 	GuiCoreDirectories::initTemp("temp");	

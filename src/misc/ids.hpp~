@@ -1,0 +1,139 @@
+#ifndef _MISC_IDS_HPP
+#define _MISC_IDS_HPP
+
+#pragma warning(push, 0)  
+#include <boost/uuid/uuid.hpp>
+#pragma warning(pop)
+
+struct IDS
+{
+
+static const boost::uuids::uuid START_INIT_SDL_TEXT_ID;
+static const boost::uuids::uuid START_SET_FULLSCREEN_MODE_TEXT_ID;
+static const boost::uuids::uuid START_SET_WINDOW_MODE_TEXT_ID;
+static const boost::uuids::uuid START_UNABLE_TO_INIT_SDL_TEXT_ID;
+static const boost::uuids::uuid START_ERROR_SETTING_VIDEO_MODE_TEXT_ID;
+static const boost::uuids::uuid START_CREATED_SURFACE_TEXT_ID;
+static const boost::uuids::uuid START_INIT_SDL_TRUETYPE_FONTS_TEXT_ID;
+static const boost::uuids::uuid START_INIT_SDL_TTF_ERROR_TEXT_ID;
+static const boost::uuids::uuid START_LOAD_CONFIGURATION_TEXT_ID;
+static const boost::uuids::uuid END_RESET_MOUSE_CURSOR_TEXT_ID;
+static const boost::uuids::uuid END_FREEING_COLORS_BRUSHES_PENS_TEXT_ID;
+static const boost::uuids::uuid END_FREEING_BITMAPS_TEXT_ID;
+static const boost::uuids::uuid END_FREEING_ANIMATIONS_TEXT_ID;
+static const boost::uuids::uuid END_FREEING_COORDINATES_TEXT_ID;
+static const boost::uuids::uuid END_FREEING_BUTTONS_TEXT_ID;
+static const boost::uuids::uuid END_FREEING_FONTS_TEXT_ID;
+static const boost::uuids::uuid START_SDL_NO_MODES_AVAILABLE_TEXT_ID;
+static const boost::uuids::uuid START_SDL_ALL_RESOLUTIONS_AVAILABLE_TEXT_ID;
+static const boost::uuids::uuid START_SDL_AVAILABLE_MODES_TEXT_ID;
+static const boost::uuids::uuid START_SDL_MAX_COLOR_DEPTH_TEXT_ID;
+static const boost::uuids::uuid START_SDL_HARDWARE_SURFACES_POSSIBLE_TEXT_ID;
+static const boost::uuids::uuid START_SDL_WINDOW_MANAGER_AVAILABLE_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SOFTWARE_TO_HARDWARE_BLITS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SOFTWARE_TO_HARDWARE_COLORKEY_BLITS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SOFTWARE_TO_HARDWARE_ALPHA_BLITS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_HARDWARE_TO_HARDWARE_BLITS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_HARDWARE_TO_HARDWARE_COLORKEY_BLITS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_HARDWARE_TO_HARDWARE_ALPHA_BLITS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_COLOR_FILLS_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_TOTAL_VIDEO_MEMORY_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_STORED_IN_SYSTEM_MEMORY_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_STORED_IN_VIDEO_MEMORY_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_USES_ASYNCHRONOUS_BLITS_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_ALLOWS_ANY_PIXEL_FORMAT_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_HAS_EXCLUSIVE_PALETTE_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_IS_DOUBLE_BUFFERED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_HAS_OPENGL_CONTEXT_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_SUPPORTS_OPENGL_BLITTING_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_IS_RESIZABLE_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_BLIT_USES_HARDWARE_ACCELERATION_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_USES_COLORKEY_BLITTING_TEXT_ID;
+static const boost::uuids::uuid START_SDL_COLORKEY_BLITTING_RLE_ACCELERATED_TEXT_ID;
+static const boost::uuids::uuid START_SDL_BLIT_USES_ALPHA_BLENDING_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_USES_PREALLOCATED_MEMORY_TEXT_ID;
+static const boost::uuids::uuid START_SDL_SURFACE_NEEDS_LOCKING_TEXT_ID;
+static const boost::uuids::uuid END_RELEASING_SOUND_ENGINE_TEXT_ID;
+static const boost::uuids::uuid END_CLOSING_SOUND_ENGINE_TEXT_ID;
+static const boost::uuids::uuid START_INIT_SOUND_TEXT_ID;
+static const boost::uuids::uuid START_INIT_FMOD_SYSTEM_CREATE_ERROR_TEXT_ID;
+static const boost::uuids::uuid START_INIT_FMOD_GET_VERSION_ERROR_TEXT_ID;
+static const boost::uuids::uuid START_INIT_FMOD_VERSION_ERROR_TEXT_ID;
+static const boost::uuids::uuid START_INIT_FMOD_SYSTEM_INIT_ERROR_TEXT_ID;
+static const boost::uuids::uuid START_INIT_NOSOUND_TEXT_ID;
+
+
+
+// ------ BITMAPS ------
+static const boost::uuids::uuid NULL_BITMAP = Misc::uuid("b428fec0-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INCREASE_BITMAP =  Misc::uuid("ba7a6d40-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid SUB_BITMAP = Misc::uuid("bd68daa0-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CANCEL_BITMAP = Misc::uuid("bfad7370-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid SMALL_ARROW_LEFT_BITMAP = Misc::uuid("c2311110-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid SMALL_ARROW_RIGHT_BITMAP = Misc::uuid("c47b7640-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid SMALL_ARROW_UP_BITMAP = Misc::uuid("c6892090-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid SMALL_ARROW_DOWN_BITMAP = Misc::uuid("c8ac9cd0-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid LOCATION_BUTTON_BITMAP = Misc::uuid("cac23660-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid TIME_BUTTON_BITMAP = Misc::uuid("cd968c10-4dc0-11e0-b8af-0800200c9a66");
+
+static const boost::uuids::uuid BLUE_RADIO_OFF_BITMAP = Misc::uuid("017e6cb0-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid BLUE_RADIO_ON_BITMAP = Misc::uuid("042cc3d0-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid RED_RADIO_OFF_BITMAP = Misc::uuid("06f8b510-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid RED_RADIO_ON_BITMAP = Misc::uuid("09d5bd50-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid YELLOW_RADIO_OFF_BITMAP = Misc::uuid("0cfffb30-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid YELLOW_RADIO_ON_BITMAP = Misc::uuid("10877440-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid GREY_RADIO_OFF_BITMAP = Misc::uuid("13e60890-4dca-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid GREYRADIO_ON_BITMAP = Misc::uuid("173078a0-4dca-11e0-b8af-0800200c9a66");
+
+static const boost::uuids::uuid BACKGROUND_SC_BITMAP = Misc::uuid("d5d572b0-4dc0-11e0-b8af-0800200c9a66");
+
+static const boost::uuids::uuid BAR_BITMAP = Misc::uuid("e7b281d0-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid KEY_BITMAP = Misc::uuid("ea0fabb0-4dc0-11e0-b8af-0800200c9a66");
+
+static const boost::uuids::uuid CLAWSOFTWARE_BITMAP = Misc::uuid("eca809d0-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLAWSOFTWARE_MONO_BITMAP = Misc::uuid("ef00c6e0-4dc0-11e0-b8af-0800200c9a66");
+
+static const boost::uuids::uuid NEW_BITMAP = Misc::uuid("f14dc420-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid LOAD_BITMAP = Misc::uuid("f41f0c90-4dc0-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid SAVE_BITMAP = Misc::uuid("f6526750-4dc0-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid REFRESH_BITMAP = Misc::uuid("f8e1ebd0-4dc0-11e0-b8af-0800200c9a66"); 
+
+static const boost::uuids::uuid BACK_BITMAP = Misc::uuid("fb55aaf0-4dc0-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid FORWARD_BITMAP = Misc::uuid("fd655110-4dc0-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid ADD_BITMAP = Misc::uuid("ffa703b0-4dc0-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid DELETE_BITMAP = Misc::uuid("01f894d0-4dc1-11e0-b8af-0800200c9a66"); 
+
+static const boost::uuids::uuid HELP_BITMAP = Misc::uuid("042e3980-4dc1-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid MAP_BITMAP = Misc::uuid("065eae10-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid SETTING_BITMAP = Misc::uuid("08c3a020-4dc1-11e0-b8af-0800200c9a66"); 
+
+static const boost::uuids::uuid BLUE_BULLET_BITMAP = Misc::uuid("0ceeac30-4dc1-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid RED_BULLET_BITMAP = Misc::uuid("cd5a3040-4dc9-11e0-b8af-0800200c9a66"); 
+static const boost::uuids::uuid YELLOW_BULLET_BITMAP = Misc::uuid("d31467d0-4dc9-11e0-b8af-0800200c9a66"); 
+	
+static const boost::uuids::uuid ARROW_LEFT_BITMAP = Misc::uuid("152c5a50-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid ARROW_RIGHT_BITMAP = Misc::uuid("19685650-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid ARROW_UP_BITMAP = Misc::uuid("1d9b2a90-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid ARROW_DOWN_BITMAP = Misc::uuid("21fc13b0-4dc1-11e0-b8af-0800200c9a66");
+		
+static const boost::uuids::uuid CLICKED_SMALL_ARROW_LEFT_BITMAP = Misc::uuid("26bcd010-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_SMALL_ARROW_RIGHT_BITMAP = Misc::uuid("28e3f5d0-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_ARROW_LEFT_BITMAP = Misc::uuid("4c8c60d0-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_ARROW_RIGHT_BITMAP = Misc::uuid("4e7dd090-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_SMALL_ARROW_UP_BITMAP = Misc::uuid("509d0710-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_SMALL_ARROW_DOWN_BITMAP = Misc::uuid("534a73d0-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_ARROW_UP_BITMAP = Misc::uuid("5593c790-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid CLICKED_ARROW_DOWN_BITMAP = Misc::uuid("57ab0ed0-4dc1-11e0-b8af-0800200c9a66");
+	
+	
+static const boost::uuids::uuid INTRO_SDL_BITMAP = Misc::uuid("5be36150-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INTRO_SDL_TTF_BITMAP = Misc::uuid("5ed2b910-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INTRO_SDL_IMAGE_BITMAP = Misc::uuid("60d42e60-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INTRO_GUI_BITMAP = Misc::uuid("62fc3e80-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INTRO_SMPEG_BITMAP = Misc::uuid("6542ac10-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INTRO_FMOD_BITMAP = Misc::uuid("6774ce50-4dc1-11e0-b8af-0800200c9a66");
+static const boost::uuids::uuid INTRO_SDL_MIXER_BITMAP = Misc::uuid("697ad780-4dc1-11e0-b8af-0800200c9a66");
+
+};
+
+#endif // _MISC_IDS_HPP

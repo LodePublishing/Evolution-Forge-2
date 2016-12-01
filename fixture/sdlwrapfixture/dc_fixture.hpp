@@ -14,6 +14,8 @@ struct DC_Fixture
 	const Uint32 nflags;
 	const eBitDepth depth;
 
+	const boost::scoped_ptr<DC> test_dc;
+
 	DC_Fixture();	
 	virtual ~DC_Fixture();
 };

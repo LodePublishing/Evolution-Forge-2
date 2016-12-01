@@ -5,8 +5,6 @@
 #include <gui/guiconfiguration_storage.hpp>
 
 GuiConfiguration_Fixture::GuiConfiguration_Fixture():
-	bitmapFixture(),
-
 	test_resolutionSize(RandomGenerator::instance().rnd(), RandomGenerator::instance().rnd()),
     test_bitDepth((eBitDepth)(RandomGenerator::instance().rnd()%MAX_BITDEPTHS)),
 	test_fullScreen(RandomGenerator::instance().rndBool()),
@@ -18,9 +16,7 @@ GuiConfiguration_Fixture::GuiConfiguration_Fixture():
     test_softwareMouse(RandomGenerator::instance().rndBool()),
     test_glowingButtons(RandomGenerator::instance().rndBool()),
     test_toolTips(RandomGenerator::instance().rndBool()),
-    test_dnaSpiral(RandomGenerator::instance().rndBool()),
-
-	test_guiConfiguration(new GuiConfiguration(test_resolutionSize, test_bitDepth, test_fullScreen, test_desiredFramerate, test_desiredCPU, test_unloadGraphics, test_smoothMovements, test_transparency, bitmapFixture.test_bitmap1, test_softwareMouse, test_glowingButtons, test_toolTips, test_dnaSpiral)),
+	test_guiConfiguration(new GuiConfiguration(test_resolutionSize, test_bitDepth, test_fullScreen, test_desiredFramerate, test_desiredCPU, test_unloadGraphics, test_smoothMovements, test_transparency, test_softwareMouse, test_glowingButtons, test_toolTips)),
 	test_guiConfigurationMap(init_guiconfigurationmap_helper())
 {
 	GuiDirectories::initTemp("temp");

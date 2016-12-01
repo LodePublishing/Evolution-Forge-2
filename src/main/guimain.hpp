@@ -1,3 +1,4 @@
+#if 0
 #ifndef _GMAIN_HPP
 #define _GMAIN_HPP
 
@@ -27,6 +28,7 @@ class Main
 	public:
 		Main(DC* const dc);
 		~Main();
+
 		void draw(DC* const dc) const;
 		void process();
 		void OnIdle();
@@ -94,3 +96,4 @@ inline const bool Main::hasFullScreenChanged() const {
 																			
 #endif
 
+#endif

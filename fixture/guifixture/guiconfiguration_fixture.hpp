@@ -6,12 +6,10 @@
 #pragma warning(pop)
 
 #include <gui/guiconfiguration.hpp>
-#include <guicorefixture/bitmap_fixture.hpp>
+#include <map>
 
 struct GuiConfiguration_Fixture
 {
-	const Bitmap_Fixture bitmapFixture;
-
 	const Size test_resolutionSize;
     const eBitDepth test_bitDepth;
     const bool test_fullScreen;
@@ -23,7 +21,6 @@ struct GuiConfiguration_Fixture
     const bool test_softwareMouse;
     const bool test_glowingButtons;
     const bool test_toolTips;
-    const bool test_dnaSpiral;
 
 	const boost::shared_ptr<const GuiConfiguration> test_guiConfiguration;
 

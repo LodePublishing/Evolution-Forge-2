@@ -7,6 +7,26 @@
 #include <misc/exceptions.hpp>
 #include <sstream>
 
+
+Cursor::Cursor(const std::string& fileName):
+fileName(fileName),
+	bitmap(new Bitmap(fileName)),
+	cursor(createCursor((SDL_Surface*) (*bitmap)))
+{ }
+
+Cursor::Cursor(const boost::uuids::uuid id, const std::string& fileName):
+UUID<Cursor>(id),
+	fileName(fileName),
+	bitmap(new Bitmap(fileName)),
+	cursor(createCursor((SDL_Surface*) (*bitmap)))
+{ }
+
+Cursor::~Cursor() {
+	if(cursor) {
+		SDL_FreeCursor(cursor);
+	}
+}
+
 SDL_PixelFormat& Cursor::get_neutral_pixel_format()
 {
 	static bool first_time = true;
@@ -77,21 +97,4 @@ SDL_Cursor* Cursor::createCursor(SDL_Surface* surface) {
 }
 
 
-Cursor::Cursor(const std::string& fileName):
-fileName(fileName),
-	bitmap(new Bitmap(fileName)),
-	cursor(createCursor((SDL_Surface*) (*bitmap)))
-{ }
 
-Cursor::Cursor(const boost::uuids::uuid id, const std::string& fileName):
-UUID<Cursor>(id),
-	fileName(fileName),
-	bitmap(new Bitmap(fileName)),
-	cursor(createCursor((SDL_Surface*) (*bitmap)))
-{ }
-
-Cursor::~Cursor() {
-	if(cursor) {
-		SDL_FreeCursor(cursor);
-	}
-}

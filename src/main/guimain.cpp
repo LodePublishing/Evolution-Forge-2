@@ -1,3 +1,4 @@
+#if 0
 #include "guimain.hpp"
 #include "../ui/editfield.hpp"
 #include "../ui/tooltip.hpp"
@@ -638,3 +639,4 @@ void Main::setMouse(const Point p)
 
 InfoWindow* Main::infoWindow = NULL;
 MessageWindow* Main::msgWindow = NULL;
+#endif

@@ -19,63 +19,63 @@ BOOST_FIXTURE_TEST_SUITE( dc_test, DC_Fixture )
 
 	BOOST_AUTO_TEST_CASE (dc_constructor)
     {
-		BOOST_REQUIRE(DC::instance().valid());
-		BOOST_CHECK_EQUAL(DC::instance().getBitDepth(), depth);
-		BOOST_CHECK_EQUAL(DC::instance().getBits(), (depth+1)*8);
-		BOOST_CHECK_EQUAL(DC::instance().getSize().getWidth(), 640);
-		BOOST_CHECK_EQUAL(DC::instance().getSize().getHeight(), 480);
-		BOOST_CHECK_EQUAL(DC::instance().w(), 640);
-		BOOST_CHECK_EQUAL(DC::instance().h(), 480);
-		BOOST_CHECK_EQUAL(DC::instance().getMaxX(), 640);
-		BOOST_CHECK_EQUAL(DC::instance().getMaxY(), 480);
-		BOOST_CHECK_EQUAL(DC::instance().isFullScreen(), false);
+		BOOST_REQUIRE(test_dc->valid());
+		BOOST_CHECK_EQUAL(test_dc->getBitDepth(), depth);
+		BOOST_CHECK_EQUAL(test_dc->getBits(), (depth+1)*8);
+		BOOST_CHECK_EQUAL(test_dc->getSize().getWidth(), 640);
+		BOOST_CHECK_EQUAL(test_dc->getSize().getHeight(), 480);
+		BOOST_CHECK_EQUAL(test_dc->w(), 640);
+		BOOST_CHECK_EQUAL(test_dc->h(), 480);
+		BOOST_CHECK_EQUAL(test_dc->getMaxX(), 640);
+		BOOST_CHECK_EQUAL(test_dc->getMaxY(), 480);
+		BOOST_CHECK_EQUAL(test_dc->isFullScreen(), false);
     }
 
 #ifdef WIN32
 	BOOST_AUTO_TEST_CASE (dc_fullscreen)
     {
-		BOOST_REQUIRE(DC::instance().valid());
-		DC::instance().setFullScreen(true);
+		BOOST_REQUIRE(test_dc->valid());
+		test_dc->setFullScreen(true);
 		SDL_Delay(1000);
-		//BOOST_CHECK_EQUAL(DC::instance().isFullScreen(), true);
+		//BOOST_CHECK_EQUAL(test_dc->isFullScreen(), true);
 
-		DC::instance().setFullScreen(false);
-		BOOST_CHECK_EQUAL(DC::instance().isFullScreen(), false);
+		test_dc->setFullScreen(false);
+		BOOST_CHECK_EQUAL(test_dc->isFullScreen(), false);
 
-		DC::instance().setFullScreen(true);
-		BOOST_CHECK_EQUAL(DC::instance().isFullScreen(), true);
+		test_dc->setFullScreen(true);
+		BOOST_CHECK_EQUAL(test_dc->isFullScreen(), true);
     }
 #endif
 
 	BOOST_AUTO_TEST_CASE (dc_bitdepth)
     {
-		BOOST_REQUIRE(DC::instance().valid());
-		BOOST_CHECK_EQUAL(DC::instance().getBitDepth(), depth);
-		DC::instance().setBitDepth(DEPTH_16BIT);
-		BOOST_CHECK_EQUAL(DC::instance().getBitDepth(), DEPTH_16BIT);
-		DC::instance().setBitDepth(DEPTH_24BIT);
-		BOOST_CHECK_EQUAL(DC::instance().getBitDepth(), DEPTH_24BIT);
-		DC::instance().setBitDepth(DEPTH_32BIT);
-		BOOST_CHECK_EQUAL(DC::instance().getBitDepth(), DEPTH_32BIT);
+		BOOST_REQUIRE(test_dc->valid());
+		BOOST_CHECK_EQUAL(test_dc->getBitDepth(), depth);
+		test_dc->setBitDepth(DEPTH_16BIT);
+		BOOST_CHECK_EQUAL(test_dc->getBitDepth(), DEPTH_16BIT);
+		test_dc->setBitDepth(DEPTH_24BIT);
+		BOOST_CHECK_EQUAL(test_dc->getBitDepth(), DEPTH_24BIT);
+		test_dc->setBitDepth(DEPTH_32BIT);
+		BOOST_CHECK_EQUAL(test_dc->getBitDepth(), DEPTH_32BIT);
     }
 
 	BOOST_AUTO_TEST_CASE (dc_size)
     {
-		BOOST_REQUIRE(DC::instance().valid());
-		BOOST_CHECK_EQUAL(DC::instance().w(), 640);
-		BOOST_CHECK_EQUAL(DC::instance().h(), 480);
-		DC::instance().setResolution(Size(800,600));
-		BOOST_CHECK_EQUAL(DC::instance().w(), 800);
-		BOOST_CHECK_EQUAL(DC::instance().h(), 600);
-		DC::instance().setResolution(Size(1024,768));
-		BOOST_CHECK_EQUAL(DC::instance().w(), 1024);
-		BOOST_CHECK_EQUAL(DC::instance().h(), 768);
-		DC::instance().setResolution(Size(1280,1024));
-		BOOST_CHECK_EQUAL(DC::instance().w(), 1280);
-		BOOST_CHECK_EQUAL(DC::instance().h(), 1024);
-		DC::instance().setResolution(Size(1920,1080));
-		BOOST_CHECK_EQUAL(DC::instance().w(), 1920);
-		BOOST_CHECK_EQUAL(DC::instance().h(), 1080);
+		BOOST_REQUIRE(test_dc->valid());
+		BOOST_CHECK_EQUAL(test_dc->w(), 640);
+		BOOST_CHECK_EQUAL(test_dc->h(), 480);
+		test_dc->setResolution(Size(800,600));
+		BOOST_CHECK_EQUAL(test_dc->w(), 800);
+		BOOST_CHECK_EQUAL(test_dc->h(), 600);
+		test_dc->setResolution(Size(1024,768));
+		BOOST_CHECK_EQUAL(test_dc->w(), 1024);
+		BOOST_CHECK_EQUAL(test_dc->h(), 768);
+		test_dc->setResolution(Size(1280,1024));
+		BOOST_CHECK_EQUAL(test_dc->w(), 1280);
+		BOOST_CHECK_EQUAL(test_dc->h(), 1024);
+		test_dc->setResolution(Size(1920,1080));
+		BOOST_CHECK_EQUAL(test_dc->w(), 1920);
+		BOOST_CHECK_EQUAL(test_dc->h(), 1080);
     }
 
 

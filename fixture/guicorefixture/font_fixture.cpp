@@ -12,7 +12,7 @@
 #pragma warning(pop)
 
 Font_Fixture::Font_Fixture() :
-test_fileName(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "test_font.ttf"),
+test_fileName("FreeSans.ttf"),
 	test_size(RandomGenerator::instance().rnd()),
 	test_underlined(RandomGenerator::instance().rndBool()),
 	test_shadow(RandomGenerator::instance().rndBool()),

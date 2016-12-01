@@ -30,3 +30,10 @@ template<> Node NodeCreator<Text>::createNodeFromObject(const Text& t) {
 	n.addChild(textMap);
 	return n;
 }
+
+
+void TextStorage::updateLanguage(const boost::uuids::uuid languageId) {
+	for(std::map<const boost::uuids::uuid, const boost::shared_ptr<const Text> >::const_iterator i = instance().getItemMap().begin(); i != instance().getItemMap().end(); i++) {
+		i->second->updateLanguage(languageId);
+	}
+}

@@ -9,7 +9,7 @@
 #pragma warning(pop)
 
 
-FrameRate::FrameRate(const bool is_optimizing, const unsigned int desired_framerate, const unsigned int desired_cpu):
+FrameRate::FrameRate(const unsigned int desired_framerate, const unsigned int desired_cpu):
 	desiredFramerate(FPS_DEFAULT),
 	currentFramerate(FPS_DEFAULT),
 	desiredCPU(100),
@@ -22,7 +22,7 @@ FrameRate::FrameRate(const bool is_optimizing, const unsigned int desired_framer
 	delayTicks(100),
 	adaptFramesPerGeneration(true),
 	averagecounter(0),
-	currentTicks(0), //lol, muss 0 sein
+	currentTicks(0), // has to be zero here
 	framesPerSecond(10),
 	tickIntervall(0),
 	generationsPerSecond(0)
@@ -43,7 +43,6 @@ FrameRate::FrameRate(const bool is_optimizing, const unsigned int desired_framer
 		percent[i] = 0;
 	}
 
-	setOptimizing(is_optimizing);
 	setDesiredCPU(desired_cpu);
 	setDesiredFramerate(desired_framerate);
 }

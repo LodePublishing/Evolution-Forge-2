@@ -44,24 +44,24 @@ BOOST_FIXTURE_TEST_SUITE( Bitmap_test, Bitmap_Fixture )
 {
 	BOOST_CHECK_EQUAL(test_bitmap1->getFileName(), test_fileName1);
 	BOOST_CHECK_EQUAL(test_bitmap2->getFileName(), test_fileName2);
-	BOOST_CHECK_EQUAL((*test_bitmap1)->w, 320);
-	BOOST_CHECK_EQUAL((*test_bitmap2)->w, 160);
+	BOOST_CHECK_EQUAL((*test_bitmap1)->w, 302);
+	BOOST_CHECK_EQUAL((*test_bitmap2)->w, 320);
 }
 
 BOOST_AUTO_TEST_CASE (Bitmap_storage)
 {
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap1->getId())->getFileName(), test_fileName1);
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap2->getId())->getFileName(), test_fileName2);
-	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap1->getId()))->w, 320);
-	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap2->getId()))->w, 160);
+	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap1->getId()))->w, 302);
+	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap2->getId()))->w, 320);
 
 	BitmapStorage::saveToXML();
 	BitmapStorage::reset();
 
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap1->getId())->getFileName(), test_fileName1);
 	BOOST_CHECK_EQUAL(BitmapStorage::instance().get(test_bitmap2->getId())->getFileName(), test_fileName2);
-	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap1->getId()))->w, 320);
-	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap2->getId()))->w, 160);
+	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap1->getId()))->w, 302);
+	BOOST_CHECK_EQUAL((*BitmapStorage::instance().get(test_bitmap2->getId()))->w, 320);
 }
 
 

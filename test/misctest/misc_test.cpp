@@ -15,8 +15,42 @@
 #include <miscfixture/miscellaneous_fixture.hpp>
 #include <miscfixture/io_fixture.hpp>
 #include <miscfixture/loadsave_fixture.hpp>
+#include <miscfixture/messagehandler_fixture.hpp>
 
 #include <sstream>
+
+
+// --- MessageHandler ---
+
+BOOST_FIXTURE_TEST_SUITE( MessageHandler_test, MessageHandler_Fixture )
+
+
+	BOOST_AUTO_TEST_CASE (MessageHandler_addMessage)
+{
+	BOOST_CHECK_EQUAL(test_messageHandler->getRemainingMessages().size(), 0);
+	test_messageHandler->clearMessages();
+	BOOST_CHECK_EQUAL(test_messageHandler->getRemainingMessages().size(), 0);
+	test_messageHandler->addMessage(test_message1);
+	test_messageHandler->addMessage(test_message2);
+	test_messageHandler->addMessage(test_message3);
+	BOOST_CHECK_EQUAL(test_messageHandler->getRemainingMessages().size(), 3);
+	std::vector<std::string> test_messageVector;
+	for(std::list<const std::string>::const_iterator i = test_messageHandler->getRemainingMessages().begin(); i != test_messageHandler->getRemainingMessages().end(); i++) {
+		test_messageVector.push_back(*i);
+	}
+	BOOST_CHECK_EQUAL(test_messageVector[0], test_message1);
+	BOOST_CHECK_EQUAL(test_messageVector[1], test_message2);
+	BOOST_CHECK_EQUAL(test_messageVector[2], test_message3);
+	
+	test_messageHandler->clearMessages();
+	BOOST_CHECK_EQUAL(test_messageHandler->getRemainingMessages().size(), 0);
+}
+
+BOOST_AUTO_TEST_SUITE_END( )
+
+// --- END MessageHandler ---
+
+
 
 // --- Miscellaneous ---
 
@@ -65,9 +99,6 @@ BOOST_AUTO_TEST_CASE (Miscellaneous_uuid)
 {
 	BOOST_CHECK_EQUAL(Misc::uuid(boost::lexical_cast<std::string>(test_uuid)), test_uuid);
 }	
-
-
-
 
 
 BOOST_AUTO_TEST_SUITE_END( )

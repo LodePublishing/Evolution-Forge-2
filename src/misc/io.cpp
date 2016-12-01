@@ -50,6 +50,10 @@ std::string IO::getDirectory(const std::list<std::string>& directoryList) {
 	return os.str();
 }
 
+bool IO::fileExists(const std::string& fileName) {
+	return boost::filesystem::exists(fileName);
+}
+
 void IO::makeBackup(const std::string& fileName) {
 	if(boost::filesystem::exists(fileName)) {
 		std::string backup_filename = fileName + ".old";

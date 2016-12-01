@@ -11,8 +11,8 @@
 #pragma warning(pop)
 
 Bitmap_Fixture::Bitmap_Fixture() :
-	test_fileName1(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "test_bitmap.jpg"),
-	test_fileName2(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "test_bitmap.png"),
+	test_fileName1("clawsoftware.jpg"),
+	test_fileName2("clawsoftware.png"),
 	test_bitmap1(new Bitmap(test_fileName1)),
 	test_bitmap2(new Bitmap(test_fileName2)),
 	test_bitmapMap(init_bitmapmap_helper())

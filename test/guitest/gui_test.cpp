@@ -9,6 +9,10 @@
 #include <guifixture/guiconfiguration_fixture.hpp>
 #include <guifixture/gui_fixture.hpp>
 #include <gui/guiconfiguration_storage.hpp>
+#include <guicore/bitmap_storage.hpp>
+#include <misc/ids.hpp>
+#include <gui/gui_directories.hpp>
+#include <gui/guiprocessor.hpp>
 
 BOOST_FIXTURE_TEST_SUITE( GuiConfiguration_Test, GuiConfiguration_Fixture )
 
@@ -23,13 +27,9 @@ BOOST_FIXTURE_TEST_SUITE( GuiConfiguration_Test, GuiConfiguration_Fixture )
 	BOOST_CHECK_EQUAL(test_guiConfiguration->isUnloadGraphics(), test_unloadGraphics);
 	BOOST_CHECK_EQUAL(test_guiConfiguration->isSmoothMovements(), test_smoothMovements);
 	BOOST_CHECK_EQUAL(test_guiConfiguration->isTransparency(), test_transparency);
-	BOOST_CHECK_EQUAL((*test_guiConfiguration->getBackgroundBitmap())->w, (*bitmapFixture.test_bitmap1)->w);
-	BOOST_CHECK_EQUAL((*test_guiConfiguration->getBackgroundBitmap())->h, (*bitmapFixture.test_bitmap1)->h);
-	BOOST_CHECK_EQUAL(test_guiConfiguration->getBackgroundBitmap()->getId(), bitmapFixture.test_bitmap1->getId());
 	BOOST_CHECK_EQUAL(test_guiConfiguration->isSoftwareMouse(), test_softwareMouse);
 	BOOST_CHECK_EQUAL(test_guiConfiguration->isGlowingButtons(), test_glowingButtons);
 	BOOST_CHECK_EQUAL(test_guiConfiguration->isToolTips(), test_toolTips);
-	BOOST_CHECK_EQUAL(test_guiConfiguration->isDnaSpiral(), test_dnaSpiral);
 }
 
 BOOST_AUTO_TEST_CASE(GuiConfiguration_Storage)
@@ -42,13 +42,9 @@ BOOST_AUTO_TEST_CASE(GuiConfiguration_Storage)
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isUnloadGraphics(), test_unloadGraphics);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isSmoothMovements(), test_smoothMovements);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isTransparency(), test_transparency);
-	BOOST_CHECK_EQUAL((*GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->getBackgroundBitmap())->w, (*bitmapFixture.test_bitmap1)->w);
-	BOOST_CHECK_EQUAL((*GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->getBackgroundBitmap())->h, (*bitmapFixture.test_bitmap1)->h);
-	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->getBackgroundBitmap()->getId(), bitmapFixture.test_bitmap1->getId());
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isSoftwareMouse(), test_softwareMouse);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isGlowingButtons(), test_glowingButtons);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isToolTips(), test_toolTips);
-	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isDnaSpiral(), test_dnaSpiral);
 
 	GuiConfigurationStorage::saveToXML();
 	GuiConfigurationStorage::reset();
@@ -61,13 +57,9 @@ BOOST_AUTO_TEST_CASE(GuiConfiguration_Storage)
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isUnloadGraphics(), test_unloadGraphics);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isSmoothMovements(), test_smoothMovements);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isTransparency(), test_transparency);
-	BOOST_CHECK_EQUAL((*GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->getBackgroundBitmap())->w, (*bitmapFixture.test_bitmap1)->w);
-	BOOST_CHECK_EQUAL((*GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->getBackgroundBitmap())->h, (*bitmapFixture.test_bitmap1)->h);
-	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->getBackgroundBitmap()->getId(), bitmapFixture.test_bitmap1->getId());
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isSoftwareMouse(), test_softwareMouse);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isGlowingButtons(), test_glowingButtons);
 	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isToolTips(), test_toolTips);
-	BOOST_CHECK_EQUAL(GuiConfigurationStorage::instance().get(test_guiConfiguration->getId())->isDnaSpiral(), test_dnaSpiral);
 }
 
 BOOST_AUTO_TEST_SUITE_END( )
@@ -78,8 +70,23 @@ BOOST_AUTO_TEST_SUITE_END( )
 
 	BOOST_AUTO_TEST_CASE (Gui_constructor)
 {
+	GuiDirectories::init();
+	BitmapStorage::reset();
+	BitmapObject* object = new BitmapObject(NULL, Rect(), Size(), BitmapStorage::instance().get(IDS::BACKGROUND_SC_BITMAP));
 
-	BOOST_CHECK(true);
+	GuiProcessor t;
+
+	t.process(test_dc);
+
+	if(!IO::fileExists(test_screenshotFileName)) {
+		test_dc->saveBMP(test_screenshotFileName);
+	}
+	SDL_Surface* surface = test_dc->loadBMP(test_screenshotFileName);
+	BOOST_CHECK(BitmapStorage::instance().get(IDS::BACKGROUND_SC_BITMAP)->equals(surface));
+	SDL_FreeSurface(surface);
+	delete object;
+
+
 }
 
 BOOST_AUTO_TEST_SUITE_END( )

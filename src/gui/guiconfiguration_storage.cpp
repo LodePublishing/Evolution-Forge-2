@@ -19,11 +19,9 @@ template<> boost::shared_ptr<GuiConfiguration> NodeCreator<GuiConfiguration>::cr
 		boost::lexical_cast<bool>(node[6].getValue()), 
 		boost::lexical_cast<bool>(node[7].getValue()), 
 		boost::lexical_cast<bool>(node[8].getValue()), 
-		BitmapStorage::instance().get(Misc::uuid(node[9])), 
+		boost::lexical_cast<bool>(node[9].getValue()), 
 		boost::lexical_cast<bool>(node[10].getValue()), 
-		boost::lexical_cast<bool>(node[11].getValue()), 
-		boost::lexical_cast<bool>(node[12].getValue()), 
-		boost::lexical_cast<bool>(node[13].getValue())
+		boost::lexical_cast<bool>(node[11].getValue())
 		));
 }
 
@@ -37,11 +35,9 @@ template<> Node NodeCreator<GuiConfiguration>::createNodeFromObject(const GuiCon
 	n.addChild(Node("DesiredCPU", boost::lexical_cast<std::string>(t.getDesiredCPU())));	
 	n.addChild(Node("UnloadGraphics", boost::lexical_cast<std::string>(t.isUnloadGraphics())));	
 	n.addChild(Node("SmoothMovements", boost::lexical_cast<std::string>(t.isSmoothMovements())));	
-	n.addChild(Node("Transparency", boost::lexical_cast<std::string>(t.isTransparency())));	
-	n.addChild(Node("BackgroundBitmapID", boost::lexical_cast<std::string>(t.getBackgroundBitmap()->getId())));	
+	n.addChild(Node("Transparency", boost::lexical_cast<std::string>(t.isTransparency())));
 	n.addChild(Node("SoftwareMouse", boost::lexical_cast<std::string>(t.isSoftwareMouse())));	
 	n.addChild(Node("GlowingButtons", boost::lexical_cast<std::string>(t.isGlowingButtons())));	
-	n.addChild(Node("ToolTips", boost::lexical_cast<std::string>(t.isToolTips())));	
-	n.addChild(Node("DnaSpiral", boost::lexical_cast<std::string>(t.isDnaSpiral())));	
+	n.addChild(Node("ToolTips", boost::lexical_cast<std::string>(t.isToolTips())));
 	return n;
 }

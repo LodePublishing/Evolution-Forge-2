@@ -8,6 +8,7 @@
 
 #pragma warning(push, 0) 
 #include <boost/filesystem/path.hpp>
+#include <boost/assign/list_of.hpp>
 #pragma warning(pop)
 
 class IO
@@ -23,6 +24,8 @@ public:
 	static void checkStreamForFailure(const std::ifstream& stream, const std::string function_name, const std::string& file_name);
 	static void checkStreamForFailure(std::ofstream& stream, const std::string function_name, const std::string& file_name);
 	static const char* loadFileToChar(const std::string& fileName);	
+	static bool fileExists(const std::string& fileName);
+
 private:
 	IO();
 	~IO();

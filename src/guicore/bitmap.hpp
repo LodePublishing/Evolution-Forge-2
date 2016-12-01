@@ -19,6 +19,8 @@ public:
 	operator SDL_Surface*() const;
 	SDL_Surface* operator->() const;
 
+	bool equals(SDL_Surface* surface) const;
+
 	const std::string& getFileName() const;
 
 private:
@@ -30,6 +32,8 @@ private:
 	/*		bool scale;
 	bool used;
 	bool solid;*/
+
+	static const std::string BITMAP_DIRECTORY;
 };
 
 inline const std::string& Bitmap::getFileName() const {

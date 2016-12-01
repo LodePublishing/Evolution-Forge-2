@@ -12,7 +12,7 @@ template<> boost::shared_ptr<ObjectSize> NodeCreator<ObjectSize>::createObjectFr
 }
 
 template<> Node NodeCreator<ObjectSize>::createNodeFromObject(const ObjectSize& t) {
-	Node n("rules");
+	Node n("objectsize");
 	n.addChild(Node("id", boost::lexical_cast<std::string>(t.getId())));
 	n.addChild(Node("width", boost::lexical_cast<std::string>(t.getWidth())));
 	n.addChild(Node("height", boost::lexical_cast<std::string>(t.getHeight())));

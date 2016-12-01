@@ -12,13 +12,15 @@ template<> boost::shared_ptr<Gui> NodeCreator<Gui>::createObjectFromNode(const s
 	return boost::shared_ptr<Gui>(new Gui(
 		Misc::uuid(node[0]),
 		node[1],
-		GuiConfigurationStorage::instance().get(Misc::uuid(node[2]))));
+		node[2],
+		GuiConfigurationStorage::instance().get(Misc::uuid(node[3]))));
 }
 
 template<> Node NodeCreator<Gui>::createNodeFromObject(const Gui& t) {
 	Node n("gui");
 	n.addChild(Node("id", boost::lexical_cast<std::string>(t.getId())));
-	n.addChild(Node("configurationID", boost::lexical_cast<std::string>(t.getGuiConfigurationId())));
 	n.addChild(Node("WindowTitle", boost::lexical_cast<std::string>(t.getTitle())));	
+	n.addChild(Node("IconWindowTitle", boost::lexical_cast<std::string>(t.getIconTitle())));	
+	n.addChild(Node("configurationID", boost::lexical_cast<std::string>(t.getGuiConfigurationId())));
 	return n;
 }

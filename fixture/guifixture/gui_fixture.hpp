@@ -4,18 +4,21 @@
 #pragma warning(push, 0)  
 #include <boost/smart_ptr.hpp>
 #pragma warning(pop)
-#include "guiconfiguration_fixture.hpp"
 #include <gui/guiinstance.hpp>
 
 struct Gui_Fixture
 {
-	GuiConfiguration_Fixture guiConfigurationFixture;
-
 	const std::string title;
-	const boost::shared_ptr<const Gui> gui;
+	const std::string iconTitle;
+	const std::string test_screenshotFileName;
+	boost::shared_ptr<const Gui> test_gui;
+	DC* test_dc;
 
 	Gui_Fixture();	
 	~Gui_Fixture();
+
+private:
+	const std::map<const boost::uuids::uuid, const boost::shared_ptr<const Gui> > Gui_Fixture::init_guimap_helper() const;
 };
 
 #endif // _GUI_FIXTURE_GUIFIXTURE_HPP

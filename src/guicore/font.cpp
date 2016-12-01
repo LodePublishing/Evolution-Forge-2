@@ -3,6 +3,7 @@
 #include <geometry/point.hpp>
 
 #include <misc/exceptions.hpp>
+#include <misc/io.hpp>
 
 #pragma warning(push, 0)
 #include <SDL_ttf.h>
@@ -16,10 +17,10 @@ Font::Font(const std::string& fileName, const Uint16 size, const bool underlined
 	size(size),
 	underlined(underlined),
 	shadow(shadow),
-	font(TTF_OpenFont(fileName.c_str(), size))
+	font(TTF_OpenFont((FONT_DIRECTORY + fileName).c_str(), size))
 {
 	if(font == NULL) {
-		throw SDLException("ERROR (Font::setFont()): Could not initialize font " + fileName + " [TTF ERROR: \"" + std::string(TTF_GetError()) + "\"].");
+		throw SDLException("ERROR (Font::setFont()): Could not initialize font " + (FONT_DIRECTORY + fileName) + " [TTF ERROR: \"" + std::string(TTF_GetError()) + "\"].");
 	}
 }
 
@@ -29,10 +30,10 @@ Font::Font(const boost::uuids::uuid id, const std::string& fileName, const Uint1
 	size(size),
 	underlined(underlined),
 	shadow(shadow),
-	font(TTF_OpenFont(fileName.c_str(), size))
+	font(TTF_OpenFont((FONT_DIRECTORY + fileName).c_str(), size))
 {
 	if(font == NULL) {
-		throw SDLException("ERROR (Font::setFont()): Could not initialize font " + fileName + " [TTF ERROR: \"" + std::string(TTF_GetError()) + "\"].");
+		throw SDLException("ERROR (Font::setFont()): Could not initialize font " + (FONT_DIRECTORY + fileName) + " [TTF ERROR: \"" + std::string(TTF_GetError()) + "\"].");
 	}
 }
 
@@ -104,3 +105,5 @@ void Font::initTTF() {
 		atexit(TTF_Quit);
 	}
 }
+
+const std::string Font::FONT_DIRECTORY = IO::getDirectory(boost::assign::list_of("data")("fonts"));

@@ -41,6 +41,8 @@ private:
 
 	Font& operator=(const Font& object);
 	Font(const Font& object);
+
+	static const std::string FONT_DIRECTORY;
 };
 
 inline const std::string& Font::getFileName() const {

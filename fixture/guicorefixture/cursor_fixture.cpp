@@ -12,10 +12,10 @@
 #pragma warning(pop)
 
 Cursor_Fixture::Cursor_Fixture() :
-	test_arrowFileName(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "arrow.png"),
-	test_handFileName(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "hand.png"),
-	test_clock1FileName(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "clock1.png"),
-	test_clock2FileName(IO::getDirectory(boost::assign::list_of("fixture")("guicorefixture")("unittestdata")) + "clock2.png"),
+	test_arrowFileName("arrow.png"),
+	test_handFileName("hand.png"),
+	test_clock1FileName("clock1.png"),
+	test_clock2FileName("clock2.png"),
 	test_arrowCursor(new Cursor(test_arrowFileName)),
 	test_handCursor(new Cursor(test_handFileName)),
 	test_clock1Cursor(new Cursor(test_clock1FileName)),

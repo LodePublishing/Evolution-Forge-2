@@ -13,11 +13,9 @@ GuiConfiguration::GuiConfiguration(
 	const bool unloadGraphics,
 	const bool smoothMovements,
 	const bool transparency,
-	const boost::shared_ptr<const Bitmap> backgroundBitmap,
 	const bool softwareMouse,
 	const bool glowingButtons,
-	const bool toolTips,
-	const bool dnaSpiral			
+	const bool toolTips		
 	):
 	UUID<GuiConfiguration>(),
 resolutionSize(resolutionSize),
@@ -28,16 +26,14 @@ resolutionSize(resolutionSize),
 	unloadGraphics(unloadGraphics),
 	smoothMovements(smoothMovements),
 	transparency(transparency),
-	backgroundBitmap(backgroundBitmap),
 	softwareMouse(softwareMouse),
 	glowingButtons(glowingButtons),
-	toolTips(toolTips),
-	dnaSpiral(dnaSpiral)
+	toolTips(toolTips)
 { }
 
 GuiConfiguration::GuiConfiguration(
         const boost::uuids::uuid id,
-	const Size resolutionSize,
+		const Size resolutionSize,
         const eBitDepth bitDepth,
         const bool fullScreen,
 
@@ -47,11 +43,9 @@ GuiConfiguration::GuiConfiguration(
         const bool unloadGraphics,
         const bool smoothMovements,
         const bool transparency,
-       	const boost::shared_ptr<const Bitmap> backgroundBitmap,
         const bool softwareMouse,
         const bool glowingButtons,
-        const bool toolTips,
-        const bool dnaSpiral
+        const bool toolTips
         ):
 	UUID<GuiConfiguration>(id),
 	resolutionSize(resolutionSize),
@@ -62,11 +56,9 @@ GuiConfiguration::GuiConfiguration(
         unloadGraphics(unloadGraphics),
         smoothMovements(smoothMovements),
         transparency(transparency),
-        backgroundBitmap(backgroundBitmap),
         softwareMouse(softwareMouse),
         glowingButtons(glowingButtons),
-        toolTips(toolTips),
-        dnaSpiral(dnaSpiral)
+        toolTips(toolTips)
 { }
 
 GuiConfiguration::~GuiConfiguration()

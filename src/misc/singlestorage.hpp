@@ -83,9 +83,9 @@ public:
 	static const std::string DATA_FILE_NAME_BASE;
 protected:
 	std::map<const boost::uuids::uuid, const boost::shared_ptr<const T> > itemMap;
-	
-private:
 	static boost::scoped_ptr<SingleStorage<T> > t;
+private:
+	
 	
 	static void loadFromXML(SingleStorage<T>*& tis) {
 		Node node = LoadSave::loadFromXML(DATA_FILE_NAME, DATA_FILE_IDENTIFIER);

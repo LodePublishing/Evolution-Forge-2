@@ -12,7 +12,7 @@ template<> boost::shared_ptr<Bitmap> NodeCreator<Bitmap>::createObjectFromNode(c
 }
 
 template<> Node NodeCreator<Bitmap>::createNodeFromObject(const Bitmap& t) {
-	Node n("rules");
+	Node n("bitmap");
 	n.addChild(Node("id", boost::lexical_cast<std::string>(t.getId())));
 	n.addChild(Node("fileName", t.getFileName()));
 	return n;
